@@ -4,7 +4,6 @@
 /dist
 /tmp
 /out-tsc
-*/obj
 
 # dependencies
 node_modules
@@ -41,7 +40,5 @@ Thumbs.db
 
 .angular
 
-apps/*/bin
-apps/*/obj
-libs/*/bin
-libs/*/obj
+**/bin
+**/obj
