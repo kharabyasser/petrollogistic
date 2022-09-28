@@ -4,6 +4,8 @@
   "projects": {
     "dispatcher-ui": "apps/dispatcher-ui",
     "features-frontend-boards": "libs/features/frontend/boards",
-    "dispatcher-api": "apps/dispatcher-api"
+    "dispatcher-api": "apps/dispatcher-api",
+    "features-backend-boards-lib": "libs/features/backend/boards/lib",
+    "features-backend-boards-lib-test": "libs/features/backend/boards/lib-test"
   }
 }
