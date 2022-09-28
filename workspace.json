@@ -2,6 +2,7 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
-    "dispatcher-ui": "apps/dispatcher-ui"
+    "dispatcher-ui": "apps/dispatcher-ui",
+    "features-frontend-boards": "libs/features/frontend/boards"
   }
 }
