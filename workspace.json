@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "dispatcher-ui": "apps/dispatcher-ui",
-    "features-frontend-boards": "libs/features/frontend/boards"
+    "features-frontend-boards": "libs/features/frontend/boards",
+    "dispatcher-api": "apps/dispatcher-api"
   }
 }

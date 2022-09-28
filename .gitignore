@@ -39,3 +39,8 @@ testem.log
 Thumbs.db
 
 .angular
+
+apps/*/bin
+apps/*/obj
+libs/*/bin
+libs/*/obj
