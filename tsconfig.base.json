@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@petrologistic/features/frontend/boards": [
+        "libs/features/frontend/boards/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

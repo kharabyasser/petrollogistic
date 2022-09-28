@@ -1,0 +1,93 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/dispatcher-ui/src",
+  "prefix": "petrologistic",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/dispatcher-ui",
+        "index": "apps/dispatcher-ui/src/index.html",
+        "main": "apps/dispatcher-ui/src/main.ts",
+        "polyfills": "apps/dispatcher-ui/src/polyfills.ts",
+        "tsConfig": "apps/dispatcher-ui/tsconfig.app.json",
+        "assets": [
+          "apps/dispatcher-ui/src/favicon.ico",
+          "apps/dispatcher-ui/src/assets"
+        ],
+        "styles": ["apps/dispatcher-ui/src/styles.css"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/dispatcher-ui/src/environments/environment.ts",
+              "with": "apps/dispatcher-ui/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "dispatcher-ui:build:production"
+        },
+        "development": {
+          "browserTarget": "dispatcher-ui:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "dispatcher-ui:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/dispatcher-ui/**/*.ts",
+          "apps/dispatcher-ui/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/dispatcher-ui"],
+      "options": {
+        "jestConfig": "apps/dispatcher-ui/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
