@@ -3,6 +3,8 @@ vs code recommended extensions
 - docker.
 - nx console.
 - prettier.
+- eslint.
+- c#.
 
 
 nx nrwl (used steps to create petrollogistic's workspace)
