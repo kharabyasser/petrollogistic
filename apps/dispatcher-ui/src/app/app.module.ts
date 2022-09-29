@@ -4,10 +4,11 @@ import { BoardsModule } from '../../../../libs/features/frontend/boards/src/lib/
 
 import { AppComponent } from './app.component';
 import { NxWelcomeComponent } from './nx-welcome.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent, NxWelcomeComponent],
-  imports: [BrowserModule, BoardsModule],
+  imports: [BrowserModule, BoardsModule, BrowserAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

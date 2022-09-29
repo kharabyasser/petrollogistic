@@ -6,7 +6,9 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/dispatcher-ui",
         "index": "apps/dispatcher-ui/src/index.html",
@@ -17,7 +19,10 @@
           "apps/dispatcher-ui/src/favicon.ico",
           "apps/dispatcher-ui/src/assets"
         ],
-        "styles": ["apps/dispatcher-ui/src/styles.css"],
+        "styles": [
+          "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+          "apps/dispatcher-ui/src/styles.css"
+        ],
         "scripts": []
       },
       "configurations": {
@@ -82,7 +87,9 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/dispatcher-ui"],
+      "outputs": [
+        "coverage/apps/dispatcher-ui"
+      ],
       "options": {
         "jestConfig": "apps/dispatcher-ui/jest.config.ts",
         "passWithNoTests": true
