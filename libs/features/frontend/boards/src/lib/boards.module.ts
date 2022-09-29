@@ -7,4 +7,4 @@ import { BoardsComponent } from './components/boards/boards.component';
   declarations: [BoardsComponent],
   exports: [BoardsComponent]
 })
-export class FeaturesFrontendBoardsModule {}
+export class BoardsModule {}
