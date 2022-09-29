@@ -1,1 +1,1 @@
-export * from './lib/features-frontend-boards.module';
+export * from './lib/boards.module';

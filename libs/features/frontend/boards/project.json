@@ -6,7 +6,9 @@
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/features/frontend/boards"],
+      "outputs": [
+        "coverage/libs/features/frontend/boards"
+      ],
       "options": {
         "jestConfig": "libs/features/frontend/boards/jest.config.ts",
         "passWithNoTests": true

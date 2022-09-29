@@ -2,10 +2,10 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
-    "dispatcher-ui": "apps/dispatcher-ui",
-    "features-frontend-boards": "libs/features/frontend/boards",
     "dispatcher-api": "apps/dispatcher-api",
+    "dispatcher-ui": "apps/dispatcher-ui",
     "features-backend-boards-lib": "libs/features/backend/boards/lib",
-    "features-backend-boards-lib-test": "libs/features/backend/boards/lib-test"
+    "features-backend-boards-lib-test": "libs/features/backend/boards/lib-test",
+    "features-frontend-boards": "libs/features/frontend/boards"
   }
 }
