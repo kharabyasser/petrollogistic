@@ -1,38 +1,87 @@
-<mat-table
-  [dataSource]="dataSource"
-  matSort
-  cdkDropListOrientation="horizontal"
-  cdkDropList 
-  (cdkDropListDropped)="tableDrop($event)"
-  class="mat-elevation-z8"
+<p-table
+  #dt1
+  dataKey="id"
+  [value]="cars"
+  styleClass="p-datatable-striped"
+  [paginator]="true"
+  [rows]="10"
+  [showCurrentPageReport]="true"
+  responsiveLayout="scroll"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  sortMode="multiple"
+  [globalFilterFields]="['vin', 'year', 'brand', 'color']"
 >
-  <ng-container
-    *ngFor="let column of columns"
-    [matColumnDef]="column.name"
-  >
-    <mat-header-cell
-      *matHeaderCellDef
-      mat-sort-header
-      sortActionDescription="Sort by number"
-      cdkDrag
-      cdkDragLockAxis="x"
-    >
-      {{ column.title }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let element">{{ element[column.name] }}</mat-cell>
-  </ng-container>
-
-  <mat-header-row
-    *matHeaderRowDef="displayedColumns"
-    class="tableHeaderRow"
-    #tableHeaderRow
-  ></mat-header-row>
-  <mat-header-row mat-row *matRowDef="let row; columns: displayedColumns"></mat-header-row>
-</mat-table>
-
-<mat-paginator
-  [pageSizeOptions]="[5, 10, 20]"
-  showFirstLastButtons
-  aria-label="Select page of periodic elements"
->
-</mat-paginator>
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <button
+        pButton
+        label="Clear"
+        class="p-button-outlined"
+        icon="pi pi-filter-slash"
+        (click)="clear(dt1)"
+      ></button>
+      <span class="p-input-icon-left ml-auto">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Search keyword"
+        />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="vin">
+        <div class="flex justify-content-center align-items-center">
+          Vin<p-columnFilter
+            type="text"
+            field="vin"
+            display="menu"
+          ></p-columnFilter>
+        </div>
+        <p-sortIcon field="vin"></p-sortIcon>
+      </th>
+      <th pSortableColumn="year">
+        <div class="flex justify-content-center align-items-center">
+          Year<p-columnFilter
+            type="text"
+            field="year"
+            display="menu"
+          ></p-columnFilter>
+        </div>
+        <p-sortIcon field="year"></p-sortIcon>
+      </th>
+      <th pSortableColumn="brand">
+        <div class="flex justify-content-center align-items-center">
+          Brand<p-columnFilter
+            type="text"
+            field="brand"
+            display="menu"
+          ></p-columnFilter>
+        </div>
+        <p-sortIcon field="brand"></p-sortIcon>
+      </th>
+      <th pSortableColumn="color">
+        <div class="flex justify-content-center align-items-center">
+          Color<p-columnFilter
+            type="text"
+            field="color"
+            display="menu"
+          ></p-columnFilter>
+        </div>
+        <p-sortIcon field="color"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-car>
+    <tr>
+      <td>{{ car.vin }}</td>
+      <td>{{ car.year }}</td>
+      <td>{{ car.brand }}</td>
+      <td>{{ car.color }}</td>
+    </tr>
+  </ng-template>
+</p-table>
