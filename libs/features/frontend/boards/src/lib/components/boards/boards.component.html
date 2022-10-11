@@ -6,11 +6,16 @@
     styleClass="p-datatable-striped"
     [paginator]="true"
     [rows]="10"
+    [resizableColumns]="true"
+    [reorderableColumns]="true"
     [showCurrentPageReport]="true"
     responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    scrollHeight="500px" scrollDirection="both"
     [rowsPerPageOptions]="[10, 25, 50]"
-    sortMode="multiple"
+    selectionMode="multiple"
+    [(selection)]="selectedCars"
+    sortMode="single"
     [globalFilterFields]="['vin', 'year', 'brand', 'color']"
   >
     <ng-template pTemplate="caption">
@@ -35,7 +40,7 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="vin">
+        <th pResizableColumn pReorderableColumn pSortableColumn="vin">
           <div class="flex justify-content-between flex-wrap">
             <div>
               Vin<p-columnFilter
@@ -47,7 +52,7 @@
             <p-sortIcon field="vin"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="year">
+        <th pResizableColumn pReorderableColumn pSortableColumn="year">
           <div class="flex justify-content-between flex-wrap">
             <div>
               Year<p-columnFilter
@@ -59,7 +64,7 @@
             <p-sortIcon field="year"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="brand">
+        <th pResizableColumn pReorderableColumn pSortableColumn="brand">
           <div class="flex justify-content-between flex-wrap">
             <div>
               Brand<p-columnFilter
@@ -71,7 +76,7 @@
             <p-sortIcon field="brand"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="color">
+        <th pResizableColumn pReorderableColumn pSortableColumn="color">
           <div class="flex justify-content-between flex-wrap">
             <div>
               Color<p-columnFilter
@@ -86,7 +91,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-car>
-      <tr>
+      <tr [pSelectableRow]="car">
         <td>{{ car.vin }}</td>
         <td>{{ car.year }}</td>
         <td>{{ car.brand }}</td>
