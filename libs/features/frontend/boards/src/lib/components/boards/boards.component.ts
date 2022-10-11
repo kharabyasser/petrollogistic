@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { Car } from '../../domain/car';
 
@@ -7,7 +7,7 @@ import { Car } from '../../domain/car';
   templateUrl: './boards.component.html',
   styleUrls: ['./boards.component.scss'],
 })
-export class BoardsComponent {
+export class BoardsComponent implements OnInit {
   cars: Car[] = [
     { id: 1, brand: 'BMW', color: 'Red', vin: '234', year: 1993 },
     { id: 2, brand: 'Mercedes', color: 'Black', vin: '487', year: 1997 },
@@ -43,7 +43,16 @@ export class BoardsComponent {
 
   selectedCars: Car[] = [];
 
-  selectedCar: any;
+  cols: any[] = [];
+
+  ngOnInit() {
+    this.cols = [
+        { field: 'brand', header: 'Brand' },
+        { field: 'color', header: 'Color' },
+        { field: 'vin', header: 'Vin' },
+        { field: 'year', header: 'Quantity' }
+    ];
+}
 
   clear(table: Table) {
     table.clear();
