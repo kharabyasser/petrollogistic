@@ -10,7 +10,9 @@
     responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [rowsPerPageOptions]="[10, 25, 50]"
-    sortMode="multiple"
+    selectionMode="multiple"
+    [(selection)]="selectedCar"
+    sortMode="single"
     [globalFilterFields]="['vin', 'year', 'brand', 'color']"
   >
     <ng-template pTemplate="caption">
@@ -86,7 +88,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-car>
-      <tr>
+      <tr [pSelectableRow]="car">
         <td>{{ car.vin }}</td>
         <td>{{ car.year }}</td>
         <td>{{ car.brand }}</td>
