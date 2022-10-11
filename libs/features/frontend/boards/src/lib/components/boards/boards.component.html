@@ -6,6 +6,7 @@
     styleClass="p-datatable-striped"
     [paginator]="true"
     [rows]="10"
+    [resizableColumns]="true"
     [showCurrentPageReport]="true"
     responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -38,7 +39,7 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="vin">
+        <th pResizableColumn pSortableColumn="vin">
           <div class="flex justify-content-between flex-wrap">
             <div>
               Vin<p-columnFilter
@@ -50,7 +51,7 @@
             <p-sortIcon field="vin"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="year">
+        <th pResizableColumn pSortableColumn="year">
           <div class="flex justify-content-between flex-wrap">
             <div>
               Year<p-columnFilter
@@ -62,7 +63,7 @@
             <p-sortIcon field="year"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="brand">
+        <th pResizableColumn pSortableColumn="brand">
           <div class="flex justify-content-between flex-wrap">
             <div>
               Brand<p-columnFilter
@@ -74,7 +75,7 @@
             <p-sortIcon field="brand"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="color">
+        <th pResizableColumn pSortableColumn="color">
           <div class="flex justify-content-between flex-wrap">
             <div>
               Color<p-columnFilter
