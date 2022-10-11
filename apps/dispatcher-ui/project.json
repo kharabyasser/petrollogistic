@@ -22,7 +22,8 @@
         "styles": [
           "node_modules/primeicons/primeicons.css",
           "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
-          "node_modules/primeng/resources/primeng.min.css"
+          "node_modules/primeng/resources/primeng.min.css",
+          "node_modules/primeflex/primeflex.css"
         ],
         "scripts": []
       },
@@ -31,8 +32,8 @@
           "budgets": [
             {
               "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
             },
             {
               "type": "anyComponentStyle",
