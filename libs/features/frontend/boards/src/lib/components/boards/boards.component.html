@@ -40,6 +40,9 @@
     </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
         <th *ngFor="let col of columns"
           pResizableColumn
           pReorderableColumn
@@ -56,8 +59,12 @@
         </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-car let-columns="columns">
-      <tr [pSelectableRow]="car">
+    <ng-template pTemplate="body" let-car let-columns="columns"
+      let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="car" [pSelectableRowIndex]="rowIndex">
+        <td>
+          <p-tableCheckbox [value]="car" (click)="$event.stopPropagation()"ß></p-tableCheckbox>
+        </td>
         <td *ngFor="let col of columns">
           {{car[col.field]}}
         </td>
