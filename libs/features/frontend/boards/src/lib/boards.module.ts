@@ -3,9 +3,10 @@ import { BoardsComponent } from './components/boards/boards.component';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { BrowserModule } from '@angular/platform-browser'
 
 @NgModule({
-  imports: [TableModule, ButtonModule, InputTextModule],
+  imports: [TableModule, ButtonModule, InputTextModule, BrowserModule],
   declarations: [BoardsComponent],
   exports: [BoardsComponent]
 })
