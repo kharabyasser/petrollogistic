@@ -50,7 +50,7 @@ export class BoardsComponent implements OnInit {
         { field: 'brand', header: 'Brand' },
         { field: 'color', header: 'Color' },
         { field: 'vin', header: 'Vin' },
-        { field: 'year', header: 'Quantity' }
+        { field: 'year', header: 'Year' }
     ];
 }
 
