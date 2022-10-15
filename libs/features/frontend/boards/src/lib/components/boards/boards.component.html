@@ -3,7 +3,7 @@
     #dt1
     dataKey="id"
     [value]="cars"
-    [columns]="cols"
+    [columns]="selectedColumns"
     [paginator]="true"
     [rows]="10"
     [resizableColumns]="true"
@@ -14,11 +14,13 @@
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords}
     entries"
     [rowsPerPageOptions]="[10, 25, 50]"
-    scrollHeight="500px" scrollDirection="both"
+    scrollHeight="500px"
+    scrollDirection="both"
     selectionMode="multiple"
     [(selection)]="selectedCars"
     sortMode="single"
-    [globalFilterFields]="['vin', 'year', 'brand', 'color']">
+    [globalFilterFields]="['vin', 'year', 'brand', 'color']"
+  >
     <ng-template pTemplate="caption">
       <div class="flex">
         <button
@@ -26,7 +28,15 @@
           label="Clear"
           class="p-button-outlined"
           icon="pi pi-filter-slash"
-          (click)="clear(dt1)"></button>
+          (click)="clear(dt1)"
+        ></button>
+        <p-multiSelect class="ml-3"
+          [options]="cols"
+          [(ngModel)]="selectedColumns"
+          optionLabel="header"
+          selectedItemsLabel="{0} columns selected"
+          placeholder="Choose Columns"
+        ></p-multiSelect>
         <span class="p-input-icon-left ml-auto">
           <i class="pi pi-search"></i>
           <input
@@ -34,7 +44,7 @@
             type="text"
             (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
             placeholder="Search keyword"
-            />
+          />
         </span>
       </div>
     </ng-template>
@@ -43,30 +53,42 @@
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th *ngFor="let col of columns"
+        <th
+          *ngFor="let col of columns"
           pResizableColumn
           pReorderableColumn
-          pSortableColumn={{col.field}}>
+          pSortableColumn="{{ col.field }}"
+        >
           <div class="flex justify-content-between flex-wrap">
             <div>
-              {{col.header}}<p-columnFilter
+              {{ col.header
+              }}<p-columnFilter
                 type="text"
-                field={{col.field}}
-                display="menu"></p-columnFilter>
+                field="{{ col.field }}"
+                display="menu"
+              ></p-columnFilter>
             </div>
-            <p-sortIcon field={{col.field}}></p-sortIcon>
+            <p-sortIcon field="{{ col.field }}"></p-sortIcon>
           </div>
         </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-car let-columns="columns"
-      let-rowIndex="rowIndex">
+    <ng-template
+      pTemplate="body"
+      let-car
+      let-columns="columns"
+      let-rowIndex="rowIndex"
+    >
       <tr [pSelectableRow]="car" [pSelectableRowIndex]="rowIndex">
         <td>
-          <p-tableCheckbox [value]="car" (click)="$event.stopPropagation()"ß></p-tableCheckbox>
+          <p-tableCheckbox
+            [value]="car"
+            (click)="$event.stopPropagation()"
+            ß
+          ></p-tableCheckbox>
         </td>
         <td *ngFor="let col of columns">
-          {{car[col.field]}}
+          {{ car[col.field] }}
         </td>
       </tr>
     </ng-template>

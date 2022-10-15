@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Table } from 'primeng/table';
 import { Car } from '../../domain/car';
 
 @Component({
   selector: 'petrologistic-boards',
   templateUrl: './boards.component.html',
-  styleUrls: ['./boards.component.scss'],
+  styleUrls: ['./boards.component.scss']
 })
 export class BoardsComponent implements OnInit {
   cars: Car[] = [
@@ -45,6 +45,8 @@ export class BoardsComponent implements OnInit {
 
   cols: any[] = [];
 
+  _selectedColumns: any[] = [];
+
   ngOnInit() {
     this.cols = [
         { field: 'brand', header: 'Brand' },
@@ -52,6 +54,17 @@ export class BoardsComponent implements OnInit {
         { field: 'vin', header: 'Vin' },
         { field: 'year', header: 'Year' }
     ];
+
+    this._selectedColumns = this.cols;
+}
+
+
+get selectedColumns(): any {
+  return this._selectedColumns;
+}
+
+set selectedColumns(vals: any) {
+  this._selectedColumns = this.cols.filter(col => vals.includes(col));
 }
 
   clear(table: Table) {
