@@ -23,6 +23,6 @@ import { CarouselDetailComponent } from './components/details/carousel-detail/ca
     TableLayoutComponent,
     CarouselDetailComponent,
   ],
-  exports: [BoardsComponent],
+  exports: [TableLayoutComponent],
 })
 export class BoardsModule {}
