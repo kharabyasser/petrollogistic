@@ -6,7 +6,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { BrowserModule } from '@angular/platform-browser';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
-import { DetailComponent } from './components/detail/detail.component';
+import { TableLayoutComponent } from './components/layouts/table-layout/table-layout.component';
+import { CarouselDetailComponent } from './components/details/carousel-detail/carousel-detail.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,11 @@ import { DetailComponent } from './components/detail/detail.component';
     MultiSelectModule,
     FormsModule,
   ],
-  declarations: [BoardsComponent, DetailComponent],
+  declarations: [
+    BoardsComponent,
+    TableLayoutComponent,
+    CarouselDetailComponent,
+  ],
   exports: [BoardsComponent],
 })
 export class BoardsModule {}
