@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{30915EF6-9094-447F-9730-AC603AE6A0DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "features", "features", "{D3771727-38E7-490C-8709-95BAA8BFC15A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{17F1097C-CEDF-4AA8-94A0-7CEAD25634D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "boards", "boards", "{9BA9BCDA-AAE0-4EED-A6B2-D26C4903465D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petrologistic.Features.Backend.Boards.Lib", "libs\features\backend\boards\lib\Petrologistic.Features.Backend.Boards.Lib.csproj", "{736F8ADF-6E48-4671-8FD3-6CF77DC39E56}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{BA90973A-131E-41B8-9D06-4DEFB39997ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petrologistic.DispatcherApi", "apps\dispatcher-api\Petrologistic.DispatcherApi.csproj", "{2CBDD425-48B2-4717-ACCF-3881709997ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{736F8ADF-6E48-4671-8FD3-6CF77DC39E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{736F8ADF-6E48-4671-8FD3-6CF77DC39E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{736F8ADF-6E48-4671-8FD3-6CF77DC39E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{736F8ADF-6E48-4671-8FD3-6CF77DC39E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CBDD425-48B2-4717-ACCF-3881709997ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CBDD425-48B2-4717-ACCF-3881709997ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CBDD425-48B2-4717-ACCF-3881709997ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CBDD425-48B2-4717-ACCF-3881709997ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D3771727-38E7-490C-8709-95BAA8BFC15A} = {30915EF6-9094-447F-9730-AC603AE6A0DC}
+		{17F1097C-CEDF-4AA8-94A0-7CEAD25634D5} = {D3771727-38E7-490C-8709-95BAA8BFC15A}
+		{9BA9BCDA-AAE0-4EED-A6B2-D26C4903465D} = {17F1097C-CEDF-4AA8-94A0-7CEAD25634D5}
+		{736F8ADF-6E48-4671-8FD3-6CF77DC39E56} = {9BA9BCDA-AAE0-4EED-A6B2-D26C4903465D}
+		{2CBDD425-48B2-4717-ACCF-3881709997ED} = {BA90973A-131E-41B8-9D06-4DEFB39997ED}
+	EndGlobalSection
+EndGlobal
