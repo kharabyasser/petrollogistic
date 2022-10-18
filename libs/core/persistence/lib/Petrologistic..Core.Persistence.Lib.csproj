@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    
+    <TargetFramework>net6.0</TargetFramework>
+    
+    <RootNamespace>Petrologistic._Core.Persistence.Lib</RootNamespace>
+    
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <Nullable>enable</Nullable>
+    
+    <OutputPath>../../../../dist/libs/core/persistence/lib</OutputPath>
+  </PropertyGroup>
+  
+  <Target Name="CheckNxModuleBoundaries" BeforeTargets="Build">
+    
+    <Exec Command="node ../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p -core-persistence-lib"/>
+    
+  </Target>
+</Project>
