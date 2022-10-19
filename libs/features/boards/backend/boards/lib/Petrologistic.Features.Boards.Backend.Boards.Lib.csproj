@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    
+    <TargetFramework>net6.0</TargetFramework>
+    
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <Nullable>enable</Nullable>
+    
+    <OutputPath>../../../../../../dist/libs/features/boards/backend/boards/lib</OutputPath>
+  </PropertyGroup>
+  
+  <Target Name="CheckNxModuleBoundaries" BeforeTargets="Build">
+    
+    <Exec Command="node ../../../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p features-boards-backend-boards-lib"/>
+    
+  </Target>
+</Project>

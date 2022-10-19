@@ -6,6 +6,8 @@
     "dispatcher-ui": "apps/dispatcher-ui",
     "features-boards-frontend": "libs/features/boards/frontend",
     "-core-persistence-lib": "libs/core/persistence/lib",
-    "-core-persistence-lib-test": "libs/core/persistence/lib-test"
+    "-core-persistence-lib-test": "libs/core/persistence/lib-test",
+    "features-boards-backend-boards-lib": "libs/features/boards/backend/boards/lib",
+    "features-boards-backend-boards-lib-test": "libs/features/boards/backend/boards/lib-test"
   }
 }
