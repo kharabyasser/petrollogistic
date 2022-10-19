@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@petrologistic/features/frontend/boards": [
-        "libs/features/frontend/boards/src/index.ts"
+        "libs/features/boards/frontend/src/index.ts"
       ]
     }
   },
