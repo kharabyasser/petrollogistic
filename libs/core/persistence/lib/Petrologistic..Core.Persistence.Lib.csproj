@@ -15,7 +15,7 @@
   
   <Target Name="CheckNxModuleBoundaries" BeforeTargets="Build">
     
-    <Exec Command="node ../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p -core-persistence-lib"/>
+    <Exec Command="node ../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p -core-persistence-lib" />
     
   </Target>
 </Project>
