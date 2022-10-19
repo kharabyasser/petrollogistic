@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    
+    <TargetFramework>net6.0</TargetFramework>
+    
+    <RootNamespace>Petrologistic.Core.Persistence.Lib.Test</RootNamespace>
+    
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <Nullable>enable</Nullable>
+    
+    <IsPackable>false</IsPackable>
+    
+    <OutputPath>../../../../dist/libs/core/persistence/lib-test</OutputPath>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    
+    <PackageReference Include="xunit" Version="2.4.2" />
+    
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      
+      <PrivateAssets>all</PrivateAssets>
+      
+    </PackageReference>
+    
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
+      
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      
+      <PrivateAssets>all</PrivateAssets>
+      
+    </PackageReference>
+    
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\lib\Petrologistic..Core.Persistence.Lib.csproj" />
+  </ItemGroup>
+  
+  <Target Name="CheckNxModuleBoundaries" BeforeTargets="Build">
+    
+    <Exec Command="node ../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p core-persistence-lib-test" />
+    
+  </Target>
+</Project>

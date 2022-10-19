@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/features/boards/frontend/src",
+  "prefix": "petrologistic",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/libs/features/boards/frontend"
+      ],
+      "options": {
+        "jestConfig": "libs/features/boards/frontend/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/features/boards/frontend/**/*.ts",
+          "libs/features/boards/frontend/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
