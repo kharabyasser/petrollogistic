@@ -1,6 +1,6 @@
 # serve the project for the first time
-`npm i`
-`npx nx serve dispatcher-ui`
+- `npm i`
+- `npx nx serve dispatcher-ui`
 
 # build the workspace
 `npx nx run-many --target=build --all --parallel=${number of parallelization} ${--skip-nx-cache}`
