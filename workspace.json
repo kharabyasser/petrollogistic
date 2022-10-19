@@ -4,9 +4,7 @@
   "projects": {
     "dispatcher-api": "apps/dispatcher-api",
     "dispatcher-ui": "apps/dispatcher-ui",
-    "features-backend-boards-lib": "libs/features/backend/boards/lib",
-    "features-backend-boards-lib-test": "libs/features/backend/boards/lib-test",
-    "features-frontend-boards": "libs/features/frontend/boards",
+    "features-boards-frontend": "libs/features/boards/frontend",
     "-core-persistence-lib": "libs/core/persistence/lib",
     "-core-persistence-lib-test": "libs/core/persistence/lib-test"
   }
