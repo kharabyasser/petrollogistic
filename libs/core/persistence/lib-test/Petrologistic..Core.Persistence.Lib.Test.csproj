@@ -4,7 +4,7 @@
     
     <TargetFramework>net6.0</TargetFramework>
     
-    <RootNamespace>Petrologistic._Core.Persistence.Lib.Test</RootNamespace>
+    <RootNamespace>Petrologistic.Core.Persistence.Lib.Test</RootNamespace>
     
     <ImplicitUsings>enable</ImplicitUsings>
     
@@ -45,7 +45,7 @@
   
   <Target Name="CheckNxModuleBoundaries" BeforeTargets="Build">
     
-    <Exec Command="node ../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p -core-persistence-lib-test" />
+    <Exec Command="node ../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p core-persistence-lib-test" />
     
   </Target>
 </Project>
