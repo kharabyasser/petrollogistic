@@ -1,8 +1,8 @@
-using Petrologistic._Core.Persistence.Lib.Models.Enums;
-using Petrologistic._Core.Persistence.Lib.Models.Location;
-using Petrologistic._Core.Persistence.Lib.Models.Pricing;
+using Petrologistic.Core.Persistence.Lib.Models.Enums;
+using Petrologistic.Core.Persistence.Lib.Models.Location;
+using Petrologistic.Core.Persistence.Lib.Models.Pricing;
 
-namespace Petrologistic._Core.Persistence.Lib.Models;
+namespace Petrologistic.Core.Persistence.Lib.Models;
 
 public class Container : BaseModel
 {

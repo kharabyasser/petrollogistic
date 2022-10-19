@@ -1,4 +1,4 @@
-namespace Petrologistic._Core.Persistence.Lib.Models.Location;
+namespace Petrologistic.Core.Persistence.Lib.Models.Location;
 
 public class Address
 {

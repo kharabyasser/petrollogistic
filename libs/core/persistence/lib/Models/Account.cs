@@ -1,6 +1,6 @@
-using Petrologistic._Core.Persistence.Lib.Models.Enums;
+using Petrologistic.Core.Persistence.Lib.Models.Enums;
 
-namespace Petrologistic._Core.Persistence.Lib.Models;
+namespace Petrologistic.Core.Persistence.Lib.Models;
 
 public class Account : BaseModel
 {

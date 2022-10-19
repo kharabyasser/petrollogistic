@@ -1,4 +1,4 @@
-﻿namespace Petrologistic._Core.Persistence.Lib.Models.Pricing;
+﻿namespace Petrologistic.Core.Persistence.Lib.Models.Pricing;
 
 public class UnitTax
 {

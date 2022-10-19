@@ -1,6 +1,7 @@
-using Petrologistic._Core.Persistence.Lib.Models.Enums;
+using Petrologistic.Core.Persistence.Lib.Models.Enums;
+using Petrologistic.Core.Persistence.Lib.Models.Pricing;
 
-namespace Petrologistic._Core.Persistence.Lib.Models;
+namespace Petrologistic.Core.Persistence.Lib.Models;
 
 public class DeliveryRequest
 {
@@ -18,12 +19,12 @@ public class DeliveryRequest
   public bool IsPrintPriceOnDelivery { get; set; }
   public bool IsSignatureRequiredOnDelivery { get; set; }
   public bool IsBringDeliveryTicketToOffice { get; set; }
-  public string CultureCode { get; set; } = default!; // Add default culture code.
+  public string CultureCode { get; set; } = default!;
   public string Currency { get; set; } = "CAD";
   public string[]? DeliveryTicketHeaderNotes { get; set; }
   public string[]? DeliveryTicketFooterNotes { get; set; }
-  public Guid BillToAccount { get; set; }
-  public Guid ShipToAccount { get; set; }
-  public Guid[] DestinationContainers { get; set; } = default!;
-  public Guid[] AdditionFees { get; set; } = default!;
+  public Account BillToAccount { get; set; } = default!;
+  public Account ShipToAccount { get; set; } = default!;
+  public Container[] DestinationContainers { get; set; } = default!;
+  public AdditionalFee[] AdditionFees { get; set; } = default!;
 }

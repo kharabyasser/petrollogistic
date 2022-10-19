@@ -13,7 +13,9 @@
   
   <ItemGroup>
     
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="12.15.0" />
+    
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     
   </ItemGroup>
   

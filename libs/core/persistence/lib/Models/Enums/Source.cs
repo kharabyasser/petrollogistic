@@ -1,4 +1,4 @@
-namespace Petrologistic._Core.Persistence.Lib.Models.Enums;
+namespace Petrologistic.Core.Persistence.Lib.Models.Enums;
 
 // TO.DO: fill the enum.
 public enum Source
