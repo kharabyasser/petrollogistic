@@ -25,6 +25,6 @@ public class DeliveryRequest
   public string[]? DeliveryTicketFooterNotes { get; set; }
   public Account BillToAccount { get; set; } = default!;
   public Account ShipToAccount { get; set; } = default!;
-  public Container[] DestinationContainers { get; set; } = default!;
-  public AdditionalFee[] AdditionFees { get; set; } = default!;
+  public IList<Container> DestinationContainers { get; set; } = default!;
+  public IList<AdditionalFee> AdditionFees { get; set; } = default!;
 }
