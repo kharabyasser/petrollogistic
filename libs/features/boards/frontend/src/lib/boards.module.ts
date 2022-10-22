@@ -11,6 +11,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { CarsService } from './services/cars-service';
 import { DeliveryRequestService } from './services/deliveryrequest-service';
+import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { DeliveryRequestService } from './services/deliveryrequest-service';
     BrowserModule,
     MultiSelectModule,
     FormsModule,
+    CoreFrontendApolloModule
   ],
   declarations: [
     BoardsComponent,

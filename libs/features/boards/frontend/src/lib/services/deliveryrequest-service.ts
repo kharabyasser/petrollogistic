@@ -1,27 +1,24 @@
 import { Injectable } from '@angular/core';
+import { ApolloQueryResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
+import { Observable } from 'rxjs';
 import { DeliveryRequest } from '../domain/delivery-request';
+
+const GET_DELIVERY_REQUESTS = gql`
+{
+    deliveryRequests {
+      id
+    }
+}`
 
 @Injectable()
 export class DeliveryRequestService {
 
-  private deliveryRequests: DeliveryRequest[] = [];
-
   constructor(private apollo: Apollo) {}
 
-  getDeliveryRequests() : DeliveryRequest[] {
-    this.apollo.watchQuery({
-        query: gql`
-        {
-            deliveryRequests {
-              id
-            }
-        }`
-    })
-    .valueChanges.subscribe((result: any) => {
-        this.deliveryRequests = result.data?.deliveryRequests
-    })
-
-    return this.deliveryRequests;
+  getDeliveryRequests() : Observable<ApolloQueryResult<any>> {
+    return this.apollo.watchQuery({
+        query: GET_DELIVERY_REQUESTS
+    }).valueChanges;
   }
 }

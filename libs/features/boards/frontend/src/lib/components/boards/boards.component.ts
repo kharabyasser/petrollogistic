@@ -24,9 +24,10 @@ export class BoardsComponent implements OnInit {
   constructor(private carsService: CarsService, private DeliveryRequestsService: DeliveryRequestService) {}
 
   ngOnInit() {
-    this.deliveryRequests = this.DeliveryRequestsService.getDeliveryRequests();
-
-    console.log(this.deliveryRequests);
+    this.DeliveryRequestsService.getDeliveryRequests().subscribe((result) => {
+      this.deliveryRequests = result.data.deliveryrequest;
+      console.log(result.data.deliveryRequests[0]);
+    });
 
     this.cars = this.carsService.getCars();
 
