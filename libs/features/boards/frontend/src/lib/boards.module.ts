@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { CarsService } from './services/cars-service';
+import { DeliveryRequestService } from './services/deliveryrequest-service';
 
 
 @NgModule({
@@ -26,6 +27,6 @@ import { CarsService } from './services/cars-service';
     TableLayoutComponent,
   ],
   exports: [TableLayoutComponent],
-  providers: [CarsService]
+  providers: [CarsService, DeliveryRequestService]
 })
 export class BoardsModule {}

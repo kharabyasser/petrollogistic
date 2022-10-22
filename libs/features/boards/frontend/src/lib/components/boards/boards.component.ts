@@ -1,7 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { Car } from '../../domain/car';
+import { DeliveryRequest } from '../../domain/delivery-request';
 import { CarsService } from '../../services/cars-service';
+import { DeliveryRequestService } from '../../services/deliveryrequest-service';
 
 @Component({
   selector: 'petrologistic-boards',
@@ -9,6 +11,8 @@ import { CarsService } from '../../services/cars-service';
   styleUrls: ['./boards.component.scss'],
 })
 export class BoardsComponent implements OnInit {
+  deliveryRequests: DeliveryRequest[] = [];
+
   cars: Car[] = [];
 
   selectedCars: Car[] = [];
@@ -17,9 +21,13 @@ export class BoardsComponent implements OnInit {
 
   _selectedColumns: any[] = [];
 
-  constructor(private carsService: CarsService) {}
+  constructor(private carsService: CarsService, private DeliveryRequestsService: DeliveryRequestService) {}
 
   ngOnInit() {
+    this.deliveryRequests = this.DeliveryRequestsService.getDeliveryRequests();
+
+    console.log(this.deliveryRequests);
+
     this.cars = this.carsService.getCars();
 
     this.cols = [
