@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
-import { Car } from '../../domain/car';
-import { CarsService } from '../../services/cars-service';
+import { DeliveryRequest } from '../../domain/deliveryrequest';
+import { DeliveryRequestService } from '../../services/deliveryrequest-service';
 
 @Component({
   selector: 'petrologistic-boards',
@@ -9,24 +9,28 @@ import { CarsService } from '../../services/cars-service';
   styleUrls: ['./boards.component.scss'],
 })
 export class BoardsComponent implements OnInit {
-  cars: Car[] = [];
+  deliveryRequests: DeliveryRequest[] = [];
 
-  selectedCars: Car[] = [];
+  selectedRequests: DeliveryRequest[] = [];
 
   cols: any[] = [];
 
   _selectedColumns: any[] = [];
 
-  constructor(private carsService: CarsService) {}
+  constructor(private DeliveryRequestsService: DeliveryRequestService) {}
 
   ngOnInit() {
-    this.cars = this.carsService.getCars();
+    this.DeliveryRequestsService.getDeliveryRequests().subscribe((result) => {
+      this.deliveryRequests = result.data.deliveryRequests;
+      console.log(result.data.deliveryRequests);
+    });
 
     this.cols = [
-      { field: 'brand', header: 'Brand' },
-      { field: 'color', header: 'Color' },
-      { field: 'vin', header: 'Vin' },
-      { field: 'year', header: 'Year' },
+      { field: 'id', header: 'Id' },
+      { field: 'source', header: 'Source' },
+      { field: 'targetDate', header: 'Target Date' },
+      { field: 'purchaseOrder', header: 'Purchase Order' },
+      { field: 'rank', header: 'Rank' },
     ];
 
     this._selectedColumns = this.cols;

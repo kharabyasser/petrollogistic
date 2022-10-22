@@ -7,10 +7,18 @@ builder.Services.AddRepositories();
 
 builder.Services.AddGraphQLServer().AddQueryType<DeliveryRequestQuery>();
 
+builder.Services.AddCors(c =>
+{
+  c.AddPolicy("Policy", b =>
+  {
+    b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+  });
+});
+
 var app = builder.Build();
 
-app.UseHttpsRedirection();
-
 app.MapGraphQL();
+
+app.UseCors("Policy");
 
 app.Run();

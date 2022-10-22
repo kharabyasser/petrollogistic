@@ -2,7 +2,7 @@
   <p-table
     #dt1
     dataKey="id"
-    [value]="cars"
+    [value]="deliveryRequests"
     [columns]="selectedColumns"
     [paginator]="true"
     [rows]="10"
@@ -17,7 +17,7 @@
     scrollHeight="500px"
     scrollDirection="both"
     selectionMode="multiple"
-    [(selection)]="selectedCars"
+    [(selection)]="selectedRequests"
     sortMode="single"
     [globalFilterFields]="['vin', 'year', 'brand', 'color']"
   >
@@ -75,20 +75,20 @@
     </ng-template>
     <ng-template
       pTemplate="body"
-      let-car
+      let-request
       let-columns="columns"
       let-rowIndex="rowIndex"
     >
-      <tr [pSelectableRow]="car" [pSelectableRowIndex]="rowIndex">
+      <tr [pSelectableRow]="request" [pSelectableRowIndex]="rowIndex">
         <td>
           <p-tableCheckbox
-            [value]="car"
+            [value]="request"
             (click)="$event.stopPropagation()"
             ß
           ></p-tableCheckbox>
         </td>
         <td *ngFor="let col of columns">
-          {{ car[col.field] }}
+          {{ request[col.field] }}
         </td>
       </tr>
     </ng-template>
