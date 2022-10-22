@@ -9,7 +9,6 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
-import { CarsService } from './services/cars-service';
 import { DeliveryRequestService } from './services/deliveryrequest-service';
 import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
 
@@ -29,6 +28,6 @@ import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
     TableLayoutComponent,
   ],
   exports: [TableLayoutComponent],
-  providers: [CarsService, DeliveryRequestService]
+  providers: [DeliveryRequestService]
 })
 export class BoardsModule {}

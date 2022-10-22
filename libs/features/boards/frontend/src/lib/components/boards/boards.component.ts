@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
-import { Car } from '../../domain/car';
-import { DeliveryRequest } from '../../domain/delivery-request';
-import { CarsService } from '../../services/cars-service';
+import { DeliveryRequest } from '../../domain/deliveryrequest';
 import { DeliveryRequestService } from '../../services/deliveryrequest-service';
 
 @Component({
@@ -13,29 +11,26 @@ import { DeliveryRequestService } from '../../services/deliveryrequest-service';
 export class BoardsComponent implements OnInit {
   deliveryRequests: DeliveryRequest[] = [];
 
-  cars: Car[] = [];
-
-  selectedCars: Car[] = [];
+  selectedRequests: DeliveryRequest[] = [];
 
   cols: any[] = [];
 
   _selectedColumns: any[] = [];
 
-  constructor(private carsService: CarsService, private DeliveryRequestsService: DeliveryRequestService) {}
+  constructor(private DeliveryRequestsService: DeliveryRequestService) {}
 
   ngOnInit() {
     this.DeliveryRequestsService.getDeliveryRequests().subscribe((result) => {
-      this.deliveryRequests = result.data.deliveryrequest;
-      console.log(result.data.deliveryRequests[0]);
+      this.deliveryRequests = result.data.deliveryRequests;
+      console.log(result.data.deliveryRequests);
     });
 
-    this.cars = this.carsService.getCars();
-
     this.cols = [
-      { field: 'brand', header: 'Brand' },
-      { field: 'color', header: 'Color' },
-      { field: 'vin', header: 'Vin' },
-      { field: 'year', header: 'Year' },
+      { field: 'id', header: 'Id' },
+      { field: 'source', header: 'Source' },
+      { field: 'targetDate', header: 'Target Date' },
+      { field: 'purchaseOrder', header: 'Purchase Order' },
+      { field: 'rank', header: 'Rank' },
     ];
 
     this._selectedColumns = this.cols;

@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { DeliveryRequest } from '../domain/delivery-request';
+import { DeliveryRequest } from '../domain/deliveryrequest';
 
 const GET_DELIVERY_REQUESTS = gql`
 {
     deliveryRequests {
-      id
+      id,
+      source,
+      targetDate,
+      isUrgent,
+      purchaseOrder,
+      rank
     }
 }`
 
