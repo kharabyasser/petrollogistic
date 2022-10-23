@@ -101,7 +101,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.ShipToAccount, (f, u) => fakeAccounts.Generate("ShippingAccount"))
       .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(0, 3));
 
-    return Task.FromResult(fakeDeliveries.Generate(10).AsEnumerable());
+    return Task.FromResult(fakeDeliveries.Generate(20).AsEnumerable());
   }
 
   Task<DeliveryRequest> IDeliveryRequestRepository.GetById(Guid id)

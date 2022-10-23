@@ -11,15 +11,14 @@
     [showCurrentPageReport]="true"
     styleClass="p-datatable-striped"
     responsiveLayout="scroll"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}
-    entries"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [rowsPerPageOptions]="[10, 25, 50]"
     scrollHeight="500px"
     scrollDirection="both"
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     sortMode="single"
-    [globalFilterFields]="['vin', 'year', 'brand', 'color']"
+    [globalFilterFields]="['source', 'targetDate', 'purchaseOrder', 'rank']"
   >
     <ng-template pTemplate="caption">
       <div class="flex">
@@ -30,7 +29,8 @@
           icon="pi pi-filter-slash"
           (click)="clear(dt1)"
         ></button>
-        <p-multiSelect class="ml-3"
+        <p-multiSelect
+          class="ml-3"
           [options]="cols"
           [(ngModel)]="selectedColumns"
           optionLabel="header"
@@ -63,7 +63,7 @@
             <div>
               {{ col.header
               }}<p-columnFilter
-                type="text"
+                type="{{ col.sortMode }}"
                 field="{{ col.field }}"
                 display="menu"
               ></p-columnFilter>
@@ -84,7 +84,6 @@
           <p-tableCheckbox
             [value]="request"
             (click)="$event.stopPropagation()"
-            ß
           ></p-tableCheckbox>
         </td>
         <td *ngFor="let col of columns">

@@ -10,7 +10,6 @@ import { DeliveryRequestService } from '../../services/deliveryrequest-service';
 })
 export class BoardsComponent implements OnInit {
   deliveryRequests: DeliveryRequest[] = [];
-
   selectedRequests: DeliveryRequest[] = [];
 
   cols: any[] = [];
@@ -21,16 +20,16 @@ export class BoardsComponent implements OnInit {
 
   ngOnInit() {
     this.DeliveryRequestsService.getDeliveryRequests().subscribe((result) => {
-      this.deliveryRequests = result.data.deliveryRequests;
+      this.deliveryRequests = [...result.data.deliveryRequests];
       console.log(result.data.deliveryRequests);
     });
 
     this.cols = [
-      { field: 'id', header: 'Id' },
-      { field: 'source', header: 'Source' },
-      { field: 'targetDate', header: 'Target Date' },
-      { field: 'purchaseOrder', header: 'Purchase Order' },
-      { field: 'rank', header: 'Rank' },
+      { field: 'id', header: 'Id', sortMode: 'text' },
+      { field: 'source', header: 'Source', sortMode: 'text' },
+      { field: 'targetDate', header: 'Target Date', sortMode: 'date' },
+      { field: 'purchaseOrder', header: 'Purchase Order', sortMode: 'text' },
+      { field: 'rank', header: 'Rank', sortMode: 'numeric' },
     ];
 
     this._selectedColumns = this.cols;
