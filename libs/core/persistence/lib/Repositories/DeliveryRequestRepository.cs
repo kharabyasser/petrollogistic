@@ -11,19 +11,37 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
 {
   public Task<IEnumerable<DeliveryRequest>> GetAll()
   {
+    string[] canadianProvincesAndTerritories = { "Ontario", "Nova Scotia", "New Brunswick", "Manitoba", "British Columbia", "Prince Edward Island", "Saskatchewan",
+    "Alberta", "Quebec", "Newfoundland and Labrador"};
+
+    var fakeAddress = new Faker<Address>()
+      .RuleFor(d => d.AddressLine1, (f, u) => f.Address.StreetAddress())
+      .RuleFor(d => d.AddressLine2, (f, u) => f.Address.StreetName())
+      .RuleFor(d => d.City, (f, u) => f.Address.City())
+      .RuleFor(d => d.Country, (f, u) => f.Address.Country())
+      .RuleFor(d => d.PostalCode, (f, u) => f.Address.ZipCode("?#? #?#"))
+      .RuleFor(d => d.Province, (f, u) => f.PickRandom(canadianProvincesAndTerritories));
+
+    Action<Faker, Account> fakeAccountDelegate = (f, u) =>
+    {
+      u.Id = Guid.NewGuid();
+      u.Name = f.Lorem.Word();
+      u.PhoneNumber = f.Phone.PhoneNumber();
+      u.EmailAddress = f.Internet.Email();
+      u.IsNotifyByMedium = f.Random.Bool();
+      u.IsNotifyOnDelivery = f.Random.Bool();
+      u.IsNotifyOnDispatch = f.Random.Bool();
+      u.Address = fakeAddress.Generate();
+    };
+
     var fakeAccounts = new Faker<Account>()
-      .RuleFor(d => d.Id, (f, u) => Guid.NewGuid())
-      .RuleFor(d => d.Name, (f, u) => f.Lorem.Word())
-      .RuleFor(d => d.PhoneNumber, (f, u) => f.Phone.PhoneNumber())
-      .RuleFor(d => d.EmailAddress, (f, u) => f.Internet.Email())
-      .RuleFor(d => d.IsNotifyByMedium, (f, u) => f.Random.Bool())
-      .RuleFor(d => d.IsNotifyOnDelivery, (f, u) => f.Random.Bool())
-      .RuleFor(d => d.IsNotifyOnDispatch, (f, u) => f.Random.Bool())
+
       .RuleSet("BillingAccount", set =>
       {
         set.Rules((f, u) =>
         {
           u.AccountType = AccountType.Billing;
+          fakeAccountDelegate(f, u);
         });
       })
       .RuleSet("ShippingAccount", set =>
@@ -31,6 +49,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
         set.Rules((f, u) =>
         {
           u.AccountType = AccountType.Shipping;
+          fakeAccountDelegate(f, u);
         });
       });
 
@@ -104,7 +123,9 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.ShipToAccount, (f, u) => fakeAccounts.Generate("ShippingAccount"))
       .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(0, 3));
 
-    return Task.FromResult(fakeDeliveries.Generate(20).AsEnumerable());
+    var deliveryRequests = fakeDeliveries.Generate(20).AsEnumerable();
+
+    return Task.FromResult(deliveryRequests);
   }
 
   Task<DeliveryRequest> IDeliveryRequestRepository.GetById(Guid id)

@@ -1,4 +1,5 @@
 using Petrologistic.Core.Persistence.Lib.Models.Enums;
+using Petrologistic.Core.Persistence.Lib.Models.Location;
 
 namespace Petrologistic.Core.Persistence.Lib.Models;
 
@@ -11,4 +12,5 @@ public class Account : BaseModel
   public bool IsNotifyOnDispatch { get; set; }
   public bool IsNotifyOnDelivery { get; set; }
   public bool IsNotifyByMedium { get; set; }
+  public Address Address { get; set; } = default!;
 }

@@ -22,7 +22,6 @@ public class Container : BaseModel
   /// </summary>
   public string IdentificationTag { get; set; } = default!;
   public string AlternativeTag{ get; set; } = default!;
-  public int ProductNumber { get; set; }
   public Product Product { get; set; } = default!;
   public double RequestedAmount { get; set; }
   public UnitOfMeasurement RequestedAmountUnit { get; set; }
