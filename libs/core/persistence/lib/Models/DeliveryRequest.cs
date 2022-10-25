@@ -27,6 +27,7 @@ public class DeliveryRequest : BaseModel
   public string[]? DeliveryTicketFooterNotes { get; set; }
   public Account BillToAccount { get; set; } = default!;
   public Account ShipToAccount { get; set; } = default!;
+  public DispatchStatus DispatchStatus { get; set; }
   public IList<Container> DestinationContainers { get; set; } = default!;
   public IList<AdditionalFee> AdditionFees { get; set; } = default!;
 }
