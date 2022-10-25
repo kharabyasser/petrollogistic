@@ -66,17 +66,20 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.Capacity, (f, u) => f.Random.Number())
       .RuleFor(d => d.IdealDeliveryQuantity, (f, u) => f.Random.Number())
       .RuleFor(d => d.UnitOfMeasurment, (f, u) => f.PickRandomWithout(UnitOfMeasurement.Default))
-      .RuleFor(d => d.Percentage, (f, u) => f.Random.Number())
-      .RuleFor(d => d.PercentageSource, (f, u) => f.Random.Word())
-      .RuleFor(d => d.PercentageMeasurementDate, (f, u) => f.Date.Past())
+      .RuleFor(d => d.CurrentPercentage, (f, u) => f.Random.Number())
+      .RuleFor(d => d.PercentageSource, (f, u) => f.PickRandomWithout(PercentageSource.Default))
+      .RuleFor(d => d.PercentageMeasurementDateTime, (f, u) => f.Date.Past())
       .RuleFor(d => d.SerialNumber, (f, u) => new Randomizer().Replace("**-******"))
       .RuleFor(d => d.ExpiryDate, (f, u) => f.Date.Future())
       .RuleFor(d => d.AvailableFromDate, (f, u) => f.Date.Future())
       .RuleFor(d => d.AvaialbeUnitDate, (f, u) => f.Date.Future())
-      .RuleFor(d => d.IdentificationBarCode, (f, u) => f.Commerce.Ean8())
-      .RuleFor(d => d.AlternativeBarCode, (f, u) => f.Commerce.Ean8())
-      .RuleFor(d => d.ProductNumber, (f, u) => f.Random.Number())
-      .RuleFor(d => d.ProductDescription, (f, u) => f.Random.Word())
+      .RuleFor(d => d.IdentificationTag, (f, u) => f.Commerce.Ean8())
+      .RuleFor(d => d.AlternativeTag, (f, u) => f.Commerce.Ean8())
+      .RuleFor(d => d.Product, (f, u) => new Product
+      {
+        Number = f.Random.Number(),
+        Description = f.Random.Word()
+      })
       .RuleFor(d => d.RequestedAmount, (f, u) => f.Random.Number())
       .RuleFor(d => d.RequestedAmountUnit, (f, u) => f.PickRandomWithout(UnitOfMeasurement.Default))
       .RuleFor(d => d.UnitPrices, (f, u) => fakeUnitPrices.GenerateBetween(1, 10).ToArray());

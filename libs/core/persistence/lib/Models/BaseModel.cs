@@ -9,5 +9,5 @@ public class BaseModel
   public Guid CreatedBy { get; set; }
   public DateTime UpdateDate { get; set; }
   public Guid UpdateBy { get; set; }
-  public Status Status { get; set; }
+  public DocumentStatus Status { get; set; }
 }
