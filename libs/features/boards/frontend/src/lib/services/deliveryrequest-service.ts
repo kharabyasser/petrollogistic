@@ -6,14 +6,41 @@ import { DeliveryRequest } from '../domain/deliveryrequest';
 
 const GET_DELIVERY_REQUESTS = gql`
 {
-    deliveryRequests {
-      id,
-      source,
-      targetDate,
-      isUrgent,
-      purchaseOrder,
-      rank
-    }
+  deliveryRequests {
+    id,
+    source,
+    isUrgent,
+    purchaseOrder,
+    shipToAccount {
+      name,
+      phoneNumber,
+      address {
+        addressLine1,
+        addressLine2,
+        city,
+        province,
+        postalCode,
+        country
+      }
+    },
+    destinationContainers {
+      currentPercentage,
+      product {
+        number,
+        description,
+      },
+      requestedAmount,
+      requestedAmountUnit
+    },
+    creationDate,
+    targetDate,
+    rank,
+    dispatchStatus,
+    dispatchedToTruck {
+      name
+    },
+    dispatchDate
+  }
 }`
 
 @Injectable()

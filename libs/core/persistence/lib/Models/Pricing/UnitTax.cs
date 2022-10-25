@@ -1,8 +1,7 @@
 namespace Petrologistic.Core.Persistence.Lib.Models.Pricing;
 
-public class UnitTax
+public class UnitTax : BaseModel
 {
-  public Guid Id { get; set; }
   public string Description { get; set; } = default!;
   public double Amount { get; set; }
   public DateTime AmountUpdateDate { get; set; }
