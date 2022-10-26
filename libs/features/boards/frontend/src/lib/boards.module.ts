@@ -11,6 +11,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { DeliveryRequestService } from './services/deliveryrequest-service';
 import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
+import { TagModule } from 'primeng/tag';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
@@ -21,6 +23,8 @@ import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
     BrowserModule,
     MultiSelectModule,
     FormsModule,
+    TagModule,
+    DropdownModule,
     CoreFrontendApolloModule
   ],
   declarations: [
@@ -30,4 +34,4 @@ import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
   exports: [TableLayoutComponent],
   providers: [DeliveryRequestService]
 })
-export class BoardsModule {}
+export class BoardsModule { }

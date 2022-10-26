@@ -25,11 +25,15 @@ export class BoardsComponent implements OnInit {
     });
 
     this.cols = [
-      { field: 'id', header: 'Id', sortMode: 'text' },
-      { field: 'source', header: 'Source', sortMode: 'text' },
-      { field: 'targetDate', header: 'Target Date', sortMode: 'date' },
-      { field: 'purchaseOrder', header: 'Purchase Order', sortMode: 'text' },
-      { field: 'rank', header: 'Rank', sortMode: 'numeric' },
+      { field: 'source', header: ''},
+      { field: 'urgent', header: 'Urgent' },
+      { field: 'shipToAccount', header: 'Ship To Account' },
+      { field: 'currentPercentage', header: 'Percentage' },
+      { field: 'creationDate', header: 'Creation Date' },
+      { field: 'product', header: 'Product' },
+      { field: 'dispatchStatus', header: 'Dispatch Status' },
+      { field: 'truck', header: 'Truck' },
+      { field: 'dispatchDate', header: 'Dispatch Date' },
     ];
 
     this._selectedColumns = this.cols;
@@ -41,6 +45,10 @@ export class BoardsComponent implements OnInit {
 
   set selectedColumns(vals: any) {
     this._selectedColumns = this.cols.filter((col) => vals.includes(col));
+  }
+
+  filter(event: any){
+    console.log(event);
   }
 
   clear(table: Table) {

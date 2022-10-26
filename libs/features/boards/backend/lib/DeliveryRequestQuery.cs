@@ -1,14 +1,14 @@
 using HotChocolate;
-using Petrologistic.Core.Persistence.Lib.Interfaces;
-using Petrologistic.Core.Persistence.Lib.Models;
+using Petrologistic.Features.Boards.Backend.Lib.Dtos;
+using Petrologistic.Features.Boards.Backend.Lib.Interfaces;
 
 namespace Petrologistic.Features.Boards.Backend.Lib;
 
 public class DeliveryRequestQuery
 {
-  public async Task<IEnumerable<DeliveryRequest>> GetDeliveryRequests([Service] IDeliveryRequestRepository deliveryRequestRepository)
+  public async Task<IEnumerable<DeliveryRequestDto>> GetDeliveryRequests([Service] IDeliveryRequestService deliveryRequestRepository)
     => await deliveryRequestRepository.GetAll();
 
-  public async Task<DeliveryRequest> GetDeliveryRequestById([Service] IDeliveryRequestRepository deliveryRequestRepository, Guid id)
+  public async Task<DeliveryRequestDto> GetDeliveryRequestById([Service] IDeliveryRequestService deliveryRequestRepository, Guid id)
    => await deliveryRequestRepository.GetById(id);
 }
