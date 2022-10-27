@@ -18,7 +18,7 @@
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     sortMode="single"
-    [globalFilterFields]="['source', 'targetDate', 'purchaseOrder', 'rank']"
+    [globalFilterFields]="['source']"
   >
     <ng-template pTemplate="caption">
       <div class="flex">
@@ -48,27 +48,54 @@
         </span>
       </div>
     </ng-template>
-    <ng-template pTemplate="header" let-columns>
+    <ng-template pTemplate="header">
       <tr>
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th
-          *ngFor="let col of columns"
-          pResizableColumn
-          pReorderableColumn
-          pSortableColumn="{{ col.field }}"
-        >
+        <th pResizableColumn pReorderableColumn>
           <div class="flex justify-content-between flex-wrap">
-            <div>
-              {{ col.header
-              }}<p-columnFilter
-                type="{{ col.sortMode }}"
-                field="{{ col.field }}"
-                display="menu"
-              ></p-columnFilter>
-            </div>
-            <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+            Tags
+            <p-columnFilter
+              field="tags"
+              [matchModeOptions]="matchModeOptions"
+              [showMatchModes]="true"
+              [showOperator]="false"
+              [showAddButton]="false"
+              display="menu"
+            >
+              <ng-template pTemplate="header">
+                <div class="px-3 pt-3 pb-0">
+                  <span class="font-bold">Tag Picker</span>
+                </div>
+              </ng-template>
+              <ng-template
+                pTemplate="filter"
+                let-value
+                let-filter="filterCallback"
+              >
+                <p-multiSelect
+                  [ngModel]="value"
+                  [options]="tags"
+                  (onChange)="filter($event.value)"
+                  placeholder="Any"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <p-tag
+                      value="{{ option.label }}"
+                      styleClass="mr-2"
+                      [severity]="
+                        option.label === 'Call'
+                          ? 'success'
+                          : option.label === 'Auto'
+                          ? 'info'
+                          : 'danger'
+                      "
+                    ></p-tag>
+                  </ng-template>
+                </p-multiSelect>
+              </ng-template>
+            </p-columnFilter>
           </div>
         </th>
       </tr>
@@ -86,8 +113,15 @@
             (click)="$event.stopPropagation()"
           ></p-tableCheckbox>
         </td>
-        <td *ngFor="let col of columns">
-          {{ request[col.field] }}
+        <td>
+          <p-tag
+            *ngFor="let tag of request['tags']"
+            value="{{ tag }}"
+            styleClass="mr-2"
+            [severity]="
+              tag === 'Call' ? 'success' : tag === 'Auto' ? 'info' : 'danger'
+            "
+          ></p-tag>
         </td>
       </tr>
     </ng-template>

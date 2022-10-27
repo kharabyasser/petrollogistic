@@ -8,8 +8,7 @@ const GET_DELIVERY_REQUESTS = gql`
 {
   deliveryRequests {
     id,
-    source,
-    isUrgent,
+    tags,
     purchaseOrder,
     shipToAccount {
       name,
