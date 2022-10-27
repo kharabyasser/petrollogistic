@@ -53,14 +53,13 @@
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pResizableColumn pReorderableColumn pSortableColumn="tags">
+        <th pResizableColumn pReorderableColumn>
           <div class="flex justify-content-between flex-wrap">
             Tags
-            <p-sortIcon field="source"></p-sortIcon>
             <p-columnFilter
               field="tags"
-              matchMode="in"
-              [showMatchModes]="false"
+              [matchModeOptions]="matchModeOptions"
+              [showMatchModes]="true"
               [showOperator]="false"
               [showAddButton]="false"
               display="menu"
@@ -78,17 +77,17 @@
                 <p-multiSelect
                   [ngModel]="value"
                   [options]="tags"
+                  (onChange)="filter($event.value)"
                   placeholder="Any"
-                  optionLabel="name"
                 >
                   <ng-template let-option pTemplate="item">
                     <p-tag
-                      value="{{ option }}"
+                      value="{{ option.label }}"
                       styleClass="mr-2"
                       [severity]="
-                        option === 'CALL'
+                        option.label === 'Call'
                           ? 'success'
-                          : option === 'AUTO'
+                          : option.label === 'Auto'
                           ? 'info'
                           : 'danger'
                       "
@@ -116,15 +115,12 @@
         </td>
         <td>
           <p-tag
-            value="{{ request['source'] }}"
+            *ngFor="let tag of request['tags']"
+            value="{{ tag }}"
             styleClass="mr-2"
-            [severity]="request['source'] === 'CALL' ? 'success' : 'info'"
-          ></p-tag>
-          <p-tag
-            *ngIf="request['isUrgent'] === true"
-            value="urgent"
-            styleClass="mr-2"
-            severity="danger"
+            [severity]="
+              tag === 'Call' ? 'success' : tag === 'Auto' ? 'info' : 'danger'
+            "
           ></p-tag>
         </td>
       </tr>
