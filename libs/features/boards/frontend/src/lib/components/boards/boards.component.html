@@ -18,7 +18,12 @@
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     sortMode="single"
-    [globalFilterFields]="['source']"
+    [globalFilterFields]="[
+      'tags', 'purchaseOrder',
+      'shipToAccount.name',
+      'shipToAccount.address.addressLine1',
+      'shipToAccount.phoneNumber'
+    ]"
   >
     <ng-template pTemplate="caption">
       <div class="flex">
@@ -53,22 +58,28 @@
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pResizableColumn pReorderableColumn>
-          <div class="flex justify-content-between flex-wrap">
+        <th
+          *ngFor="let col of selectedColumns"
+          [ngSwitch]="col.field"
+          pResizableColumn
+          pReorderableColumn
+          [pSortableColumn]="
+            col.field === 'shipToAccount' ? 'shipToAccount.name' : col.field
+          "
+        >
+          <div
+            *ngSwitchCase="'tags'"
+            class="flex justify-content-between flex-wrap"
+          >
             Tags
             <p-columnFilter
               field="tags"
-              [matchModeOptions]="matchModeOptions"
+              [matchModeOptions]="tagFilterModeOptions"
               [showMatchModes]="true"
               [showOperator]="false"
               [showAddButton]="false"
               display="menu"
             >
-              <ng-template pTemplate="header">
-                <div class="px-3 pt-3 pb-0">
-                  <span class="font-bold">Tag Picker</span>
-                </div>
-              </ng-template>
               <ng-template
                 pTemplate="filter"
                 let-value
@@ -97,6 +108,36 @@
               </ng-template>
             </p-columnFilter>
           </div>
+          <div
+            *ngSwitchCase="'shipToAccount'"
+            class="flex justify-content-between flex-wrap"
+          >
+            Ship To Account
+            <div class="flex justify-content-start flex-wrap">
+              <p-columnFilter
+                field="shipToAccount"
+                type="text"
+                [matchModeOptions]="accountFilterModeOptions"
+                [showOperator]="true"
+                [showAddButton]="true"
+                display="menu"
+              >
+              </p-columnFilter>
+              <p-sortIcon field="shipToAccount"></p-sortIcon>
+            </div>
+          </div>
+          <div *ngSwitchDefault>
+            <div class="flex justify-content-between flex-wrap">
+              {{ col.header }}
+              <div class="flex justify-content-start flex-wrap">
+                <p-columnFilter
+                  field="{{ col.field }}"
+                  display="menu"
+                ></p-columnFilter>
+                <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+              </div>
+            </div>
+          </div>
         </th>
       </tr>
     </ng-template>
@@ -113,15 +154,28 @@
             (click)="$event.stopPropagation()"
           ></p-tableCheckbox>
         </td>
-        <td>
-          <p-tag
-            *ngFor="let tag of request['tags']"
-            value="{{ tag }}"
-            styleClass="mr-2"
-            [severity]="
-              tag === 'Call' ? 'success' : tag === 'Auto' ? 'info' : 'danger'
-            "
-          ></p-tag>
+        <td *ngFor="let col of selectedColumns" [ngSwitch]="col.field">
+          <div *ngSwitchCase="'tags'">
+            <p-tag
+              *ngFor="let tag of request['tags']"
+              value="{{ tag }}"
+              styleClass="mr-2"
+              [severity]="
+                tag === 'Call' ? 'success' : tag === 'Auto' ? 'info' : 'danger'
+              "
+            ></p-tag>
+          </div>
+          <div *ngSwitchCase="'shipToAccount'">
+            <b> {{ request[col.field].name }} </b>
+            <br />
+            {{ request[col.field].address.addressLine1 }},
+            {{ request[col.field].address.postalCode }}
+            <br />
+            {{ request[col.field].phoneNumber }}
+          </div>
+          <div *ngSwitchDefault>
+            {{ request[col.field] }}
+          </div>
         </td>
       </tr>
     </ng-template>
