@@ -67,17 +67,12 @@
             Tags
             <p-columnFilter
               field="tags"
-              [matchModeOptions]="matchModeOptions"
+              [matchModeOptions]="tagFilterModeOptions"
               [showMatchModes]="true"
               [showOperator]="false"
               [showAddButton]="false"
               display="menu"
             >
-              <ng-template pTemplate="header">
-                <div class="px-3 pt-3 pb-0">
-                  <span class="font-bold">Tag Picker</span>
-                </div>
-              </ng-template>
               <ng-template
                 pTemplate="filter"
                 let-value
@@ -105,6 +100,24 @@
                 </p-multiSelect>
               </ng-template>
             </p-columnFilter>
+          </div>
+          <div
+            *ngSwitchCase="'shipToAccount'"
+            class="flex justify-content-between flex-wrap"
+          >
+            Ship To Account
+            <div class="flex justify-content-start flex-wrap">
+              <p-columnFilter
+                field="shipToAccount"
+                type="text"
+                [matchModeOptions]="accountFilterModeOptions"
+                [showOperator]="true"
+                [showAddButton]="true"
+                display="menu"
+              >
+              </p-columnFilter>
+              <p-sortIcon field="shipToAccount"></p-sortIcon>
+            </div>
           </div>
           <div *ngSwitchDefault>
             <div class="flex justify-content-between flex-wrap">
@@ -144,6 +157,14 @@
                 tag === 'Call' ? 'success' : tag === 'Auto' ? 'info' : 'danger'
               "
             ></p-tag>
+          </div>
+          <div *ngSwitchCase="'shipToAccount'">
+            <b> {{ request[col.field].name }} </b>
+            <br />
+            {{ request[col.field].address.addressLine1 }},
+            {{ request[col.field].address.postalCode }}
+            <br />
+            {{ request[col.field].phoneNumber }}
           </div>
           <div *ngSwitchDefault>
             {{ request[col.field] }}
