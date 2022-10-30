@@ -3,7 +3,7 @@
     #dt1
     dataKey="id"
     [value]="deliveryRequests"
-    [columns]="selectedColumns"
+    [columns]="_selectedColumns"
     [paginator]="true"
     [rows]="10"
     [resizableColumns]="true"
@@ -18,7 +18,7 @@
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     sortMode="single"
-    [globalFilterFields]="['source']"
+    [globalFilterFields]="['tags, purchaseOrder']"
   >
     <ng-template pTemplate="caption">
       <div class="flex">
@@ -53,8 +53,17 @@
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pResizableColumn pReorderableColumn>
-          <div class="flex justify-content-between flex-wrap">
+        <th
+          *ngFor="let col of _selectedColumns"
+          [ngSwitch]="col.field"
+          pResizableColumn
+          pReorderableColumn
+          pSortableColumn="{{ col.field }}"
+        >
+          <div
+            *ngSwitchCase="'tags'"
+            class="flex justify-content-between flex-wrap"
+          >
             Tags
             <p-columnFilter
               field="tags"
@@ -97,6 +106,18 @@
               </ng-template>
             </p-columnFilter>
           </div>
+          <div *ngSwitchDefault>
+            <div class="flex justify-content-between flex-wrap">
+              {{ col.header }}
+              <div class="flex justify-content-start flex-wrap">
+                <p-columnFilter
+                  field="{{ col.field }}"
+                  display="menu"
+                ></p-columnFilter>
+                <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+              </div>
+            </div>
+          </div>
         </th>
       </tr>
     </ng-template>
@@ -113,15 +134,20 @@
             (click)="$event.stopPropagation()"
           ></p-tableCheckbox>
         </td>
-        <td>
-          <p-tag
-            *ngFor="let tag of request['tags']"
-            value="{{ tag }}"
-            styleClass="mr-2"
-            [severity]="
-              tag === 'Call' ? 'success' : tag === 'Auto' ? 'info' : 'danger'
-            "
-          ></p-tag>
+        <td *ngFor="let col of _selectedColumns" [ngSwitch]="col.field">
+          <div *ngSwitchCase="'tags'">
+            <p-tag
+              *ngFor="let tag of request['tags']"
+              value="{{ tag }}"
+              styleClass="mr-2"
+              [severity]="
+                tag === 'Call' ? 'success' : tag === 'Auto' ? 'info' : 'danger'
+              "
+            ></p-tag>
+          </div>
+          <div *ngSwitchDefault>
+            {{ request[col.field] }}
+          </div>
         </td>
       </tr>
     </ng-template>

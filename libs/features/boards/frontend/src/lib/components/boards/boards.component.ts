@@ -34,15 +34,8 @@ export class BoardsComponent implements OnInit {
     });
 
     this.cols = [
-      { field: 'source', header: ''},
-      { field: 'urgent', header: 'Urgent' },
-      { field: 'shipToAccount', header: 'Ship To Account' },
-      { field: 'currentPercentage', header: 'Percentage' },
-      { field: 'creationDate', header: 'Creation Date' },
-      { field: 'product', header: 'Product' },
-      { field: 'dispatchStatus', header: 'Dispatch Status' },
-      { field: 'truck', header: 'Truck' },
-      { field: 'dispatchDate', header: 'Dispatch Date' },
+      { field: 'tags', header: 'Tags'},
+      { field: 'purchaseOrder', header: 'Purchase Order' },
     ];
 
     this._selectedColumns = this.cols;
