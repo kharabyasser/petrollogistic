@@ -106,7 +106,7 @@ export class BoardsComponent implements OnInit {
       }
 
       const address = value.address.addressLine1 + 
-      value.address.addressLine1 + 
+      value.address.addressLine2 + 
       value.address.city + 
       value.address.province + 
       value.address.country +

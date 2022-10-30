@@ -18,7 +18,12 @@
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     sortMode="single"
-    [globalFilterFields]="['tags, purchaseOrder', 'shipToAccount']"
+    [globalFilterFields]="[
+      'tags, purchaseOrder',
+      'shipToAccount.name',
+      'shipToAccount.address.addressLine1',
+      'shipToAccount.phoneNumber'
+    ]"
   >
     <ng-template pTemplate="caption">
       <div class="flex">
@@ -58,7 +63,9 @@
           [ngSwitch]="col.field"
           pResizableColumn
           pReorderableColumn
-          [pSortableColumn]="col.field === 'shipToAccount' ? 'shipToAccount.name' : col.field"
+          [pSortableColumn]="
+            col.field === 'shipToAccount' ? 'shipToAccount.name' : col.field
+          "
         >
           <div
             *ngSwitchCase="'tags'"
