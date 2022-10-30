@@ -15,7 +15,7 @@ export class BoardsComponent implements OnInit {
 
   cols: any[] = [];
   tags:SelectItem [] = [];
-  _selectedColumns: any[] = [];
+  selectedCols: any[] = [];
 
   matchModeOptions: SelectItem[] = [];
 
@@ -38,7 +38,7 @@ export class BoardsComponent implements OnInit {
       { field: 'purchaseOrder', header: 'Purchase Order' },
     ];
 
-    this._selectedColumns = this.cols;
+    this.selectedCols = this.cols;
 
     const containsTagFilterName = 'contains-tag';
     const exactMatchTagFilterName = 'exact-match-tag';
@@ -84,11 +84,11 @@ export class BoardsComponent implements OnInit {
   }
 
   get selectedColumns(): any {
-    return this._selectedColumns;
+    return this.selectedCols;
   }
 
   set selectedColumns(vals: any) {
-    this._selectedColumns = this.cols.filter((col) => vals.includes(col));
+    this.selectedCols = this.cols.filter((col) => vals.includes(col));
   }
 
   filter(event: any){

@@ -3,7 +3,7 @@
     #dt1
     dataKey="id"
     [value]="deliveryRequests"
-    [columns]="_selectedColumns"
+    [columns]="selectedColumns"
     [paginator]="true"
     [rows]="10"
     [resizableColumns]="true"
@@ -54,7 +54,7 @@
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
         <th
-          *ngFor="let col of _selectedColumns"
+          *ngFor="let col of selectedColumns"
           [ngSwitch]="col.field"
           pResizableColumn
           pReorderableColumn
@@ -134,7 +134,7 @@
             (click)="$event.stopPropagation()"
           ></p-tableCheckbox>
         </td>
-        <td *ngFor="let col of _selectedColumns" [ngSwitch]="col.field">
+        <td *ngFor="let col of selectedColumns" [ngSwitch]="col.field">
           <div *ngSwitchCase="'tags'">
             <p-tag
               *ngFor="let tag of request['tags']"
