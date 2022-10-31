@@ -9,6 +9,7 @@ export interface DeliveryRequest {
     purchaseOrder: string,
     shipToAccount: Account,
     destinationContainers: Container[];
+    lowestContainer: Container;
     creationDate: Date,
     targetDate: Date,
     rank: number,

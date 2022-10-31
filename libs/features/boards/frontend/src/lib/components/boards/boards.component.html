@@ -13,13 +13,14 @@
     responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [rowsPerPageOptions]="[10, 25, 50]"
-    scrollHeight="500px"
+    scrollHeight="1000px"
     scrollDirection="both"
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     sortMode="single"
     [globalFilterFields]="[
-      'tags', 'purchaseOrder',
+      'tags',
+      'purchaseOrder',
       'shipToAccount.name',
       'shipToAccount.address.addressLine1',
       'shipToAccount.phoneNumber'
@@ -63,9 +64,7 @@
           [ngSwitch]="col.field"
           pResizableColumn
           pReorderableColumn
-          [pSortableColumn]="
-            col.field === 'shipToAccount' ? 'shipToAccount.name' : col.field
-          "
+          [pSortableColumn]="col.sortCol"
         >
           <div
             *ngSwitchCase="'tags'"
@@ -123,7 +122,23 @@
                 display="menu"
               >
               </p-columnFilter>
-              <p-sortIcon field="shipToAccount"></p-sortIcon>
+              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
+            </div>
+          </div>
+          <div
+            *ngSwitchCase="'lowestContainer'"
+            class="flex justify-content-between flex-wrap"
+          >
+            Percentage
+            <div class="flex justify-content-start flex-wrap">
+              <p-columnFilter
+                field="{{ col.sortCol }}"
+                type="numeric"
+                [showOperator]="true"
+                [showAddButton]="true"
+                display="menu"
+              ></p-columnFilter>
+              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
           <div *ngSwitchDefault>
@@ -172,6 +187,11 @@
             {{ request[col.field].address.postalCode }}
             <br />
             {{ request[col.field].phoneNumber }}
+          </div>
+          <div *ngSwitchCase="'lowestContainer'">
+            <p-knob
+              [(ngModel)]="request[col.field].currentPercentage"
+            ></p-knob>
           </div>
           <div *ngSwitchDefault>
             {{ request[col.field] }}

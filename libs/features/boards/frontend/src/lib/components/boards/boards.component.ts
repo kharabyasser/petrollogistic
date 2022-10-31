@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
 import { DeliveryRequestService } from '../../services/deliveryrequest-service';
+import { Container } from '../../domain/container';
 
 @Component({
   selector: 'petrologistic-boards',
@@ -13,8 +14,6 @@ import { DeliveryRequestService } from '../../services/deliveryrequest-service';
 export class BoardsComponent implements OnInit {
   deliveryRequests: DeliveryRequest[] = [];
   selectedRequests: DeliveryRequest[] = [];
-
-  accountFilterPropertyOptions = ['Name', 'Address'];
 
   cols: any[] = [];
   tags: SelectItem[] = [];
@@ -28,6 +27,12 @@ export class BoardsComponent implements OnInit {
   ngOnInit() {
     this.DeliveryRequestsService.getDeliveryRequests().subscribe((result) => {
       this.deliveryRequests = [...result.data.deliveryRequests];
+      this.deliveryRequests = result.data.deliveryRequests.map((item: DeliveryRequest) => ({
+        ...item,
+        lowestContainer: item.destinationContainers.reduce((prev: Container, curr: Container) =>
+          (prev?.currentPercentage < curr.currentPercentage ? prev : curr))
+      }));
+
       this.tags = this.deliveryRequests
         .flatMap(d => d.tags)
         .filter((value, index, array) => {
@@ -38,8 +43,9 @@ export class BoardsComponent implements OnInit {
 
     this.cols = [
       { field: 'tags', header: 'Tags' },
-      { field: 'purchaseOrder', header: 'Purchase Order' },
-      { field: 'shipToAccount', header: 'Ship to Account' },
+      { field: 'purchaseOrder', header: 'Purchase Order', sortCol: 'purchaseOrder' },
+      { field: 'shipToAccount', header: 'Ship to Account', sortCol: 'shipToAccount.name' },
+      { field: 'lowestContainer', header: 'Percentage', sortCol: 'lowestContainer.currentPercentage' },
     ];
 
     this.selectedCols = this.cols;
@@ -93,7 +99,7 @@ export class BoardsComponent implements OnInit {
         return false;
       }
 
-        return value.name.toLowerCase().includes(filter.toLowerCase());
+      return value.name.toLowerCase().includes(filter.toLowerCase());
     });
 
     this.filterService.register(accountFilterAddress, (value: Account, filter: string): boolean => {
@@ -105,12 +111,12 @@ export class BoardsComponent implements OnInit {
         return false;
       }
 
-      const address = value.address.addressLine1 + 
-      value.address.addressLine2 + 
-      value.address.city + 
-      value.address.province + 
-      value.address.country +
-      value.address.postalCode;  
+      const address = value.address.addressLine1 +
+        value.address.addressLine2 +
+        value.address.city +
+        value.address.province +
+        value.address.country +
+        value.address.postalCode;
 
       return address.toLowerCase().includes(filter.toLowerCase());
     });

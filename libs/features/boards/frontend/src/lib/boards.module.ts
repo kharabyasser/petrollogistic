@@ -9,11 +9,12 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
-import { DeliveryRequestService } from './services/deliveryrequest-service';
-import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
 import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
+import { KnobModule } from 'primeng/knob';
 
+import { DeliveryRequestService } from './services/deliveryrequest-service';
+import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { DropdownModule } from 'primeng/dropdown';
     FormsModule,
     TagModule,
     DropdownModule,
+    KnobModule,
     CoreFrontendApolloModule
   ],
   declarations: [

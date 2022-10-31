@@ -85,7 +85,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.Capacity, (f, u) => f.Random.Number())
       .RuleFor(d => d.IdealDeliveryQuantity, (f, u) => f.Random.Number())
       .RuleFor(d => d.UnitOfMeasurment, (f, u) => f.PickRandomWithout(UnitOfMeasurement.Default))
-      .RuleFor(d => d.CurrentPercentage, (f, u) => f.Random.Number())
+      .RuleFor(d => d.CurrentPercentage, (f, u) => f.Random.Number(0, 100))
       .RuleFor(d => d.PercentageSource, (f, u) => f.PickRandomWithout(PercentageSource.Default))
       .RuleFor(d => d.PercentageMeasurementDateTime, (f, u) => f.Date.Past())
       .RuleFor(d => d.SerialNumber, (f, u) => new Randomizer().Replace("**-******"))
@@ -121,7 +121,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.DeliveryTicketFooterNotes, (f, u) => f.Lorem.Words())
       .RuleFor(d => d.BillToAccount, (f, u) => fakeAccounts.Generate("BillingAccount"))
       .RuleFor(d => d.ShipToAccount, (f, u) => fakeAccounts.Generate("ShippingAccount"))
-      .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(0, 3));
+      .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(1, 3));
 
     var deliveryRequests = fakeDeliveries.Generate(20).AsEnumerable();
 
