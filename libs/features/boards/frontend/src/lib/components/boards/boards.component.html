@@ -161,6 +161,7 @@
       let-request
       let-columns="columns"
       let-rowIndex="rowIndex"
+      let-expanded="expanded"
     >
       <tr [pSelectableRow]="request" [pSelectableRowIndex]="rowIndex">
         <td>
@@ -188,13 +189,57 @@
             <br />
             {{ request[col.field].phoneNumber }}
           </div>
-          <div *ngSwitchCase="'lowestContainer'">
-            <p-knob
-              [(ngModel)]="request[col.field].currentPercentage"
-            ></p-knob>
+          <div
+            *ngSwitchCase="'lowestContainer'"
+            class="flex justify-content-between flex-wrap flex align-items-center justify-content-center"
+          >
+            <p-knob [(ngModel)]="request[col.field].currentPercentage"></p-knob>
+            <button
+              type="button"
+              pButton
+              pRipple
+              [pRowToggler]="request"
+              class="p-button-text p-button-rounded p-button-plain"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            ></button>
           </div>
           <div *ngSwitchDefault>
             {{ request[col.field] }}
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-request>
+      <tr class="expendedrow">
+        <td colspan="7">
+          <div class="p-3">
+            <p-table
+              [value]="spread(request.destinationContainers)"
+              dataKey="id"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th pSortableColumn="requestedAmount">
+                    Requested Amount
+                    <p-sortIcon field="requestedAmount"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="requestedAmountUnit">
+                    Unit <p-sortIcon field="requestedAmountUnit"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="currentPercentage">
+                    Percentage
+                    <p-sortIcon field="currentPercentage"></p-sortIcon>
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-container>
+                <tr>
+                  <td>{{ container.requestedAmount }}</td>
+                  <td>{{ container.requestedAmountUnit }}</td>
+                  <td>{{ container.currentPercentage }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
           </div>
         </td>
       </tr>

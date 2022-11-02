@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FilterService, SelectItem } from 'primeng/api';
+import { FilterService, SelectItem, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
@@ -157,5 +157,9 @@ export class BoardsComponent implements OnInit {
 
   clear(table: Table) {
     table.clear();
+  }
+
+  spread(items: any[]): any {
+    return [...items];
   }
 }
