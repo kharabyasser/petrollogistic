@@ -19,6 +19,7 @@ public class DeliveryRequestProfile : Profile
         }
 
         return tags;
-      }));
+      }))
+      .ForMember(dest => dest.CreationDate, opt => opt.MapFrom((src, dest) => src.CreationDate));
   }
 }

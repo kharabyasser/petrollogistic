@@ -23,6 +23,7 @@ const GET_DELIVERY_REQUESTS = gql`
       }
     },
     destinationContainers {
+      id,
       currentPercentage,
       product {
         number,

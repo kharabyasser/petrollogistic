@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FilterService, SelectItem } from 'primeng/api';
+import { FilterService, SelectItem, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
 import { DeliveryRequestService } from '../../services/deliveryrequest-service';
+import { Container } from '../../domain/container';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'petrologistic-boards',
@@ -13,8 +15,6 @@ import { DeliveryRequestService } from '../../services/deliveryrequest-service';
 export class BoardsComponent implements OnInit {
   deliveryRequests: DeliveryRequest[] = [];
   selectedRequests: DeliveryRequest[] = [];
-
-  accountFilterPropertyOptions = ['Name', 'Address'];
 
   cols: any[] = [];
   tags: SelectItem[] = [];
@@ -28,6 +28,14 @@ export class BoardsComponent implements OnInit {
   ngOnInit() {
     this.DeliveryRequestsService.getDeliveryRequests().subscribe((result) => {
       this.deliveryRequests = [...result.data.deliveryRequests];
+      this.deliveryRequests = result.data.deliveryRequests.map((item: DeliveryRequest) => ({
+        ...item,
+        creationDate: formatDate(item.creationDate, 'dd/MM/yyyy', 'en-US'),
+        targetDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
+        lowestContainer: item.destinationContainers.reduce((prev: Container, curr: Container) =>
+          (prev?.currentPercentage < curr.currentPercentage ? prev : curr))
+      }));
+
       this.tags = this.deliveryRequests
         .flatMap(d => d.tags)
         .filter((value, index, array) => {
@@ -37,9 +45,13 @@ export class BoardsComponent implements OnInit {
     });
 
     this.cols = [
-      { field: 'tags', header: 'Tags' },
-      { field: 'purchaseOrder', header: 'Purchase Order' },
-      { field: 'shipToAccount', header: 'Ship to Account' },
+      { selector: 'tags', field: 'tags', header: 'Tags' },
+      { selector: 'purchaseOrder', field: 'purchaseOrder', header: 'Purchase Order', sortCol: 'purchaseOrder', filterType: 'numeric' },
+      { selector: 'shipToAccount', field: 'shipToAccount', header: 'Ship to Account', sortCol: 'shipToAccount.name' },
+      { selector: 'lowestContainer', field: 'lowestContainer', header: 'Percentage', sortCol: 'lowestContainer.currentPercentage' },
+      { selector: 'creationDate', field: 'creationDate', header: 'Creation Date', sortCol: 'creationDate', filterType: 'date' },
+      { selector: 'targetDate', field: 'targetDate', header: 'Target Date', sortCol: 'targetDate', filterType: 'date' },
+      { selector: 'product', field: 'lowestContainer', header: 'Product', sortCol: 'lowestContainer.requestedAmount' },
     ];
 
     this.selectedCols = this.cols;
@@ -93,7 +105,7 @@ export class BoardsComponent implements OnInit {
         return false;
       }
 
-        return value.name.toLowerCase().includes(filter.toLowerCase());
+      return value.name.toLowerCase().includes(filter.toLowerCase());
     });
 
     this.filterService.register(accountFilterAddress, (value: Account, filter: string): boolean => {
@@ -105,12 +117,12 @@ export class BoardsComponent implements OnInit {
         return false;
       }
 
-      const address = value.address.addressLine1 + 
-      value.address.addressLine2 + 
-      value.address.city + 
-      value.address.province + 
-      value.address.country +
-      value.address.postalCode;  
+      const address = value.address.addressLine1 +
+        value.address.addressLine2 +
+        value.address.city +
+        value.address.province +
+        value.address.country +
+        value.address.postalCode;
 
       return address.toLowerCase().includes(filter.toLowerCase());
     });
@@ -151,5 +163,9 @@ export class BoardsComponent implements OnInit {
 
   clear(table: Table) {
     table.clear();
+  }
+
+  spread(items: any[]): any {
+    return [...items];
   }
 }
