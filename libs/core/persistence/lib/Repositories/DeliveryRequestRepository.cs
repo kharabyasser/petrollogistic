@@ -96,10 +96,10 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.AlternativeTag, (f, u) => f.Commerce.Ean8())
       .RuleFor(d => d.Product, (f, u) => new Product
       {
-        Number = f.Random.Number(),
+        Number = f.Random.Number(10, 50),
         Description = f.Random.Word()
       })
-      .RuleFor(d => d.RequestedAmount, (f, u) => f.Random.Number())
+      .RuleFor(d => d.RequestedAmount, (f, u) => f.Random.Number(450, 2250))
       .RuleFor(d => d.RequestedAmountUnit, (f, u) => f.PickRandomWithout(UnitOfMeasurement.Default))
       .RuleFor(d => d.UnitPrices, (f, u) => fakeUnitPrices.GenerateBetween(1, 10).ToArray());
 
@@ -109,6 +109,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.TargetDate, (f, u) => f.Date.Future())
       .RuleFor(d => d.IsUrgent, (f, u) => f.Random.Bool())
       .RuleFor(d => d.PurchaseOrder, (f, u) => f.Random.AlphaNumeric(9))
+      .RuleFor(d => d.CreationDate, (f, u) => f.Date.Past())
       .RuleFor(d => d.Rank, (f, u) => f.Random.Number(1, 5))
       .RuleFor(d => d.Instructions, (f, u) => f.Lorem.Words())
       .RuleFor(d => d.IsCashOnDelivery, (f, u) => f.Random.Bool())

@@ -61,7 +61,7 @@
         </th>
         <th
           *ngFor="let col of selectedColumns"
-          [ngSwitch]="col.field"
+          [ngSwitch]="col.selector"
           pResizableColumn
           pReorderableColumn
           [pSortableColumn]="col.sortCol"
@@ -141,11 +141,28 @@
               <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
+          <div
+            *ngSwitchCase="'product'"
+            class="flex justify-content-between flex-wrap"
+          >
+            Product
+            <div class="flex justify-content-start flex-wrap">
+              <p-columnFilter
+                field="{{ col.sortCol }}"
+                type="numeric"
+                [showOperator]="true"
+                [showAddButton]="true"
+                display="menu"
+              ></p-columnFilter>
+              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
+            </div>
+          </div>
           <div *ngSwitchDefault>
             <div class="flex justify-content-between flex-wrap">
               {{ col.header }}
               <div class="flex justify-content-start flex-wrap">
                 <p-columnFilter
+                  type="{{ col.filterType }}"
                   field="{{ col.field }}"
                   display="menu"
                 ></p-columnFilter>
@@ -170,7 +187,7 @@
             (click)="$event.stopPropagation()"
           ></p-tableCheckbox>
         </td>
-        <td *ngFor="let col of selectedColumns" [ngSwitch]="col.field">
+        <td *ngFor="let col of selectedColumns" [ngSwitch]="col.selector">
           <div *ngSwitchCase="'tags'">
             <p-tag
               *ngFor="let tag of request['tags']"
@@ -203,6 +220,21 @@
               [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
             ></button>
           </div>
+          <div
+            *ngSwitchCase="'product'"
+            class="flex flex-column card-container"
+          >
+            <div>
+              <b
+                >{{ request[col.field].product.number }} -
+                {{ request[col.field].product.description }}
+              </b>
+            </div>
+            <div>
+              {{ request[col.field].requestedAmount }} - 
+              {{ request[col.field].requestedAmountUnit }}
+            </div>
+          </div>
           <div *ngSwitchDefault>
             {{ request[col.field] }}
           </div>
@@ -211,7 +243,7 @@
     </ng-template>
     <ng-template pTemplate="rowexpansion" let-request>
       <tr class="expendedrow">
-        <td colspan="7">
+        <td colspan="8">
           <div class="p-3">
             <p-table
               [value]="spread(request.destinationContainers)"

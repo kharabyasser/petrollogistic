@@ -5,6 +5,7 @@ import { Account } from '../../domain/account';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
 import { DeliveryRequestService } from '../../services/deliveryrequest-service';
 import { Container } from '../../domain/container';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'petrologistic-boards',
@@ -29,6 +30,8 @@ export class BoardsComponent implements OnInit {
       this.deliveryRequests = [...result.data.deliveryRequests];
       this.deliveryRequests = result.data.deliveryRequests.map((item: DeliveryRequest) => ({
         ...item,
+        creationDate: formatDate(item.creationDate, 'dd/MM/yyyy', 'en-US'),
+        targetDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
         lowestContainer: item.destinationContainers.reduce((prev: Container, curr: Container) =>
           (prev?.currentPercentage < curr.currentPercentage ? prev : curr))
       }));
@@ -42,10 +45,13 @@ export class BoardsComponent implements OnInit {
     });
 
     this.cols = [
-      { field: 'tags', header: 'Tags' },
-      { field: 'purchaseOrder', header: 'Purchase Order', sortCol: 'purchaseOrder' },
-      { field: 'shipToAccount', header: 'Ship to Account', sortCol: 'shipToAccount.name' },
-      { field: 'lowestContainer', header: 'Percentage', sortCol: 'lowestContainer.currentPercentage' },
+      { selector: 'tags', field: 'tags', header: 'Tags' },
+      { selector: 'purchaseOrder', field: 'purchaseOrder', header: 'Purchase Order', sortCol: 'purchaseOrder', filterType: 'numeric' },
+      { selector: 'shipToAccount', field: 'shipToAccount', header: 'Ship to Account', sortCol: 'shipToAccount.name' },
+      { selector: 'lowestContainer', field: 'lowestContainer', header: 'Percentage', sortCol: 'lowestContainer.currentPercentage' },
+      { selector: 'creationDate', field: 'creationDate', header: 'Creation Date', sortCol: 'creationDate', filterType: 'date' },
+      { selector: 'targetDate', field: 'targetDate', header: 'Target Date', sortCol: 'targetDate', filterType: 'date' },
+      { selector: 'product', field: 'lowestContainer', header: 'Product', sortCol: 'lowestContainer.requestedAmount' },
     ];
 
     this.selectedCols = this.cols;
