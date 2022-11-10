@@ -18,10 +18,12 @@ export class BoardsComponent implements OnInit {
 
   cols: any[] = [];
   tags: SelectItem[] = [];
+  dispatchStatuses: SelectItem[] = [];
   selectedCols: any[] = [];
 
   tagFilterModeOptions: SelectItem[] = [];
   accountFilterModeOptions: SelectItem[] = [];
+  dispatchStatusesModeOptions: SelectItem[] = [];
 
   constructor(private DeliveryRequestsService: DeliveryRequestService, private filterService: FilterService) { }
 
@@ -30,8 +32,10 @@ export class BoardsComponent implements OnInit {
       this.deliveryRequests = [...result.data.deliveryRequests];
       this.deliveryRequests = result.data.deliveryRequests.map((item: DeliveryRequest) => ({
         ...item,
+        tags: item.destinationContainers.length == 1 ? item.tags : item.tags.concat('Fleet'),
         creationDate: formatDate(item.creationDate, 'dd/MM/yyyy', 'en-US'),
         targetDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
+        dispatchDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
         lowestContainer: item.destinationContainers.reduce((prev: Container, curr: Container) =>
           (prev?.currentPercentage < curr.currentPercentage ? prev : curr))
       }));
@@ -42,6 +46,13 @@ export class BoardsComponent implements OnInit {
           return array.indexOf(value) === index;
         })
         .map(tag => ({ label: tag, value: tag } as SelectItem));
+
+      this.dispatchStatuses = this.deliveryRequests
+        .flatMap(d => d.dispatchStatus)
+        .filter((value, index, array) => {
+          return array.indexOf(value) === index;
+        })
+        .map(dispatchStatus => ({ label: dispatchStatus.toString(), value: dispatchStatus.toString() } as SelectItem));
     });
 
     this.cols = [
@@ -52,6 +63,9 @@ export class BoardsComponent implements OnInit {
       { selector: 'creationDate', field: 'creationDate', header: 'Creation Date', sortCol: 'creationDate', filterType: 'date' },
       { selector: 'targetDate', field: 'targetDate', header: 'Target Date', sortCol: 'targetDate', filterType: 'date' },
       { selector: 'product', field: 'lowestContainer', header: 'Product', sortCol: 'lowestContainer.requestedAmount' },
+      { selector: 'dispatchStatus', field: 'dispatchStatus', header: 'Status', sortCol: 'dispatchStatus' },
+      { selector: 'dispatchedToTruck', field: 'dispatchedToTruck', header: 'Truck', sortCol: 'dispatchedToTruck', filterType: 'text' },
+      { selector: 'dispatchDate', field: 'dispatchDate', header: 'Dispatch Date', sortCol: 'dispatchDate', filterType: 'date' },
     ];
 
     this.selectedCols = this.cols;
@@ -61,6 +75,7 @@ export class BoardsComponent implements OnInit {
     const accountFilterName = 'account-name-filter';
     const accountFilterAddress = 'account-address-filter';
     const accountFilterPhone = 'account-phone-filter';
+    const dispatchStatusFilter = 'dispatchStatus-filter';
 
     this.filterService.register(tagFilterContainsName, (value: string[], filter: string[]): boolean => {
       if (filter === undefined || filter === null || filter.length === 0) {
@@ -141,6 +156,18 @@ export class BoardsComponent implements OnInit {
       return phone.toLowerCase().includes(filter.toLowerCase());
     });
 
+    this.filterService.register(dispatchStatusFilter, (value: string, filter: string): boolean => {
+      if (filter === undefined || filter === null) {
+        return true;
+      }
+
+      if (value === undefined || value === null) {
+        return false;
+      }
+
+      return filter === value;
+    });
+
     this.tagFilterModeOptions = [
       { label: 'Contains', value: tagFilterContainsName },
       { label: 'Exact Match', value: tagFilterExactName },
@@ -151,6 +178,10 @@ export class BoardsComponent implements OnInit {
       { label: 'Address', value: accountFilterAddress },
       { label: 'Phone', value: accountFilterPhone },
     ];
+
+    this.dispatchStatusesModeOptions = [
+      { label: 'Status', value: dispatchStatusFilter }
+    ]
   }
 
   get selectedColumns(): any {

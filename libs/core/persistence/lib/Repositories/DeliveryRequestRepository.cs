@@ -122,9 +122,10 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.DeliveryTicketFooterNotes, (f, u) => f.Lorem.Words())
       .RuleFor(d => d.BillToAccount, (f, u) => fakeAccounts.Generate("BillingAccount"))
       .RuleFor(d => d.ShipToAccount, (f, u) => fakeAccounts.Generate("ShippingAccount"))
+      .RuleFor(d => d.DispatchStatus, (f, u) => DispatchStatus.Pending)
       .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(1, 3));
 
-    var deliveryRequests = fakeDeliveries.Generate(20).AsEnumerable();
+    var deliveryRequests = fakeDeliveries.Generate(100).AsEnumerable();
 
     return Task.FromResult(deliveryRequests);
   }

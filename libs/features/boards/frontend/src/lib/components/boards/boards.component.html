@@ -99,7 +99,9 @@
                           ? 'success'
                           : option.label === 'Auto'
                           ? 'info'
-                          : 'danger'
+                          : option.label === 'Urgent'
+                          ? 'danger'
+                          : 'warning'
                       "
                     ></p-tag>
                   </ng-template>
@@ -157,6 +159,48 @@
               <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
+          <div
+            *ngSwitchCase="'dispatchStatus'"
+            class="flex justify-content-between flex-wrap"
+          >
+            Status
+            <p-columnFilter
+              field="dispatchStatus"
+              [matchModeOptions]="dispatchStatusesModeOptions"
+              [showMatchModes]="true"
+              [showOperator]="false"
+              [showAddButton]="false"
+              display="menu"
+            >
+              <ng-template
+                pTemplate="filter"
+                let-value
+                let-filter="filterCallback"
+              >
+                <p-dropdown
+                  [ngModel]="value"
+                  [options]="dispatchStatuses"
+                  (onChange)="filter($event.value)"
+                  placeholder="Any"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <p-tag
+                      value="{{ option.label }}"
+                      styleClass="mr-2"
+                      [severity]="
+                        option.label === 'Dispatched'
+                          ? 'success'
+                          : option.label === 'Pending'
+                          ? 'info'
+                          : 'warning'
+                      "
+                    ></p-tag>
+                  </ng-template>
+                </p-dropdown>
+              </ng-template>
+            </p-columnFilter>
+            <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
+          </div>
           <div *ngSwitchDefault>
             <div class="flex justify-content-between flex-wrap">
               {{ col.header }}
@@ -194,7 +238,13 @@
               value="{{ tag }}"
               styleClass="mr-2"
               [severity]="
-                tag === 'Call' ? 'success' : tag === 'Auto' ? 'info' : 'danger'
+                tag === 'Call'
+                  ? 'success'
+                  : tag === 'Auto'
+                  ? 'info'
+                  : tag === 'Urgent'
+                  ? 'danger'
+                  : 'warning'
               "
             ></p-tag>
           </div>
@@ -210,7 +260,12 @@
             *ngSwitchCase="'lowestContainer'"
             class="flex justify-content-between flex-wrap flex align-items-center justify-content-center"
           >
-            <p-knob [(ngModel)]="request[col.field].currentPercentage"></p-knob>
+            <p-knob
+              [(ngModel)]="request[col.field].currentPercentage"
+              [valueColor]="
+                request[col.field].currentPercentage < 15 ? '#DF0404' : '#3C82F6'
+              "
+            ></p-knob>
             <button
               type="button"
               pButton
@@ -231,19 +286,35 @@
               </b>
             </div>
             <div>
-              {{ request[col.field].requestedAmount }} - 
+              {{ request[col.field].requestedAmount }} -
               {{ request[col.field].requestedAmountUnit }}
             </div>
           </div>
+          <div *ngSwitchCase="'dispatchStatus'">
+            <p-tag
+              value="{{ request['dispatchStatus'] }}"
+              styleClass="mr-2"
+              [severity]="
+                request['dispatchStatus'] === 'DISPATCHED'
+                  ? 'success'
+                  : request['dispatchStatus'] === 'ASSIGNED'
+                  ? 'info'
+                  : 'warning'
+              "
+            ></p-tag>
+          </div>
           <div *ngSwitchDefault>
-            {{ request[col.field] }}
+            <div *ngIf="request[col.field] !== null; else emptyCell">
+              {{ request[col.field] }}
+            </div>
+            <ng-template #emptyCell><b>-</b></ng-template>
           </div>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="rowexpansion" let-request>
       <tr class="expendedrow">
-        <td colspan="8">
+        <td colspan="12">
           <div class="p-3">
             <p-table
               [value]="spread(request.destinationContainers)"
@@ -262,6 +333,14 @@
                     Percentage
                     <p-sortIcon field="currentPercentage"></p-sortIcon>
                   </th>
+                  <th pSortableColumn="product.description">
+                    Product Name
+                    <p-sortIcon field="product.description"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="product.number">
+                    Product Code
+                    <p-sortIcon field="product.number"></p-sortIcon>
+                  </th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-container>
@@ -269,6 +348,8 @@
                   <td>{{ container.requestedAmount }}</td>
                   <td>{{ container.requestedAmountUnit }}</td>
                   <td>{{ container.currentPercentage }}</td>
+                  <td>{{ container.product.description }}</td>
+                  <td>{{ container.product.number }}</td>
                 </tr>
               </ng-template>
             </p-table>
