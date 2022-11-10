@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "core-frontend-apollo": "libs/core/frontend/apollo",
+    "core-frontend-store": "libs/core/frontend/store",
     "core-persistence-lib": "libs/core/persistence/lib",
     "core-persistence-lib-test": "libs/core/persistence/lib-test",
     "dispatcher-api": "apps/dispatcher-api",
