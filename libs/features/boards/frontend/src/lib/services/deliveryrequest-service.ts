@@ -48,8 +48,8 @@ export class DeliveryRequestService {
 
   constructor(private apollo: Apollo) {}
 
-  getDeliveryRequests() : Observable<ApolloQueryResult<any>> {
-    return this.apollo.watchQuery({
+  getDeliveryRequests() : Observable<ApolloQueryResult<DeliveryRequest[]>> {
+    return this.apollo.watchQuery<DeliveryRequest[]>({
         query: GET_DELIVERY_REQUESTS
     }).valueChanges;
   }

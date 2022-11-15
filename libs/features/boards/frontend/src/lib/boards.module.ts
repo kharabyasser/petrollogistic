@@ -13,8 +13,13 @@ import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
 import { KnobModule } from 'primeng/knob';
 
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './+state/delivery-requests-reducer';
+
 import { DeliveryRequestService } from './services/deliveryrequest-service';
-import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
+import { CoreFrontendApolloModule } from '@petrologistic/core/frontend/apollo';
+import { EffectsModule } from '@ngrx/effects';
+import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
 
 @NgModule({
   imports: [
@@ -27,7 +32,9 @@ import { CoreFrontendApolloModule } from 'libs/core/frontend/apollo/src';
     TagModule,
     DropdownModule,
     KnobModule,
-    CoreFrontendApolloModule
+    CoreFrontendApolloModule,
+    StoreModule.forFeature('DeliveryRequests', reducers),
+    EffectsModule.forFeature([DeliveryRequestsEffect])
   ],
   declarations: [
     BoardsComponent,

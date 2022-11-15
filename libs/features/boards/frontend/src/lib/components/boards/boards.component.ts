@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FilterService, SelectItem, SortEvent } from 'primeng/api';
+import { FilterService, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
-import { DeliveryRequestService } from '../../services/deliveryrequest-service';
-import { Container } from '../../domain/container';
+import { select, Store } from '@ngrx/store';
+import * as RequestsActions from '../../+state/delivery-requests-actions';
+import { map, Observable } from 'rxjs';
+import { requestsSelector } from '../../+state/delivery-requests.selectors';
 import { formatDate } from '@angular/common';
+import { Container } from '../../domain/container';
 
 @Component({
   selector: 'petrologistic-boards',
@@ -13,47 +16,50 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./boards.component.scss'],
 })
 export class BoardsComponent implements OnInit {
-  deliveryRequests: DeliveryRequest[] = [];
+  deliveryRequests$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
   selectedRequests: DeliveryRequest[] = [];
 
   cols: any[] = [];
-  tags: SelectItem[] = [];
-  dispatchStatuses: SelectItem[] = [];
   selectedCols: any[] = [];
 
+  tags: SelectItem[] = [];
+  dispatchStatuses: SelectItem[] = [];
   tagFilterModeOptions: SelectItem[] = [];
   accountFilterModeOptions: SelectItem[] = [];
   dispatchStatusesModeOptions: SelectItem[] = [];
 
-  constructor(private DeliveryRequestsService: DeliveryRequestService, private filterService: FilterService) { }
+  constructor(private filterService: FilterService, private store: Store) {
+    this.deliveryRequests$ = this.store.pipe(select(requestsSelector))
+      .pipe(
+        map(reqs =>
+          reqs.map(item => ({
+            ...item,
+            tags: item.destinationContainers.length == 1 ? item.tags : item.tags.concat('Fleet'),
+            creationDate: formatDate(item.creationDate, 'dd/MM/yyyy', 'en-US'),
+            targetDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
+            dispatchDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
+            lowestContainer: item.destinationContainers.reduce((prev: Container, curr: Container) =>
+              (prev?.currentPercentage < curr.currentPercentage ? prev : curr))
+          })))
+      );
+
+      this.deliveryRequests$.pipe(
+        map(reqs =>
+          reqs.flatMap(req => req.tags)
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .map(tag => ({ label: tag, value: tag } as SelectItem)))
+      ).subscribe(item => this.tags = item);
+  
+      this.deliveryRequests$.pipe(
+        map(reqs =>
+          reqs.flatMap(req => req.dispatchStatus)
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .map(dispatchStatus => ({ label: dispatchStatus.toString(), value: dispatchStatus.toString() } as SelectItem)))
+      ).subscribe(item => this.dispatchStatuses = item);
+  }
 
   ngOnInit() {
-    this.DeliveryRequestsService.getDeliveryRequests().subscribe((result) => {
-      this.deliveryRequests = [...result.data.deliveryRequests];
-      this.deliveryRequests = result.data.deliveryRequests.map((item: DeliveryRequest) => ({
-        ...item,
-        tags: item.destinationContainers.length == 1 ? item.tags : item.tags.concat('Fleet'),
-        creationDate: formatDate(item.creationDate, 'dd/MM/yyyy', 'en-US'),
-        targetDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
-        dispatchDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
-        lowestContainer: item.destinationContainers.reduce((prev: Container, curr: Container) =>
-          (prev?.currentPercentage < curr.currentPercentage ? prev : curr))
-      }));
-
-      this.tags = this.deliveryRequests
-        .flatMap(d => d.tags)
-        .filter((value, index, array) => {
-          return array.indexOf(value) === index;
-        })
-        .map(tag => ({ label: tag, value: tag } as SelectItem));
-
-      this.dispatchStatuses = this.deliveryRequests
-        .flatMap(d => d.dispatchStatus)
-        .filter((value, index, array) => {
-          return array.indexOf(value) === index;
-        })
-        .map(dispatchStatus => ({ label: dispatchStatus.toString(), value: dispatchStatus.toString() } as SelectItem));
-    });
+    this.store.dispatch(RequestsActions.getDeliveryRequests());
 
     this.cols = [
       { selector: 'tags', field: 'tags', header: 'Tags' },

@@ -1,8 +1,11 @@
 <div class="card">
+  <div *ngFor="let post of deliveryRequests$ | async">
+    Hello {{ post.id }}
+  </div>
   <p-table
     #dt1
     dataKey="id"
-    [value]="deliveryRequests"
+    [value]="(deliveryRequests$ | async) || selectedRequests"
     [columns]="selectedColumns"
     [paginator]="true"
     [rows]="10"

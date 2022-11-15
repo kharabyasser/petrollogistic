@@ -10,10 +10,10 @@ export interface DeliveryRequest {
     shipToAccount: Account,
     destinationContainers: Container[];
     lowestContainer: Container;
-    creationDate: Date,
-    targetDate: Date,
+    creationDate: string,
+    targetDate: string,
     rank: number,
     dispatchStatus: DispatchStatus,
     dispatchedToTruck: Truck,
-    dispatchDate: Date
+    dispatchDate: string
 }
