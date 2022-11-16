@@ -13,7 +13,7 @@ export class DeliveryRequestsEffect {
                 return this.deliveryRequestService
                     .getDeliveryRequests()
                     .pipe(
-                        map(request => RequestsActions.getDeliveryRequestsSuccess({ data: request.data })),
+                        map(request => RequestsActions.getDeliveryRequestsSuccess({ data: request })),
                         catchError(error => of(RequestsActions.getDeliveryRequestsFailure({ error: error.message }))));
             }))
     )

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { DeliveryRequest } from '../domain/deliveryrequest';
 
 const GET_DELIVERY_REQUESTS = gql`
@@ -46,11 +46,11 @@ const GET_DELIVERY_REQUESTS = gql`
 @Injectable()
 export class DeliveryRequestService {
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
-  getDeliveryRequests() : Observable<ApolloQueryResult<DeliveryRequest[]>> {
-    return this.apollo.watchQuery<DeliveryRequest[]>({
-        query: GET_DELIVERY_REQUESTS
-    }).valueChanges;
+  getDeliveryRequests(): Observable<DeliveryRequest[]> {
+    return this.apollo.watchQuery<{ deliveryRequests : DeliveryRequest[] }>({
+      query: GET_DELIVERY_REQUESTS
+    }).valueChanges.pipe(map(result => result.data.deliveryRequests));
   }
 }
