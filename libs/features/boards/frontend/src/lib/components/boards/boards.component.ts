@@ -3,12 +3,10 @@ import { FilterService, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
-import { select, Store } from '@ngrx/store';
-import * as RequestsActions from '../../+state/delivery-requests-actions';
 import { map, Observable } from 'rxjs';
-import { requestsSelector } from '../../+state/delivery-requests.selectors';
 import { formatDate } from '@angular/common';
 import { Container } from '../../domain/container';
+import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
 
 @Component({
   selector: 'petrologistic-boards',
@@ -28,8 +26,8 @@ export class BoardsComponent implements OnInit {
   accountFilterModeOptions: SelectItem[] = [];
   dispatchStatusesModeOptions: SelectItem[] = [];
 
-  constructor(private filterService: FilterService, private store: Store) {
-    this.deliveryRequests$ = this.store.pipe(select(requestsSelector))
+  constructor(private filterService: FilterService, private deliveriesFacade: DeliveryRequestsFacade) {
+    this.deliveryRequests$ = this.deliveriesFacade.deliveryRequests$
       .pipe(
         map(reqs =>
           reqs.map(item => ({
@@ -59,7 +57,7 @@ export class BoardsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.dispatch(RequestsActions.getDeliveryRequests());
+    this.deliveriesFacade.loadDeliveryRequests();
 
     this.cols = [
       { selector: 'tags', field: 'tags', header: 'Tags' },
