@@ -2,7 +2,7 @@
   <p-table
     #dt1
     dataKey="id"
-    [value]="deliveryRequests"
+    [value]="(deliveryRequests$ | async) || selectedRequests"
     [columns]="selectedColumns"
     [paginator]="true"
     [rows]="10"

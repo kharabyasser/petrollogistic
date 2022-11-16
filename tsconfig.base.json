@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@env/*": ["apps/dispatcher-ui/src/environments/environment.ts"],
       "@petrologistic/core/frontend/apollo": [
         "libs/core/frontend/apollo/src/index.ts"
       ],
