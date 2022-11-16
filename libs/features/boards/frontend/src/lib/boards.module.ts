@@ -20,6 +20,7 @@ import { DeliveryRequestService } from './services/deliveryrequest-service';
 import { CoreFrontendApolloModule } from '@petrologistic/core/frontend/apollo';
 import { EffectsModule } from '@ngrx/effects';
 import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
+import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
 
 @NgModule({
   imports: [
@@ -41,6 +42,6 @@ import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
     TableLayoutComponent,
   ],
   exports: [TableLayoutComponent],
-  providers: [DeliveryRequestService]
+  providers: [DeliveryRequestService, DeliveryRequestsFacade]
 })
 export class BoardsModule { }
