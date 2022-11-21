@@ -9,11 +9,11 @@ import { Container } from '../../domain/container';
 import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
 
 @Component({
-  selector: 'petrologistic-boards',
-  templateUrl: './boards.component.html',
-  styleUrls: ['./boards.component.scss'],
+  selector: 'petrologistic-table',
+  templateUrl: './table.component.html',
+  styleUrls: ['./table.component.scss'],
 })
-export class BoardsComponent implements OnInit {
+export class TableComponent implements OnInit {
   deliveryRequests$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
   selectedRequests: DeliveryRequest[] = [];
 

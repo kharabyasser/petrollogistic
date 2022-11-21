@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { BoardsComponent } from './components/boards/boards.component';
-import { TableLayoutComponent } from './components/layouts/table-layout/table-layout.component';
+import { TableComponent } from './components/table/table.component';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -21,6 +20,7 @@ import { CoreFrontendApolloModule } from '@petrologistic/core/frontend/apollo';
 import { EffectsModule } from '@ngrx/effects';
 import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
 import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
+import { BoardsContainerComponent } from './containers/boards-container.component';
 
 @NgModule({
   imports: [
@@ -38,10 +38,10 @@ import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
     EffectsModule.forFeature([DeliveryRequestsEffect])
   ],
   declarations: [
-    BoardsComponent,
-    TableLayoutComponent,
+    TableComponent,
+    BoardsContainerComponent
   ],
-  exports: [TableLayoutComponent],
+  exports: [BoardsContainerComponent],
   providers: [DeliveryRequestService, DeliveryRequestsFacade]
 })
 export class BoardsModule { }
