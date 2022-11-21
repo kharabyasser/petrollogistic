@@ -21,6 +21,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
 import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
 import { BoardsContainerComponent } from './containers/boards-container.component';
+import { DetailsComponent } from './components/details/details.component';
 
 @NgModule({
   imports: [
@@ -35,13 +36,10 @@ import { BoardsContainerComponent } from './containers/boards-container.componen
     KnobModule,
     CoreFrontendApolloModule,
     StoreModule.forFeature('DeliveryRequests', reducers),
-    EffectsModule.forFeature([DeliveryRequestsEffect])
+    EffectsModule.forFeature([DeliveryRequestsEffect]),
   ],
-  declarations: [
-    TableComponent,
-    BoardsContainerComponent
-  ],
+  declarations: [TableComponent, BoardsContainerComponent, DetailsComponent],
   exports: [BoardsContainerComponent],
-  providers: [DeliveryRequestService, DeliveryRequestsFacade]
+  providers: [DeliveryRequestService, DeliveryRequestsFacade],
 })
-export class BoardsModule { }
+export class BoardsModule {}
