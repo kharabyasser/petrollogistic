@@ -9,11 +9,11 @@ import { Container } from '../../domain/container';
 import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
 
 @Component({
-  selector: 'petrologistic-boards',
-  templateUrl: './boards.component.html',
-  styleUrls: ['./boards.component.scss'],
+  selector: 'petrologistic-table',
+  templateUrl: './table.component.html',
+  styleUrls: ['./table.component.scss'],
 })
-export class BoardsComponent implements OnInit {
+export class TableComponent implements OnInit {
   deliveryRequests$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
   selectedRequests: DeliveryRequest[] = [];
 
@@ -41,19 +41,19 @@ export class BoardsComponent implements OnInit {
           })))
       );
 
-      this.deliveryRequests$.pipe(
-        map(reqs =>
-          reqs.flatMap(req => req.tags)
-            .filter((value, index, array) => array.indexOf(value) === index)
-            .map(tag => ({ label: tag, value: tag } as SelectItem)))
-      ).subscribe(item => this.tags = item);
-  
-      this.deliveryRequests$.pipe(
-        map(reqs =>
-          reqs.flatMap(req => req.dispatchStatus)
-            .filter((value, index, array) => array.indexOf(value) === index)
-            .map(dispatchStatus => ({ label: dispatchStatus.toString(), value: dispatchStatus.toString() } as SelectItem)))
-      ).subscribe(item => this.dispatchStatuses = item);
+    this.deliveryRequests$.pipe(
+      map(reqs =>
+        reqs.flatMap(req => req.tags)
+          .filter((value, index, array) => array.indexOf(value) === index)
+          .map(tag => ({ label: tag, value: tag } as SelectItem)))
+    ).subscribe(item => this.tags = item);
+
+    this.deliveryRequests$.pipe(
+      map(reqs =>
+        reqs.flatMap(req => req.dispatchStatus)
+          .filter((value, index, array) => array.indexOf(value) === index)
+          .map(dispatchStatus => ({ label: dispatchStatus.toString(), value: dispatchStatus.toString() } as SelectItem)))
+    ).subscribe(item => this.dispatchStatuses = item);
   }
 
   ngOnInit() {
@@ -202,5 +202,22 @@ export class BoardsComponent implements OnInit {
 
   spread(items: any[]): any {
     return [...items];
+  }
+
+  onRowSelect(event: any) {
+    this.deliveriesFacade.addSelectedRequest(event.data.id);
+  }
+
+  onHeaderSelectionToggle(event: any) {
+    if (event.checked) {
+      this.deliveriesFacade.addAllRequestsToSelection();
+    }
+    else {
+      this.deliveriesFacade.removeAllRequestsFromSelection();
+    }
+  }
+
+  onRowUnselect(event: any) {
+    this.deliveriesFacade.removeSelectedRequest(event.data.id);
   }
 }

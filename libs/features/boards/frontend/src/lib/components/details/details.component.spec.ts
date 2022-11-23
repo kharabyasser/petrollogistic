@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableLayoutComponent } from './table-layout.component';
+import { DetailsComponent } from './details.component';
 
-describe('TableLayoutComponent', () => {
-  let component: TableLayoutComponent;
-  let fixture: ComponentFixture<TableLayoutComponent>;
+describe('DetailsComponent', () => {
+  let component: DetailsComponent;
+  let fixture: ComponentFixture<DetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TableLayoutComponent],
+      declarations: [DetailsComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TableLayoutComponent);
+    fixture = TestBed.createComponent(DetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

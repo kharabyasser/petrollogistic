@@ -17,6 +17,9 @@
     scrollDirection="both"
     selectionMode="multiple"
     [(selection)]="selectedRequests"
+    (onRowSelect)="onRowSelect($event)"
+    (onRowUnselect)="onRowUnselect($event)"
+    (onHeaderCheckboxToggle)="onHeaderSelectionToggle($event)"
     sortMode="single"
     [globalFilterFields]="[
       'tags',

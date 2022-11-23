@@ -5,6 +5,7 @@ import { DeliveryRequest } from "../domain/deliveryrequest";
 import * as RequestsActions from './delivery-requests-actions';
 
 export interface State extends EntityState<DeliveryRequest> {
+    selectedDeliveries: string[];
     isLoading: boolean;
     isLoaded: boolean;
     error: string | null;
@@ -12,10 +13,10 @@ export interface State extends EntityState<DeliveryRequest> {
 
 export const adapter : EntityAdapter<DeliveryRequest> = 
    createEntityAdapter<DeliveryRequest>({
-
    });
 
 export const initialState: State = adapter.getInitialState({
+    selectedDeliveries: [],
     isLoading: false,
     isLoaded: false,
     error: null
@@ -34,5 +35,17 @@ export const reducers = createReducer(
          isLoading: false, 
          isLoaded: false,
          error: action.error 
-        }))
+        })),
+    on(RequestsActions.addSelectedDeliveryRequest, (state, action) => ({
+        ...state, 
+        selectedDeliveries: [...state.selectedDeliveries, action.data]
+    })),
+    on(RequestsActions.removeSelectedDeliveryRequest, (state, action) => ({
+        ...state, 
+        selectedDeliveries: state.selectedDeliveries.filter(x => x != action.data)
+    })),
+    on(RequestsActions.toggleRequestsSelection, (state, action) => ({
+        ...state, 
+        selectedDeliveries: action.data ? Object.values(state.entities).map(x => x ? x.id : '') : []
+    }))
 );
