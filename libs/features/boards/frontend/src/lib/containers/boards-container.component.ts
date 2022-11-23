@@ -19,13 +19,13 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ]
 })
 export class BoardsContainerComponent {
-  menuState = '';
+  detailsState = '';
 
   constructor() {
-    this.menuState = 'in';
+    this.detailsState = 'out';
   }
 
   toggleMenu(){
-    this.menuState = this.menuState === 'out' ? 'in' : 'out';
+    this.detailsState = this.detailsState === 'out' ? 'in' : 'out';
   }
 }
