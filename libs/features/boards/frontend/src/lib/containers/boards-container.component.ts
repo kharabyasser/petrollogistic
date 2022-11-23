@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { DeliveryRequestsFacade } from '../+state/delivery-requests-facade';
 
 @Component({
   selector: 'petrologistic-boards-container',
@@ -21,11 +22,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class BoardsContainerComponent {
   detailsState = '';
 
-  constructor() {
-    this.detailsState = 'out';
-  }
-
-  toggleMenu(){
-    this.detailsState = this.detailsState === 'out' ? 'in' : 'out';
+  constructor(private deliveriesFacade: DeliveryRequestsFacade) {
+    this.deliveriesFacade.selectedRequests$.subscribe(x => 
+      this.detailsState = x.length > 0 ? 'in' : 'out');
   }
 }
