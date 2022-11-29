@@ -1,5 +1,11 @@
 <div class="flex align-items-stretch flex-wrap card-container blue-container">
-    <petrologistic-table [@slideInOut]="detailsState"></petrologistic-table>
-    <petrologistic-details ></petrologistic-details>
+  <petrologistic-table
+    [@slideInOut]="detailsState"
+    (@slideInOut.done)="onAnimationEvent($event)"
+    (@slideInOut.start)="onAnimationEvent($event)"
+  ></petrologistic-table>
+  <petrologistic-details
+    class="details"
+    *ngIf="detailsvisible"
+  ></petrologistic-details>
 </div>
-    

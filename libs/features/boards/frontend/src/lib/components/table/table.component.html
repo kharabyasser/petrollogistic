@@ -266,7 +266,9 @@
             <p-knob
               [(ngModel)]="request[col.field].currentPercentage"
               [valueColor]="
-                request[col.field].currentPercentage < 15 ? '#DF0404' : '#3C82F6'
+                request[col.field].currentPercentage < 15
+                  ? '#DF0404'
+                  : '#3C82F6'
               "
             ></p-knob>
             <button

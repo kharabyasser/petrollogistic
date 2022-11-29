@@ -22,6 +22,7 @@ import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
 import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
 import { BoardsContainerComponent } from './containers/boards-container.component';
 import { DetailsComponent } from './components/details/details.component';
+import { MapsComponent } from './components/maps/maps.component';
 
 @NgModule({
   imports: [
@@ -38,7 +39,7 @@ import { DetailsComponent } from './components/details/details.component';
     StoreModule.forFeature('DeliveryRequests', reducers),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
   ],
-  declarations: [TableComponent, BoardsContainerComponent, DetailsComponent],
+  declarations: [TableComponent, BoardsContainerComponent, DetailsComponent, MapsComponent],
   exports: [BoardsContainerComponent],
   providers: [DeliveryRequestService, DeliveryRequestsFacade],
 })
