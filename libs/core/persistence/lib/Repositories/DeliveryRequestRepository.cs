@@ -79,8 +79,8 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.Id, (f, u) => Guid.NewGuid())
       .RuleFor(d => d.Coordinates, (f, u) => new GeoCoordinates
       {
-        Longitude = f.Address.Longitude(),
-        Latitude = f.Address.Latitude()
+        Longitude = f.Address.Longitude(-73.97, -73.38),
+        Latitude = f.Address.Latitude(45.40, 45.70)
       })
       .RuleFor(d => d.Capacity, (f, u) => f.Random.Number())
       .RuleFor(d => d.IdealDeliveryQuantity, (f, u) => f.Random.Number())

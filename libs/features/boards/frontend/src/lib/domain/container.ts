@@ -6,5 +6,7 @@ export interface Container {
     currentPercentage: number,
     product: Product,
     requestedAmount: number,
-    requestedAmountUnit: UnitOfMeasurement
+    requestedAmountUnit: UnitOfMeasurement,
+    latitude: number,
+    longtitude: number,
 }
