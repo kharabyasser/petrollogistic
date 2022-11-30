@@ -1,6 +1,8 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Map, Marker } from 'maplibre-gl';
+import { map, Observable, of } from 'rxjs';
 import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
+import { DeliveryRequest } from '../../domain/deliveryrequest';
 
 @Component({
   selector: 'petrologistic-maps',
@@ -9,10 +11,35 @@ import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
 })
 export class MapsComponent implements AfterViewInit, OnDestroy {
 
-  map: Map | undefined;
+  map!: Map;
   @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
 
+  selectedDeliveries$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
+  deliveryRequests: DeliveryRequest[] = [];
+
   constructor(private deliveriesFacade: DeliveryRequestsFacade) {
+    this.deliveriesFacade.deliveryRequests$.subscribe(deliveries => this.deliveryRequests = deliveries);
+
+    this.deliveriesFacade.selectedRequests$
+      .subscribe(ids => {
+        const selectedDeliveries = this.deliveryRequests.filter(d => ids.includes(d.id));
+
+        selectedDeliveries.forEach(d => {
+          d.destinationContainers.forEach(container => {
+            new Marker({ color: "#FF0000" })
+              .setLngLat([container.longtitude, container.latitude])
+              .addTo(this.map);
+          });
+
+          const allCoordinates = selectedDeliveries.map(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]))[0];
+          const padding = 0.1;
+
+          this.map.fitBounds([
+            [Math.max(...allCoordinates.map(x => x[0])) + padding, Math.max(...allCoordinates.map(x => x[1])) + padding],
+            [Math.min(...allCoordinates.map(x => x[0])) - padding, Math.min(...allCoordinates.map(x => x[1])) - padding]
+          ]);
+        })
+      });
   }
 
   ngAfterViewInit() {
@@ -25,10 +52,6 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
       zoom: initialState.zoom,
       attributionControl: false
     });
-
-    new Marker({color: "#FF0000"})
-    .setLngLat([initialState.lng, initialState.lat])
-    .addTo(this.map);
   }
 
   ngOnDestroy() {

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ApolloQueryResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { DeliveryRequest } from '../domain/deliveryrequest';
@@ -30,7 +29,9 @@ const GET_DELIVERY_REQUESTS = gql`
         description,
       },
       requestedAmount,
-      requestedAmountUnit
+      requestedAmountUnit,
+      latitude,
+      longtitude
     },
     creationDate,
     targetDate,
@@ -49,7 +50,7 @@ export class DeliveryRequestService {
   constructor(private apollo: Apollo) { }
 
   getDeliveryRequests(): Observable<DeliveryRequest[]> {
-    return this.apollo.watchQuery<{ deliveryRequests : DeliveryRequest[] }>({
+    return this.apollo.watchQuery<{ deliveryRequests: DeliveryRequest[] }>({
       query: GET_DELIVERY_REQUESTS
     }).valueChanges.pipe(map(result => result.data.deliveryRequests));
   }
