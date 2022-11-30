@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Map, Marker } from 'maplibre-gl';
-import { map, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
 
@@ -12,6 +12,7 @@ import { DeliveryRequest } from '../../domain/deliveryrequest';
 export class MapsComponent implements AfterViewInit, OnDestroy {
 
   map!: Map;
+  currentMarkers!: Marker[];
   @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
 
   selectedDeliveries$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
@@ -24,14 +25,22 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
       .subscribe(ids => {
         const selectedDeliveries = this.deliveryRequests.filter(d => ids.includes(d.id));
 
+        this.currentMarkers?.forEach(m =>
+          m.remove()
+        );
+
+        this.currentMarkers = [];
+
         selectedDeliveries.forEach(d => {
           d.destinationContainers.forEach(container => {
-            new Marker({ color: "#FF0000" })
-              .setLngLat([container.longtitude, container.latitude])
-              .addTo(this.map);
+            const marker = new Marker({ color: "#FF0000" })
+              .setLngLat([container.longtitude, container.latitude]);
+            this.currentMarkers.push(marker);
+
+            marker.addTo(this.map);
           });
 
-          const allCoordinates = selectedDeliveries.map(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]))[0];
+          const allCoordinates = selectedDeliveries.flatMap(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]));
           const padding = 0.1;
 
           this.map.fitBounds([
@@ -45,13 +54,15 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     const initialState = { lng: 139.7525, lat: 35.6846, zoom: 14 };
 
-    this.map = new Map({
-      container: this.mapContainer.nativeElement,
-      style: `https://api.maptiler.com/maps/streets-v2/style.json?key=9GLc7lJKzQasVymrF28T`,
-      center: [initialState.lng, initialState.lat],
-      zoom: initialState.zoom,
-      attributionControl: false
-    });
+    if (this.map == null) {
+      this.map = new Map({
+        container: this.mapContainer.nativeElement,
+        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=9GLc7lJKzQasVymrF28T`,
+        center: [initialState.lng, initialState.lat],
+        zoom: initialState.zoom,
+        attributionControl: false
+      });
+    }
   }
 
   ngOnDestroy() {

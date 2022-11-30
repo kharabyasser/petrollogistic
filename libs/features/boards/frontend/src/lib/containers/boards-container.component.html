@@ -6,6 +6,6 @@
   ></petrologistic-table>
   <petrologistic-details
     class="details"
-    *ngIf="detailsvisible"
+    [hidden]="!detailsvisible"
   ></petrologistic-details>
 </div>
