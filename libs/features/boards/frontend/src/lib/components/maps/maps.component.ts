@@ -60,7 +60,7 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
         style: `https://api.maptiler.com/maps/streets-v2/style.json?key=9GLc7lJKzQasVymrF28T`,
         center: [initialState.lng, initialState.lat],
         zoom: initialState.zoom,
-        attributionControl: false
+        attributionControl: false,
       });
     }
   }

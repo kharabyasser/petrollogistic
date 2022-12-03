@@ -1,5 +1,6 @@
-<div class="flex align-items-stretch flex-wrap card-container blue-container">
+<div class="flex align-items-stretch flex-wrap container">
   <petrologistic-table
+    class="list"
     [@slideInOut]="detailsState"
     (@slideInOut.done)="onAnimationEvent($event)"
     (@slideInOut.start)="onAnimationEvent($event)"

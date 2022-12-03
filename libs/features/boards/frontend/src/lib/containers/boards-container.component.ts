@@ -9,10 +9,10 @@ import { DeliveryRequestsFacade } from '../+state/delivery-requests-facade';
   animations: [
     trigger('slideInOut', [
       state('in', style({
-        width: '80%'
+        width: '80vw'
       })),
       state('out', style({
-        width: '100%'
+        width: '100vw'
       })),
       transition('in => out', animate('400ms ease-in-out')),
       transition('out => in', animate('400ms ease-in-out'))
@@ -21,7 +21,7 @@ import { DeliveryRequestsFacade } from '../+state/delivery-requests-facade';
 })
 export class BoardsContainerComponent {
   detailsState = '';
-  detailsvisible = true;
+  detailsvisible = false;
 
   constructor(private deliveriesFacade: DeliveryRequestsFacade) {
     this.deliveriesFacade.selectedRequests$.subscribe(x => 
