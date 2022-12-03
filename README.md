@@ -19,3 +19,6 @@ nx nrwl (used steps to create petrollogistic's workspace)
 - init new workspace `npx create-nx-workspace` "petrologistic", app template.<br />
 - add nx Angular `npm install --save-dev @nrwl/angular`.<br /> 
 - add nx Dotnet `npm install --save-dev @nx-dotnet/core`.<br />
+
+# openrouteservice api interactive examples: 
+https://openrouteservice.org/dev/#/api-docs/v2/directions/
