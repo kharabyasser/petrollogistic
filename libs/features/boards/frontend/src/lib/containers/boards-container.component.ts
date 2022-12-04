@@ -21,19 +21,9 @@ import { DeliveryRequestsFacade } from '../+state/delivery-requests-facade';
 })
 export class BoardsContainerComponent {
   detailsState = '';
-  detailsvisible = false;
 
   constructor(private deliveriesFacade: DeliveryRequestsFacade) {
     this.deliveriesFacade.selectedRequests$.subscribe(x => 
       this.detailsState = x.length > 0 ? 'in' : 'out');
-  }
-
-  onAnimationEvent(event: any) {
-    if (event.fromState === 'out') {
-      this.detailsvisible = true;
-    }
-    else if (event.fromState === 'in' && event.phaseName === 'done') {
-      this.detailsvisible = false;
-    }
   }
 }
