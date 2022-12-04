@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { TableComponent } from './components/table/table.component';
-
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -30,6 +30,7 @@ import { MapsComponent } from './components/maps/maps.component';
     ButtonModule,
     InputTextModule,
     BrowserModule,
+    HttpClientModule,
     MultiSelectModule,
     FormsModule,
     TagModule,
