@@ -14,6 +14,9 @@ export class DetailsComponent {
 
   selectedCoordinates: number[][] = [];
 
+  approxDrivingDistance = 0;
+  approxDrivingDuration = 0;
+
   constructor(private deliveriesFacade: DeliveryRequestsFacade) {
     this.deliveriesFacade.deliveryRequests$.subscribe(deliveries => this.deliveryRequests = deliveries);
 
@@ -23,5 +26,13 @@ export class DetailsComponent {
 
         this.selectedCoordinates = this.selectedDeliveryRequests .flatMap(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]));
       });
+  }
+
+  onDistanceCalculated(distance: number) {
+    this.approxDrivingDistance = distance;
+  }
+
+  onDurationCalculated(duration: number) {
+    this.approxDrivingDuration = duration;
   }
 }

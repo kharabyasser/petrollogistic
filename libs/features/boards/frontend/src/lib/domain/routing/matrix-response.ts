@@ -1,6 +1,6 @@
 export interface MatrixResponse {
-    distances: number[][4],
-    destinations: Destination[],
+    durations: number[][],
+    distances: number[][],
     sources: Destination[],
     matadata: any
 }

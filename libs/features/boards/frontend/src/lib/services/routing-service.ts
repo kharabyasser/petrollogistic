@@ -12,7 +12,7 @@ export class RoutingService {
     constructor(private http: HttpClient) { }
 
     getMatrix(body: MatrixRequest) {
-        return this.http.post<MatrixResponse>(environment.openroutingserviceapi, body);
+        return this.http.post<MatrixResponse>(`${environment.openroutingserviceapi}/matrix/driving-car`, body);
     }
 
     getDirections(body: DirectionsRequest) {

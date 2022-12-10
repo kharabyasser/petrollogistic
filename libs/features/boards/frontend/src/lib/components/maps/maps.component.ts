@@ -1,8 +1,8 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Map, Marker } from 'maplibre-gl';
-import { Observable } from 'rxjs';
-import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
-import { DeliveryRequest } from '../../domain/deliveryrequest';
+import { RoutingMetric } from '../../domain/routing/enums/routing-metric';
+import { RoutingUnit } from '../../domain/routing/enums/routing-unit';
+import { RoutingService } from '../../services/routing-service';
 
 @Component({
   selector: 'petrologistic-maps',
@@ -16,8 +16,11 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
 
   @Input() deliveriesCoordinates!: number[][];
+  
+  @Output() approxDrivingTimeEvent = new EventEmitter<number>();
+  @Output() approxDrivingDistanceEvent = new EventEmitter<number>();
 
-  constructor() {
+  constructor(private routingService: RoutingService) {
   }
 
   ngAfterViewInit() {
@@ -54,6 +57,17 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
       [Math.max(...this.deliveriesCoordinates.map(x => x[0])) + padding, Math.max(...this.deliveriesCoordinates.map(x => x[1])) + padding],
       [Math.min(...this.deliveriesCoordinates.map(x => x[0])) - padding, Math.min(...this.deliveriesCoordinates.map(x => x[1])) - padding]
     ]);
+
+    // Calculating matrix.
+    this.routingService.getMatrix(
+      {
+        locations: this.deliveriesCoordinates,
+        metrics: [RoutingMetric.distance, RoutingMetric.duration],
+        units: RoutingUnit.km
+      }).subscribe(x => {
+        this.approxDrivingDistanceEvent.emit(Math.max(...x.distances.flat(1)));
+        this.approxDrivingTimeEvent.emit(Math.max(...x.durations.flat(1)));
+      });
   }
 
   ngOnDestroy() {

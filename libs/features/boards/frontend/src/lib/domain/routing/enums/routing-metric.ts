@@ -1,5 +1,5 @@
 export enum RoutingMetric {
-    default = 0,
-    distance = 1,
-    duration = 2
+    default = "default",
+    distance = "distance",
+    duration = "duration"
 }

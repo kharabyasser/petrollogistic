@@ -1,5 +1,9 @@
 <div class="vertical-align-baseline details-wrapper">
-  <petrologistic-maps [deliveriesCoordinates]="selectedCoordinates"></petrologistic-maps>
+  <petrologistic-maps
+    [deliveriesCoordinates]="selectedCoordinates"
+    (approxDrivingDistanceEvent)="onDistanceCalculated($event)"
+    (approxDrivingTimeEvent)="onDurationCalculated($event)"
+  ></petrologistic-maps>
   <div class="flex justify-content-between flex-wrap">
     <table>
       <tr>
@@ -9,7 +13,7 @@
         <th style="color: rgb(167, 167, 167)">Driving Time</th>
       </tr>
       <td></td>
-      <td>2h 35mins</td>
+      <td>{{ approxDrivingDuration }} m</td>
     </table>
     <table>
       <tr>
@@ -19,7 +23,7 @@
         <th style="color: rgb(167, 167, 167)">Driving Distance</th>
       </tr>
       <td></td>
-      <td>22 Km</td>
+      <td>{{ approxDrivingDistance }} Km</td>
     </table>
     <table>
       <tr>

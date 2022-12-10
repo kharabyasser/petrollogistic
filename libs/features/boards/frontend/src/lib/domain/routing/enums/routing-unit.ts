@@ -1,6 +1,6 @@
 export enum RoutingUnit {
-    default = 0,
-    km = 1,
-    m = 2,
-    mi = 3
+    default = "default",
+    km = "km",
+    m = "m",
+    mi = "mi"
 }
