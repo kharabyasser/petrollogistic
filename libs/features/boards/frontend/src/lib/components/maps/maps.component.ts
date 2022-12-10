@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input } from '@angular/core';
 import { Map, Marker } from 'maplibre-gl';
 import { Observable } from 'rxjs';
 import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
@@ -14,6 +14,8 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
   map!: Map;
   currentMarkers!: Marker[];
   @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
+
+  @Input() deliveriesCoordinates!: number[][];
 
   selectedDeliveries$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
   deliveryRequests: DeliveryRequest[] = [];
