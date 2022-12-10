@@ -17,8 +17,8 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
 
   @Input() deliveriesCoordinates!: number[][];
   
-  @Output() approxDrivingTimeEvent = new EventEmitter<number>();
   @Output() approxDrivingDistanceEvent = new EventEmitter<number>();
+  @Output() approxDrivingTimeEvent = new EventEmitter<number>();
 
   constructor(private routingService: RoutingService) {
   }
