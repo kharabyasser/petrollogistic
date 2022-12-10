@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { Map, Marker } from 'maplibre-gl';
 import { Observable } from 'rxjs';
 import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
@@ -17,40 +17,7 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
 
   @Input() deliveriesCoordinates!: number[][];
 
-  selectedDeliveries$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
-  deliveryRequests: DeliveryRequest[] = [];
-
-  constructor(private deliveriesFacade: DeliveryRequestsFacade) {
-    this.deliveriesFacade.deliveryRequests$.subscribe(deliveries => this.deliveryRequests = deliveries);
-
-    this.deliveriesFacade.selectedRequests$
-      .subscribe(ids => {
-        const selectedDeliveries = this.deliveryRequests.filter(d => ids.includes(d.id));
-
-        this.currentMarkers?.forEach(m =>
-          m.remove()
-        );
-
-        this.currentMarkers = [];
-
-        selectedDeliveries.forEach(d => {
-          d.destinationContainers.forEach(container => {
-            const marker = new Marker({ color: "#FF0000" })
-              .setLngLat([container.longtitude, container.latitude]);
-            this.currentMarkers.push(marker);
-
-            marker.addTo(this.map);
-          });
-
-          const allCoordinates = selectedDeliveries.flatMap(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]));
-          const padding = 0.1;
-
-          this.map.fitBounds([
-            [Math.max(...allCoordinates.map(x => x[0])) + padding, Math.max(...allCoordinates.map(x => x[1])) + padding],
-            [Math.min(...allCoordinates.map(x => x[0])) - padding, Math.min(...allCoordinates.map(x => x[1])) - padding]
-          ]);
-        })
-      });
+  constructor() {
   }
 
   ngAfterViewInit() {
@@ -65,6 +32,28 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
         attributionControl: false,
       });
     }
+  }
+
+  ngOnChanges() {
+    // Cleaning old markers.
+    this.currentMarkers?.forEach(m =>
+      m.remove()
+    );
+    this.currentMarkers = [];
+
+    // Adding new markers.
+    this.deliveriesCoordinates.forEach(c => {
+      const marker = new Marker({ color: "#FF0000" }).setLngLat([c[0], c[1]]);
+      this.currentMarkers.push(marker);
+      marker.addTo(this.map);
+    });
+
+    // Fiting all markers bounds.
+    const padding = 0.1;
+    this.map.fitBounds([
+      [Math.max(...this.deliveriesCoordinates.map(x => x[0])) + padding, Math.max(...this.deliveriesCoordinates.map(x => x[1])) + padding],
+      [Math.min(...this.deliveriesCoordinates.map(x => x[0])) - padding, Math.min(...this.deliveriesCoordinates.map(x => x[1])) - padding]
+    ]);
   }
 
   ngOnDestroy() {
