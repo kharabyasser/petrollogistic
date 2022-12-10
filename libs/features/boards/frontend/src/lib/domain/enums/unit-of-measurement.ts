@@ -1,5 +1,5 @@
 export enum UnitOfMeasurement {
-    Default = 0,
-    Litters = 1,
-    Galon = 2
+    default = 0,
+    litters = 1,
+    galon = 2
 }

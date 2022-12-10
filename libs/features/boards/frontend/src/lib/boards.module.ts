@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { TableComponent } from './components/table/table.component';
-
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -23,6 +23,7 @@ import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
 import { BoardsContainerComponent } from './containers/boards-container.component';
 import { DetailsComponent } from './components/details/details.component';
 import { MapsComponent } from './components/maps/maps.component';
+import { RoutingService } from './services/routing-service';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { MapsComponent } from './components/maps/maps.component';
     ButtonModule,
     InputTextModule,
     BrowserModule,
+    HttpClientModule,
     MultiSelectModule,
     FormsModule,
     TagModule,
@@ -41,6 +43,6 @@ import { MapsComponent } from './components/maps/maps.component';
   ],
   declarations: [TableComponent, BoardsContainerComponent, DetailsComponent, MapsComponent],
   exports: [BoardsContainerComponent],
-  providers: [DeliveryRequestService, DeliveryRequestsFacade],
+  providers: [DeliveryRequestService, DeliveryRequestsFacade, RoutingService],
 })
 export class BoardsModule {}

@@ -1,5 +1,5 @@
 export enum AccountType {
-    Default = 0,
-    Billing = 1,
-    Shipping = 2
+    default = 0,
+    billing = 1,
+    shipping = 2
 }

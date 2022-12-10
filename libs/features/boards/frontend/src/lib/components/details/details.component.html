@@ -1,3 +1,39 @@
-<div>
-  <petrologistic-maps></petrologistic-maps>
+<div class="vertical-align-baseline details-wrapper">
+  <petrologistic-maps
+    [deliveriesCoordinates]="selectedCoordinates"
+    (approxDrivingDistanceEvent)="onDistanceCalculated($event)"
+    (approxDrivingTimeEvent)="onDurationCalculated($event)"
+  ></petrologistic-maps>
+  <div class="flex justify-content-between flex-wrap">
+    <table>
+      <tr>
+        <th>
+          <p-tag severity="success"><i class="pi pi-clock"></i></p-tag>
+        </th>
+        <th style="color: rgb(167, 167, 167)">Driving Time</th>
+      </tr>
+      <td></td>
+      <td>{{ approxDrivingDuration }} m</td>
+    </table>
+    <table>
+      <tr>
+        <th>
+          <p-tag severity="info"><i class="pi pi-car"></i></p-tag>
+        </th>
+        <th style="color: rgb(167, 167, 167)">Driving Distance</th>
+      </tr>
+      <td></td>
+      <td>{{ approxDrivingDistance }} Km</td>
+    </table>
+    <table>
+      <tr>
+        <th>
+          <p-tag severity="warning"><i class="pi pi-align-justify"></i></p-tag>
+        </th>
+        <th style="color: rgb(167, 167, 167); text-align: left">Selected</th>
+      </tr>
+      <td></td>
+      <td>4 Req (7 Cnt)</td>
+    </table>
+  </div>
 </div>
