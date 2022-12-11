@@ -15,7 +15,8 @@ export class DetailsComponent {
   selectedCoordinates: number[][] = [];
 
   approxDrivingDistance = 0;
-  approxDrivingDuration = 0;
+  approxDrivingDuration = '';
+  selectedRequests = 0;
 
   constructor(private deliveriesFacade: DeliveryRequestsFacade) {
     this.deliveriesFacade.deliveryRequests$.subscribe(deliveries => this.deliveryRequests = deliveries);
@@ -24,7 +25,9 @@ export class DetailsComponent {
       .subscribe(ids => {
         this.selectedDeliveryRequests = this.deliveryRequests.filter(d => ids.includes(d.id));
 
-        this.selectedCoordinates = this.selectedDeliveryRequests .flatMap(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]));
+        this.selectedCoordinates = this.selectedDeliveryRequests.flatMap(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]));
+
+        this.selectedRequests = ids.length;
       });
   }
 
@@ -33,6 +36,11 @@ export class DetailsComponent {
   }
 
   onDurationCalculated(duration: number) {
-    this.approxDrivingDuration = duration;
+    if (duration === 0) {
+      this.approxDrivingDuration = '';
+      return;
+    }
+
+    this.approxDrivingDuration = new Date(duration * 1000).toISOString().slice(11, 16).replace(':', 'h') + 'm';
   }
 }

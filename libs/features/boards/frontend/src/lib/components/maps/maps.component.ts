@@ -16,7 +16,7 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
 
   @Input() deliveriesCoordinates!: number[][];
-  
+
   @Output() approxDrivingDistanceEvent = new EventEmitter<number>();
   @Output() approxDrivingTimeEvent = new EventEmitter<number>();
 
@@ -59,15 +59,22 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
     ]);
 
     // Calculating matrix.
-    this.routingService.getMatrix(
-      {
-        locations: this.deliveriesCoordinates,
-        metrics: [RoutingMetric.distance, RoutingMetric.duration],
-        units: RoutingUnit.km
-      }).subscribe(x => {
-        this.approxDrivingDistanceEvent.emit(Math.max(...x.distances.flat(1)));
-        this.approxDrivingTimeEvent.emit(Math.max(...x.durations.flat(1)));
-      });
+    if (this.deliveriesCoordinates.length > 1) {
+      this.routingService.getMatrix(
+        {
+          locations: this.deliveriesCoordinates,
+          metrics: [RoutingMetric.distance, RoutingMetric.duration],
+          units: RoutingUnit.km
+        }).subscribe(x => {
+          this.approxDrivingDistanceEvent.emit(Math.max(...x.distances.map(a => a.reduce((partialsum, d) => partialsum + d, 0))));
+          this.approxDrivingTimeEvent.emit(...x.durations.map(a => a.reduce((partialsum, d) => partialsum + d, 0)));
+        });
+    }
+    else 
+    {
+      this.approxDrivingDistanceEvent.emit(0);
+      this.approxDrivingTimeEvent.emit(0);
+    }
   }
 
   ngOnDestroy() {

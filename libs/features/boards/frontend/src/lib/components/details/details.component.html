@@ -13,7 +13,9 @@
         <th style="color: rgb(167, 167, 167)">Driving Time</th>
       </tr>
       <td></td>
-      <td>{{ approxDrivingDuration }} m</td>
+      <td>
+        {{ approxDrivingDuration === '' ? '-' : approxDrivingDuration }}
+      </td>
     </table>
     <table>
       <tr>
@@ -23,7 +25,13 @@
         <th style="color: rgb(167, 167, 167)">Driving Distance</th>
       </tr>
       <td></td>
-      <td>{{ approxDrivingDistance }} Km</td>
+      <td>
+        {{
+          approxDrivingDistance === 0
+            ? '-'
+            : (approxDrivingDistance | number: '1.0-2') + "Km"
+        }}
+      </td>
     </table>
     <table>
       <tr>
@@ -33,7 +41,7 @@
         <th style="color: rgb(167, 167, 167); text-align: left">Selected</th>
       </tr>
       <td></td>
-      <td>4 Req (7 Cnt)</td>
+      <td>{{ selectedRequests }} Req(s) </td>
     </table>
   </div>
 </div>
