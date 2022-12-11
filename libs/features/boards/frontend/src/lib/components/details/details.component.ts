@@ -16,7 +16,38 @@ export class DetailsComponent {
 
   approxDrivingDistance = 0;
   approxDrivingDuration = '';
-  selectedRequests = 0;
+  selectedRequestsCount = 0;
+
+  basicData: any;
+
+  horizontalOptions = {
+    indexAxis: 'y',
+    plugins: {
+      legend: {
+        labels: {
+          color: '#495057'
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#495057'
+        },
+        grid: {
+          color: '#FFFFFF'
+        }
+      },
+      y: {
+        ticks: {
+          color: '#495057'
+        },
+        grid: {
+          color: '#FFFFFF'
+        }
+      }
+    }
+  };
 
   constructor(private deliveriesFacade: DeliveryRequestsFacade) {
     this.deliveriesFacade.deliveryRequests$.subscribe(deliveries => this.deliveryRequests = deliveries);
@@ -24,10 +55,29 @@ export class DetailsComponent {
     this.deliveriesFacade.selectedRequests$
       .subscribe(ids => {
         this.selectedDeliveryRequests = this.deliveryRequests.filter(d => ids.includes(d.id));
-
         this.selectedCoordinates = this.selectedDeliveryRequests.flatMap(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]));
+        this.selectedRequestsCount = ids.length;
 
-        this.selectedRequests = ids.length;
+        const productsData = this.selectedDeliveryRequests
+        .flatMap(r => r.destinationContainers.map(c => ({
+          label: c.product.description,
+          amount: c.requestedAmount,
+          color: c.requestedAmount > 1500 ? '#EC407A' : '#AB47BC'
+        })));
+
+        this.basicData = {
+          labels: productsData.map(d => d.label),
+          datasets: [
+            {
+              label: 'Products',
+              backgroundColor: productsData.map(d => d.color),
+              borderColor: productsData.map(d =>  d.color),
+              data: productsData.map(d => d.amount),
+              maxBarThickness: 30,
+              borderWidth: 1
+            }
+          ]
+        };
       });
   }
 

@@ -41,8 +41,11 @@
         <th style="color: rgb(167, 167, 167); text-align: left">Selected</th>
       </tr>
       <td></td>
-      <td>{{ selectedRequests }} Req(s) </td>
+      <td>{{ selectedRequestsCount }} Req(s) </td>
     </table>
+  </div>
+  <div class="card">
+    <p-chart type="bar" [data]="basicData" [options]="horizontalOptions"></p-chart>
   </div>
   <p-divider></p-divider>
 </div>
