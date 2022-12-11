@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
 import { KnobModule } from 'primeng/knob';
+import { DividerModule } from 'primeng/divider';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './+state/delivery-requests-reducer';
@@ -35,6 +36,7 @@ import { RoutingService } from './services/routing-service';
     MultiSelectModule,
     FormsModule,
     TagModule,
+    DividerModule,
     DropdownModule,
     KnobModule,
     CoreFrontendApolloModule,
