@@ -2,3 +2,27 @@
     width: 20vw;
     padding: 7px;
 }
+
+.metric {
+    margin: 10px !important;
+}
+
+.details-wrapper {
+    overflow-y:scroll;
+    max-height: 100vh;
+}
+
+.container-fieldset {
+    margin: 8px;
+}
+
+.container-knob {
+    margin-right: 15px;
+}
+
+.fieldset-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}

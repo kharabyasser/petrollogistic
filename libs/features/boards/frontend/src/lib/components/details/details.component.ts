@@ -24,9 +24,7 @@ export class DetailsComponent {
     indexAxis: 'y',
     plugins: {
       legend: {
-        labels: {
-          color: '#495057'
-        }
+        display: false
       }
     },
     scales: {
@@ -62,14 +60,13 @@ export class DetailsComponent {
         .flatMap(r => r.destinationContainers.map(c => ({
           label: c.product.description,
           amount: c.requestedAmount,
-          color: c.requestedAmount > 1500 ? '#EC407A' : '#AB47BC'
+          color: c.requestedAmount > 1500 ? '#FF0049' : '#33C4FF'
         })));
 
         this.basicData = {
           labels: productsData.map(d => d.label),
           datasets: [
             {
-              label: 'Products',
               backgroundColor: productsData.map(d => d.color),
               borderColor: productsData.map(d =>  d.color),
               data: productsData.map(d => d.amount),
