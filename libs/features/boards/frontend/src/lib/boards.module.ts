@@ -13,6 +13,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { KnobModule } from 'primeng/knob';
 import { DividerModule } from 'primeng/divider';
 import { ChartModule } from 'primeng/chart';
+import { AccordionModule } from 'primeng/accordion';
+import { FieldsetModule } from 'primeng/fieldset';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './+state/delivery-requests-reducer';
@@ -41,7 +43,9 @@ import { RoutingService } from './services/routing-service';
     DropdownModule,
     KnobModule,
     ChartModule,
+    AccordionModule,
     CoreFrontendApolloModule,
+    FieldsetModule,
     StoreModule.forFeature('DeliveryRequests', reducers),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
   ],
