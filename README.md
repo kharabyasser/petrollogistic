@@ -22,3 +22,5 @@ nx nrwl (used steps to create petrollogistic's workspace)
 
 # openrouteservice api interactive examples: 
 https://openrouteservice.org/dev/#/api-docs/v2/directions/
+# openrouteservice docker installation
+https://giscience.github.io/openrouteservice/installation/Running-with-Docker.html
