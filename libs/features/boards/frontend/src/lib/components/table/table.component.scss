@@ -5,11 +5,13 @@
 :host ::ng-deep .p-datatable .p-datatable-thead>tr>th {
     position: -webkit-sticky;
     position: sticky;
-    top: 0rem;
+    padding-left: 0;
+    padding-right: 0;
 }
 
-.layout-news-active :host ::ng-deep .p-datatable tr>th {
-    top: 7rem;
+:host ::ng-deep .p-datatable tr>td {
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 :host ::ng-deep .expendedrow {
