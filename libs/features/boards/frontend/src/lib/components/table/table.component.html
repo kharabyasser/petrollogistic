@@ -1,6 +1,6 @@
 <div class="card">
   <p-table
-    #dt1
+    #tableList
     dataKey="id"
     [value]="(deliveryRequests$ | async) || selectedRequests"
     [columns]="selectedColumns"
@@ -13,8 +13,7 @@
     responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [rowsPerPageOptions]="[10, 25, 50]"
-    scrollHeight="100vh"
-    scrollDirection="both"
+    scrollHeight="flex"
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     (onRowSelect)="onRowSelect($event)"
@@ -36,7 +35,7 @@
           label="Clear"
           class="p-button-outlined"
           icon="pi pi-filter-slash"
-          (click)="clear(dt1)"
+          (click)="clear(tableList)"
         ></button>
         <p-multiSelect
           class="ml-3"
@@ -51,7 +50,7 @@
           <input
             pInputText
             type="text"
-            (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+            (input)="tableList.filterGlobal($any($event.target).value, 'contains')"
             placeholder="Search keyword"
           />
         </span>

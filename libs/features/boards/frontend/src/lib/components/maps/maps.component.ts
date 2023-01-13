@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Map, Marker } from 'maplibre-gl';
 import { RoutingMetric } from '../../domain/routing/enums/routing-metric';
 import { RoutingUnit } from '../../domain/routing/enums/routing-unit';
