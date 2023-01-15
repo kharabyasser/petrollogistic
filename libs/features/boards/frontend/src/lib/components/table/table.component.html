@@ -117,6 +117,7 @@
           >
             Ship To Account
             <div class="flex justify-content-start flex-wrap">
+              <p-sortIcon class='sort' field="{{ col.sortCol }}"></p-sortIcon>
               <p-columnFilter
                 field="shipToAccount"
                 type="text"
@@ -126,7 +127,6 @@
                 display="menu"
               >
               </p-columnFilter>
-              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
           <div
@@ -135,6 +135,7 @@
           >
             Percentage
             <div class="flex justify-content-start flex-wrap">
+              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
               <p-columnFilter
                 field="{{ col.sortCol }}"
                 type="numeric"
@@ -142,7 +143,6 @@
                 [showAddButton]="true"
                 display="menu"
               ></p-columnFilter>
-              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
           <div
@@ -151,6 +151,7 @@
           >
             Product
             <div class="flex justify-content-start flex-wrap">
+              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
               <p-columnFilter
                 field="{{ col.sortCol }}"
                 type="numeric"
@@ -158,7 +159,6 @@
                 [showAddButton]="true"
                 display="menu"
               ></p-columnFilter>
-              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
           <div
@@ -166,6 +166,7 @@
             class="flex justify-content-between flex-wrap"
           >
             Status
+            <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             <p-columnFilter
               field="dispatchStatus"
               [matchModeOptions]="dispatchStatusesModeOptions"
@@ -201,18 +202,17 @@
                 </p-dropdown>
               </ng-template>
             </p-columnFilter>
-            <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
           </div>
           <div *ngSwitchDefault>
             <div class="flex justify-content-between flex-wrap">
               {{ col.header }}
               <div class="flex justify-content-start flex-wrap">
+                <p-sortIcon field="{{ col.field }}"></p-sortIcon>
                 <p-columnFilter
                   type="{{ col.filterType }}"
                   field="{{ col.field }}"
                   display="menu"
                 ></p-columnFilter>
-                <p-sortIcon field="{{ col.field }}"></p-sortIcon>
               </div>
             </div>
           </div>

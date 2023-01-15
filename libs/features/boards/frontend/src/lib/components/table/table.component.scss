@@ -1,42 +1,54 @@
-:host ::ng-deep .p-datatable .p-datatable-thead>tr>th {
-    position: -webkit-sticky;
-    position: sticky;
-    padding-left: 0;
-    padding-right: 0;
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  position: -webkit-sticky;
+  position: sticky;
+  padding-left: 0;
+  padding-right: 0;
 }
 
-:host ::ng-deep .p-datatable tr>td {
-    padding-top: 2px;
-    padding-bottom: 2px;
+:host ::ng-deep .p-datatable tr > td {
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 :host ::ng-deep .expendedrow {
-    background-color: white !important;
+  background-color: white !important;
 }
 
 ::ng-deep .containerBar .p-progressbar {
-    position: absolute;
-    min-width: 100%;
-    height: 18px;
-    top: 10%;
-} 
+  position: absolute;
+  min-width: 100%;
+  height: 18px;
+  top: 10%;
+}
 
 ::ng-deep .containerBar .p-progressbar-value {
-    background: cornflowerblue
-} 
+  background: cornflowerblue;
+}
 
 .card {
-    margin: 10px;
+  margin: 10px;
 }
 
 .progress__value {
-    position: relative;
-    width: fit-content;
-    font-weight: bold;
-    margin: auto;
+  position: relative;
+  width: fit-content;
+  font-weight: bold;
+  margin: auto;
 }
 .p-button-text {
-    padding: 0;
+  padding: 0;
+  margin: 0;
+  width: 20px;
+}
+p-sortIcon {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     margin: 0;
-    width: 20px;
+}
+
+p-columnFilter {
+    margin: 0;
 }
