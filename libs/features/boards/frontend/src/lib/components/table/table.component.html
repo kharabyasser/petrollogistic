@@ -5,14 +5,14 @@
     [value]="(deliveryRequests$ | async) || selectedRequests"
     [columns]="selectedColumns"
     [paginator]="true"
-    [rows]="10"
+    [rows]="15"
     [resizableColumns]="true"
     [reorderableColumns]="true"
     [showCurrentPageReport]="true"
     styleClass="p-datatable-striped"
     responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [rowsPerPageOptions]="[10, 25, 50]"
+    [rowsPerPageOptions]="[15, 30, 50]"
     scrollHeight="flex"
     selectionMode="multiple"
     [(selection)]="selectedRequests"
@@ -50,7 +50,9 @@
           <input
             pInputText
             type="text"
-            (input)="tableList.filterGlobal($any($event.target).value, 'contains')"
+            (input)="
+              tableList.filterGlobal($any($event.target).value, 'contains')
+            "
             placeholder="Search keyword"
           />
         </span>
@@ -115,9 +117,9 @@
             *ngSwitchCase="'shipToAccount'"
             class="flex justify-content-between flex-wrap"
           >
-            Ship To Account
+            Account
             <div class="flex justify-content-start flex-wrap">
-              <p-sortIcon class='sort' field="{{ col.sortCol }}"></p-sortIcon>
+              <p-sortIcon class="sort" field="{{ col.sortCol }}"></p-sortIcon>
               <p-columnFilter
                 field="shipToAccount"
                 type="text"
@@ -251,18 +253,13 @@
             ></p-tag>
           </div>
           <div *ngSwitchCase="'shipToAccount'">
-            <b> {{ request[col.field].name }} </b>
-            <br />
-            {{ request[col.field].address.addressLine1 }},
-            {{ request[col.field].address.postalCode }}
-            <br />
-            {{ request[col.field].phoneNumber }}
+            {{ request[col.field].name }}
           </div>
           <div
             *ngSwitchCase="'lowestContainer'"
             class="flex justify-content-between flex-wrap flex align-items-center justify-content-center"
           >
-            <div style="position: relative; overflow: hidden; width: 75%;">
+            <div style="position: relative; overflow: hidden; width: 75%">
               <p-progressBar
                 class="containerBar"
                 [ngClass]="{
@@ -271,7 +268,9 @@
                 [value]="request[col.field].currentPercentage"
                 [showValue]="false"
               ></p-progressBar>
-              <div class="progress__value"> {{ request[col.field].currentPercentage }} %</div>
+              <div class="progress__value">
+                {{ request[col.field].currentPercentage }} %
+              </div>
             </div>
             <div>
               <button

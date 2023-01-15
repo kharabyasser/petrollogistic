@@ -107,13 +107,6 @@ export class TableComponent implements OnInit {
         sortCol: 'lowestContainer.currentPercentage',
       },
       {
-        selector: 'creationDate',
-        field: 'creationDate',
-        header: 'Creation Date',
-        sortCol: 'creationDate',
-        filterType: 'date',
-      },
-      {
         selector: 'targetDate',
         field: 'targetDate',
         header: 'Target Date',
