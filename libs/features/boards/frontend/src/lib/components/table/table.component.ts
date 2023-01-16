@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FilterService, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
@@ -26,50 +26,119 @@ export class TableComponent implements OnInit {
   accountFilterModeOptions: SelectItem[] = [];
   dispatchStatusesModeOptions: SelectItem[] = [];
 
-  constructor(private filterService: FilterService, private deliveriesFacade: DeliveryRequestsFacade) {
-    this.deliveryRequests$ = this.deliveriesFacade.deliveryRequests$
+  constructor(
+    private filterService: FilterService,
+    private deliveriesFacade: DeliveryRequestsFacade
+  ) {
+    this.deliveryRequests$ = this.deliveriesFacade.deliveryRequests$.pipe(
+      map((reqs) =>
+        reqs.map((item) => ({
+          ...item,
+          tags:
+            item.destinationContainers.length == 1
+              ? item.tags
+              : item.tags.concat('FL'),
+          creationDate: formatDate(item.creationDate, 'dd/MM/yyyy', 'en-US'),
+          targetDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
+          dispatchDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
+          lowestContainer: item.destinationContainers.reduce(
+            (prev: Container, curr: Container) =>
+              prev?.currentPercentage < curr.currentPercentage ? prev : curr
+          ),
+        }))
+      )
+    );
+
+    this.deliveryRequests$
       .pipe(
-        map(reqs =>
-          reqs.map(item => ({
-            ...item,
-            tags: item.destinationContainers.length == 1 ? item.tags : item.tags.concat('Fleet'),
-            creationDate: formatDate(item.creationDate, 'dd/MM/yyyy', 'en-US'),
-            targetDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
-            dispatchDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
-            lowestContainer: item.destinationContainers.reduce((prev: Container, curr: Container) =>
-              (prev?.currentPercentage < curr.currentPercentage ? prev : curr))
-          })))
-      );
+        map((reqs) =>
+          reqs
+            .flatMap((req) => req.tags)
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .map((tag) => ({ label: tag, value: tag } as SelectItem))
+        )
+      )
+      .subscribe((item) => (this.tags = item));
 
-    this.deliveryRequests$.pipe(
-      map(reqs =>
-        reqs.flatMap(req => req.tags)
-          .filter((value, index, array) => array.indexOf(value) === index)
-          .map(tag => ({ label: tag, value: tag } as SelectItem)))
-    ).subscribe(item => this.tags = item);
-
-    this.deliveryRequests$.pipe(
-      map(reqs =>
-        reqs.flatMap(req => req.dispatchStatus)
-          .filter((value, index, array) => array.indexOf(value) === index)
-          .map(dispatchStatus => ({ label: dispatchStatus.toString(), value: dispatchStatus.toString() } as SelectItem)))
-    ).subscribe(item => this.dispatchStatuses = item);
+    this.deliveryRequests$
+      .pipe(
+        map((reqs) =>
+          reqs
+            .flatMap((req) => req.dispatchStatus)
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .map(
+              (dispatchStatus) =>
+                ({
+                  label: dispatchStatus.toString(),
+                  value: dispatchStatus.toString(),
+                } as SelectItem)
+            )
+        )
+      )
+      .subscribe((item) => (this.dispatchStatuses = item));
   }
 
+  // fix for paginator auto focus.
+  @HostListener('window:scroll') onScroll(e: Event): void {
+    window.scrollTo(0, window.scrollY);
+ }
   ngOnInit() {
     this.deliveriesFacade.loadDeliveryRequests();
 
     this.cols = [
       { selector: 'tags', field: 'tags', header: 'Tags' },
-      { selector: 'purchaseOrder', field: 'purchaseOrder', header: 'Purchase Order', sortCol: 'purchaseOrder', filterType: 'numeric' },
-      { selector: 'shipToAccount', field: 'shipToAccount', header: 'Ship to Account', sortCol: 'shipToAccount.name' },
-      { selector: 'lowestContainer', field: 'lowestContainer', header: 'Percentage', sortCol: 'lowestContainer.currentPercentage' },
-      { selector: 'creationDate', field: 'creationDate', header: 'Creation Date', sortCol: 'creationDate', filterType: 'date' },
-      { selector: 'targetDate', field: 'targetDate', header: 'Target Date', sortCol: 'targetDate', filterType: 'date' },
-      { selector: 'product', field: 'lowestContainer', header: 'Product', sortCol: 'lowestContainer.requestedAmount' },
-      { selector: 'dispatchStatus', field: 'dispatchStatus', header: 'Status', sortCol: 'dispatchStatus' },
-      { selector: 'dispatchedToTruck', field: 'dispatchedToTruck', header: 'Truck', sortCol: 'dispatchedToTruck', filterType: 'text' },
-      { selector: 'dispatchDate', field: 'dispatchDate', header: 'Dispatch Date', sortCol: 'dispatchDate', filterType: 'date' },
+      {
+        selector: 'purchaseOrder',
+        field: 'purchaseOrder',
+        header: 'Purchase Order',
+        sortCol: 'purchaseOrder',
+        filterType: 'numeric',
+      },
+      {
+        selector: 'shipToAccount',
+        field: 'shipToAccount',
+        header: 'Ship to Account',
+        sortCol: 'shipToAccount.name',
+      },
+      {
+        selector: 'lowestContainer',
+        field: 'lowestContainer',
+        header: 'Percentage',
+        sortCol: 'lowestContainer.currentPercentage',
+      },
+      {
+        selector: 'targetDate',
+        field: 'targetDate',
+        header: 'Target Date',
+        sortCol: 'targetDate',
+        filterType: 'date',
+      },
+      {
+        selector: 'product',
+        field: 'lowestContainer',
+        header: 'Product',
+        sortCol: 'lowestContainer.requestedAmount',
+      },
+      {
+        selector: 'dispatchStatus',
+        field: 'dispatchStatus',
+        header: 'Status',
+        sortCol: 'dispatchStatus',
+      },
+      {
+        selector: 'dispatchedToTruck',
+        field: 'dispatchedToTruck',
+        header: 'Truck',
+        sortCol: 'dispatchedToTruck',
+        filterType: 'text',
+      },
+      {
+        selector: 'dispatchDate',
+        field: 'dispatchDate',
+        header: 'Dispatch Date',
+        sortCol: 'dispatchDate',
+        filterType: 'date',
+      },
     ];
 
     this.selectedCols = this.cols;
@@ -81,96 +150,115 @@ export class TableComponent implements OnInit {
     const accountFilterPhone = 'account-phone-filter';
     const dispatchStatusFilter = 'dispatchStatus-filter';
 
-    this.filterService.register(tagFilterContainsName, (value: string[], filter: string[]): boolean => {
-      if (filter === undefined || filter === null || filter.length === 0) {
-        return true;
-      }
+    this.filterService.register(
+      tagFilterContainsName,
+      (value: string[], filter: string[]): boolean => {
+        if (filter === undefined || filter === null || filter.length === 0) {
+          return true;
+        }
 
-      if (value === undefined || value === null) {
-        return false;
-      }
-
-      return filter.every(elem => value.includes(elem));
-    });
-
-    this.filterService.register(tagFilterExactName, (value: string[], filter: string[]): boolean => {
-      if (filter === undefined || filter === null || filter.length === 0) {
-        return true;
-      }
-
-      if (value === undefined || value === null) {
-        return false;
-      }
-
-      if (value.length === filter.length) {
-        return value.every(element => {
-          if (filter.includes(element)) {
-            return true;
-          }
-
+        if (value === undefined || value === null) {
           return false;
-        });
+        }
+
+        return filter.every((elem) => value.includes(elem));
       }
+    );
 
-      return false;
-    });
+    this.filterService.register(
+      tagFilterExactName,
+      (value: string[], filter: string[]): boolean => {
+        if (filter === undefined || filter === null || filter.length === 0) {
+          return true;
+        }
 
-    this.filterService.register(accountFilterName, (value: Account, filter: string): boolean => {
-      if (filter === undefined || filter === null) {
-        return true;
-      }
+        if (value === undefined || value === null) {
+          return false;
+        }
 
-      if (value === undefined || value === null) {
+        if (value.length === filter.length) {
+          return value.every((element) => {
+            if (filter.includes(element)) {
+              return true;
+            }
+
+            return false;
+          });
+        }
+
         return false;
       }
+    );
 
-      return value.name.toLowerCase().includes(filter.toLowerCase());
-    });
+    this.filterService.register(
+      accountFilterName,
+      (value: Account, filter: string): boolean => {
+        if (filter === undefined || filter === null) {
+          return true;
+        }
 
-    this.filterService.register(accountFilterAddress, (value: Account, filter: string): boolean => {
-      if (filter === undefined || filter === null) {
-        return true;
+        if (value === undefined || value === null) {
+          return false;
+        }
+
+        return value.name.toLowerCase().includes(filter.toLowerCase());
       }
+    );
 
-      if (value === undefined || value === null) {
-        return false;
+    this.filterService.register(
+      accountFilterAddress,
+      (value: Account, filter: string): boolean => {
+        if (filter === undefined || filter === null) {
+          return true;
+        }
+
+        if (value === undefined || value === null) {
+          return false;
+        }
+
+        const address =
+          value.address.addressLine1 +
+          value.address.addressLine2 +
+          value.address.city +
+          value.address.province +
+          value.address.country +
+          value.address.postalCode;
+
+        return address.toLowerCase().includes(filter.toLowerCase());
       }
+    );
 
-      const address = value.address.addressLine1 +
-        value.address.addressLine2 +
-        value.address.city +
-        value.address.province +
-        value.address.country +
-        value.address.postalCode;
+    this.filterService.register(
+      accountFilterPhone,
+      (value: Account, filter: string): boolean => {
+        if (filter === undefined || filter === null) {
+          return true;
+        }
 
-      return address.toLowerCase().includes(filter.toLowerCase());
-    });
+        if (value === undefined || value === null) {
+          return false;
+        }
 
-    this.filterService.register(accountFilterPhone, (value: Account, filter: string): boolean => {
-      if (filter === undefined || filter === null) {
-        return true;
+        const phone = value.phoneNumber;
+
+        return phone.toLowerCase().includes(filter.toLowerCase());
       }
+    );
 
-      if (value === undefined || value === null) {
-        return false;
+    this.filterService.register(
+      dispatchStatusFilter,
+      (value: string, filter: string): boolean => {
+        if (filter === undefined || filter === null) {
+          return true;
+        }
+
+        if (value === undefined || value === null) {
+          return false;
+        }
+
+        return filter === value;
       }
-
-      const phone = value.phoneNumber;
-
-      return phone.toLowerCase().includes(filter.toLowerCase());
-    });
-
-    this.filterService.register(dispatchStatusFilter, (value: string, filter: string): boolean => {
-      if (filter === undefined || filter === null) {
-        return true;
-      }
-
-      if (value === undefined || value === null) {
-        return false;
-      }
-
-      return filter === value;
-    });
+    );
 
     this.tagFilterModeOptions = [
       { label: 'Contains', value: tagFilterContainsName },
@@ -184,8 +272,8 @@ export class TableComponent implements OnInit {
     ];
 
     this.dispatchStatusesModeOptions = [
-      { label: 'Status', value: dispatchStatusFilter }
-    ]
+      { label: 'Status', value: dispatchStatusFilter },
+    ];
   }
 
   get selectedColumns(): any {
@@ -211,8 +299,7 @@ export class TableComponent implements OnInit {
   onHeaderSelectionToggle(event: any) {
     if (event.checked) {
       this.deliveriesFacade.addAllRequestsToSelection();
-    }
-    else {
+    } else {
       this.deliveriesFacade.removeAllRequestsFromSelection();
     }
   }

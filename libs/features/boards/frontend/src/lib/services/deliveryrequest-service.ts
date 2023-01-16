@@ -11,6 +11,7 @@ const GET_DELIVERY_REQUESTS = gql`
     purchaseOrder,
     shipToAccount {
       name,
+      accountNumber,
       phoneNumber,
       address {
         addressLine1,
@@ -19,10 +20,13 @@ const GET_DELIVERY_REQUESTS = gql`
         province,
         postalCode,
         country
-      }
+      },
+      latitude,
+      longtitude
     },
     destinationContainers {
       id,
+      containerNumber,
       currentPercentage,
       product {
         number,
@@ -30,8 +34,6 @@ const GET_DELIVERY_REQUESTS = gql`
       },
       requestedAmount,
       requestedAmountUnit,
-      latitude,
-      longtitude
     },
     creationDate,
     targetDate,

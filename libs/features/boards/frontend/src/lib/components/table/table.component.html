@@ -1,20 +1,19 @@
 <div class="card">
   <p-table
-    #dt1
+    #tableList
     dataKey="id"
     [value]="(deliveryRequests$ | async) || selectedRequests"
     [columns]="selectedColumns"
     [paginator]="true"
-    [rows]="10"
+    [rows]="15"
     [resizableColumns]="true"
     [reorderableColumns]="true"
     [showCurrentPageReport]="true"
     styleClass="p-datatable-striped"
     responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    scrollHeight="1100px"
-    scrollDirection="both"
+    [rowsPerPageOptions]="[15, 30, 50]"
+    scrollHeight="83vh"
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     (onRowSelect)="onRowSelect($event)"
@@ -36,7 +35,7 @@
           label="Clear"
           class="p-button-outlined"
           icon="pi pi-filter-slash"
-          (click)="clear(dt1)"
+          (click)="clear(tableList)"
         ></button>
         <p-multiSelect
           class="ml-3"
@@ -51,7 +50,9 @@
           <input
             pInputText
             type="text"
-            (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+            (input)="
+              tableList.filterGlobal($any($event.target).value, 'contains')
+            "
             placeholder="Search keyword"
           />
         </span>
@@ -98,11 +99,11 @@
                       value="{{ option.label }}"
                       styleClass="mr-2"
                       [severity]="
-                        option.label === 'Call'
+                        option.label === 'CA'
                           ? 'success'
-                          : option.label === 'Auto'
+                          : option.label === 'AU'
                           ? 'info'
-                          : option.label === 'Urgent'
+                          : option.label === 'UR'
                           ? 'danger'
                           : 'warning'
                       "
@@ -116,8 +117,9 @@
             *ngSwitchCase="'shipToAccount'"
             class="flex justify-content-between flex-wrap"
           >
-            Ship To Account
+            Account
             <div class="flex justify-content-start flex-wrap">
+              <p-sortIcon class="sort" field="{{ col.sortCol }}"></p-sortIcon>
               <p-columnFilter
                 field="shipToAccount"
                 type="text"
@@ -127,7 +129,6 @@
                 display="menu"
               >
               </p-columnFilter>
-              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
           <div
@@ -136,6 +137,7 @@
           >
             Percentage
             <div class="flex justify-content-start flex-wrap">
+              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
               <p-columnFilter
                 field="{{ col.sortCol }}"
                 type="numeric"
@@ -143,7 +145,6 @@
                 [showAddButton]="true"
                 display="menu"
               ></p-columnFilter>
-              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
           <div
@@ -152,6 +153,7 @@
           >
             Product
             <div class="flex justify-content-start flex-wrap">
+              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
               <p-columnFilter
                 field="{{ col.sortCol }}"
                 type="numeric"
@@ -159,7 +161,6 @@
                 [showAddButton]="true"
                 display="menu"
               ></p-columnFilter>
-              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             </div>
           </div>
           <div
@@ -167,6 +168,7 @@
             class="flex justify-content-between flex-wrap"
           >
             Status
+            <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
             <p-columnFilter
               field="dispatchStatus"
               [matchModeOptions]="dispatchStatusesModeOptions"
@@ -202,18 +204,17 @@
                 </p-dropdown>
               </ng-template>
             </p-columnFilter>
-            <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
           </div>
           <div *ngSwitchDefault>
             <div class="flex justify-content-between flex-wrap">
               {{ col.header }}
               <div class="flex justify-content-start flex-wrap">
+                <p-sortIcon field="{{ col.field }}"></p-sortIcon>
                 <p-columnFilter
                   type="{{ col.filterType }}"
                   field="{{ col.field }}"
                   display="menu"
                 ></p-columnFilter>
-                <p-sortIcon field="{{ col.field }}"></p-sortIcon>
               </div>
             </div>
           </div>
@@ -241,44 +242,46 @@
               value="{{ tag }}"
               styleClass="mr-2"
               [severity]="
-                tag === 'Call'
+                tag === 'CA'
                   ? 'success'
-                  : tag === 'Auto'
+                  : tag === 'AU'
                   ? 'info'
-                  : tag === 'Urgent'
+                  : tag === 'UR'
                   ? 'danger'
                   : 'warning'
               "
             ></p-tag>
           </div>
           <div *ngSwitchCase="'shipToAccount'">
-            <b> {{ request[col.field].name }} </b>
-            <br />
-            {{ request[col.field].address.addressLine1 }},
-            {{ request[col.field].address.postalCode }}
-            <br />
-            {{ request[col.field].phoneNumber }}
+           {{ request[col.field].name }} 
           </div>
           <div
             *ngSwitchCase="'lowestContainer'"
             class="flex justify-content-between flex-wrap flex align-items-center justify-content-center"
           >
-            <p-knob
-              [(ngModel)]="request[col.field].currentPercentage"
-              [valueColor]="
-                request[col.field].currentPercentage < 15
-                  ? '#DF0404'
-                  : '#3C82F6'
-              "
-            ></p-knob>
-            <button
-              type="button"
-              pButton
-              pRipple
-              [pRowToggler]="request"
-              class="p-button-text p-button-rounded p-button-plain"
-              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-            ></button>
+            <div style="position: relative; overflow: hidden; width: 75%">
+              <p-progressBar
+                class="containerBar"
+                [ngClass]="{
+                  lowContainerBar: request[col.field].currentPercentage < 25
+                }"
+                [value]="request[col.field].currentPercentage"
+                [showValue]="false"
+              ></p-progressBar>
+              <div class="progress__value">
+                {{ request[col.field].currentPercentage }} %
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                pButton
+                pRipple
+                [pRowToggler]="request"
+                class="p-button-text p-button-plain p-button-sm"
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              ></button>
+            </div>
           </div>
           <div
             *ngSwitchCase="'product'"

@@ -26,12 +26,18 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
     {
       u.Id = Guid.NewGuid();
       u.Name = f.Lorem.Word();
+      u.AccountNumber = f.Random.Number(999, 9999);
       u.PhoneNumber = f.Phone.PhoneNumber();
       u.EmailAddress = f.Internet.Email();
       u.IsNotifyByMedium = f.Random.Bool();
       u.IsNotifyOnDelivery = f.Random.Bool();
       u.IsNotifyOnDispatch = f.Random.Bool();
       u.Address = fakeAddress.Generate();
+      u.Coordinates = new GeoCoordinates
+      {
+        Longitude = f.Address.Longitude(-73.97, -73.38),
+        Latitude = f.Address.Latitude(45.40, 45.70)
+      };
     };
 
     var fakeAccounts = new Faker<Account>()
@@ -77,11 +83,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
 
     var fakeContainers = new Faker<Container>()
       .RuleFor(d => d.Id, (f, u) => Guid.NewGuid())
-      .RuleFor(d => d.Coordinates, (f, u) => new GeoCoordinates
-      {
-        Longitude = f.Address.Longitude(-73.97, -73.38),
-        Latitude = f.Address.Latitude(45.40, 45.70)
-      })
+      .RuleFor(d => d.ContainerNumber, (f, u) => f.Random.Number(0, 100))
       .RuleFor(d => d.Capacity, (f, u) => f.Random.Number())
       .RuleFor(d => d.IdealDeliveryQuantity, (f, u) => f.Random.Number())
       .RuleFor(d => d.UnitOfMeasurment, (f, u) => f.PickRandomWithout(UnitOfMeasurement.Default))
@@ -108,7 +110,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.Source, (f, u) => f.PickRandomWithout(Source.Default))
       .RuleFor(d => d.TargetDate, (f, u) => f.Date.Future())
       .RuleFor(d => d.IsUrgent, (f, u) => f.Random.Bool())
-      .RuleFor(d => d.PurchaseOrder, (f, u) => f.Random.AlphaNumeric(9))
+      .RuleFor(d => d.PurchaseOrder, (f, u) => f.Random.Number(9999, 99999))
       .RuleFor(d => d.CreationDate, (f, u) => f.Date.Past())
       .RuleFor(d => d.Rank, (f, u) => f.Random.Number(1, 5))
       .RuleFor(d => d.Instructions, (f, u) => f.Lorem.Words())

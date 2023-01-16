@@ -9,7 +9,7 @@ import { DeliveryRequestsFacade } from '../+state/delivery-requests-facade';
   animations: [
     trigger('slideInOut', [
       state('in', style({
-        width: '80vw'
+        width: '75vw'
       })),
       state('out', style({
         width: '100vw'

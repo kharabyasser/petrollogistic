@@ -4,7 +4,10 @@ import { Address } from "./models/address";
 export interface Account {
     id: string,
     name: string,
+    accountNumber: number,
     phoneNumber: string,
     address: Address,
-    accountType: AccountType
+    accountType: AccountType,
+    latitude: number,
+    longtitude: number
 }

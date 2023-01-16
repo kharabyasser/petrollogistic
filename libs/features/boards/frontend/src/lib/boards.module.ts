@@ -15,6 +15,7 @@ import { DividerModule } from 'primeng/divider';
 import { ChartModule } from 'primeng/chart';
 import { AccordionModule } from 'primeng/accordion';
 import { FieldsetModule } from 'primeng/fieldset';
+import {ProgressBarModule} from 'primeng/progressbar';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './+state/delivery-requests-reducer';
@@ -42,6 +43,7 @@ import { RoutingService } from './services/routing-service';
     DividerModule,
     DropdownModule,
     KnobModule,
+    ProgressBarModule,
     ChartModule,
     AccordionModule,
     CoreFrontendApolloModule,
