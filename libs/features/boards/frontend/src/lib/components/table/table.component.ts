@@ -37,7 +37,7 @@ export class TableComponent implements OnInit {
           tags:
             item.destinationContainers.length == 1
               ? item.tags
-              : item.tags.concat('Fleet'),
+              : item.tags.concat('FL'),
           creationDate: formatDate(item.creationDate, 'dd/MM/yyyy', 'en-US'),
           targetDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),
           dispatchDate: formatDate(item.targetDate, 'dd/MM/yyyy', 'en-US'),

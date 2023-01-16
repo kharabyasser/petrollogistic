@@ -11,7 +11,7 @@ public class DeliveryRequest : BaseModel
   /// <summary>
   /// PO number, generated when a client make a command.
   /// </summary>
-  public string PurchaseOrder { get; set; } = default!;
+  public int PurchaseOrder { get; set; } = default!;
   public Truck? DispatchedToTruck { get; set; }
   public DateTime DispatchDate { get; set; }
   public User? DispatchedBy { get; set; }

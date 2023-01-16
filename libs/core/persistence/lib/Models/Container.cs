@@ -6,6 +6,7 @@ namespace Petrologistic.Core.Persistence.Lib.Models;
 
 public class Container : BaseModel
 {
+  public int ContainerNumber { get; set; } 
   public GeoCoordinates Coordinates { get; set; } = default!;
   public double Capacity { get; set; }
   public double IdealDeliveryQuantity { get; set; }

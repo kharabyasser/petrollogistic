@@ -53,7 +53,8 @@ export class DetailsComponent {
     this.deliveriesFacade.selectedRequests$
       .subscribe(ids => {
         this.selectedDeliveryRequests = this.deliveryRequests.filter(d => ids.includes(d.id));
-        this.selectedCoordinates = this.selectedDeliveryRequests.flatMap(d => d.destinationContainers.map(c => [c.longtitude, c.latitude]));
+        this.selectedCoordinates = this.selectedDeliveryRequests.map(d => [d.shipToAccount.longtitude, 
+          d.shipToAccount.latitude]);
         this.selectedRequestsCount = ids.length;
 
         const productsData = this.selectedDeliveryRequests

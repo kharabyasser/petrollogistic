@@ -8,9 +8,6 @@ public class ContainerProfile : Profile
 {
   public ContainerProfile()
   {
-    CreateMap<Container, ContainerDto>()
-      .ForMember(dest => dest.Latitude, opt => opt.MapFrom((src, dest) => src.Coordinates.Latitude))
-      .ForMember(dest => dest.Longtitude, opt => opt.MapFrom((src, dest) => src.Coordinates.Longitude));
-    ;
+    CreateMap<Container, ContainerDto>();
   }
 }

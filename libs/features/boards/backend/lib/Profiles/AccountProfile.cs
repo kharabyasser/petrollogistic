@@ -8,6 +8,8 @@ public class AccountProfile : Profile
 {
   public AccountProfile()
   {
-    CreateMap<Account, AccountDto>();
+    CreateMap<Account, AccountDto>()
+      .ForMember(dest => dest.Latitude, opt => opt.MapFrom((src, dest) => src.Coordinates.Latitude))
+      .ForMember(dest => dest.Longtitude, opt => opt.MapFrom((src, dest) => src.Coordinates.Longitude)); ;
   }
 }

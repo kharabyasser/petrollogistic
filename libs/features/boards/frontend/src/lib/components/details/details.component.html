@@ -77,7 +77,7 @@
             </div>
           </td>
           <td colspan="2">
-            <strong>{{ request.shipToAccount.name }}</strong>
+            <strong>{{ request.shipToAccount.accountNumber }} - {{ request.shipToAccount.name }}</strong>
             <br />
             <sub>
               {{ request.shipToAccount.address.addressLine1 }},
@@ -116,7 +116,7 @@
         class="container-fieldset"
       >
         <p-fieldset
-          legend="Container {{ container.id.toString().slice(0, 5) }}"
+          legend="Container {{ container.containerNumber }}"
           [toggleable]="true"
           [collapsed]="j !== 0"
         >

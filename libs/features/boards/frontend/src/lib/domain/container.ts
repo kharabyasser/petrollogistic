@@ -3,6 +3,7 @@ import { Product } from "./product";
 
 export interface Container {
     id: string,
+    containerNumber: number,
     currentPercentage: number,
     product: Product,
     requestedAmount: number,

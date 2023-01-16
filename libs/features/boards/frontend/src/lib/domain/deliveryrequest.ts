@@ -6,7 +6,7 @@ import { Truck } from "./truck";
 export interface DeliveryRequest {
     id: string,
     tags: string[],
-    purchaseOrder: string,
+    purchaseOrder: number,
     shipToAccount: Account,
     destinationContainers: Container[];
     lowestContainer: Container;

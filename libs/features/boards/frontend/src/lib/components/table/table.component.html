@@ -13,7 +13,7 @@
     responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [rowsPerPageOptions]="[15, 30, 50]"
-    scrollHeight="auto"
+    scrollHeight="83vh"
     selectionMode="multiple"
     [(selection)]="selectedRequests"
     (onRowSelect)="onRowSelect($event)"
@@ -99,11 +99,11 @@
                       value="{{ option.label }}"
                       styleClass="mr-2"
                       [severity]="
-                        option.label === 'Call'
+                        option.label === 'CA'
                           ? 'success'
-                          : option.label === 'Auto'
+                          : option.label === 'AU'
                           ? 'info'
-                          : option.label === 'Urgent'
+                          : option.label === 'UR'
                           ? 'danger'
                           : 'warning'
                       "
@@ -242,18 +242,18 @@
               value="{{ tag }}"
               styleClass="mr-2"
               [severity]="
-                tag === 'Call'
+                tag === 'CA'
                   ? 'success'
-                  : tag === 'Auto'
+                  : tag === 'AU'
                   ? 'info'
-                  : tag === 'Urgent'
+                  : tag === 'UR'
                   ? 'danger'
                   : 'warning'
               "
             ></p-tag>
           </div>
           <div *ngSwitchCase="'shipToAccount'">
-            {{ request[col.field].name }}
+           {{ request[col.field].name }} 
           </div>
           <div
             *ngSwitchCase="'lowestContainer'"
