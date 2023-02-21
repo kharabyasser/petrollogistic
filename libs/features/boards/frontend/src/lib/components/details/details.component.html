@@ -2,6 +2,7 @@
   <p-accordion [multiple]="true">
     <p-accordionTab header="Map and Products" [selected]="true">
       <petrologistic-maps
+        style="--height: 30vh"
         [deliveriesCoordinates]="selectedCoordinates"
         (approxDrivingDistanceEvent)="onDistanceCalculated($event)"
         (approxDrivingTimeEvent)="onDurationCalculated($event)"
@@ -31,7 +32,7 @@
             {{
               approxDrivingDistance === 0
                 ? '-'
-                : (approxDrivingDistance | number: '1.0-2') + 'Km'
+                : (approxDrivingDistance | number : '1.0-2') + 'Km'
             }}
           </td>
         </table>
@@ -77,7 +78,10 @@
             </div>
           </td>
           <td colspan="2">
-            <strong>{{ request.shipToAccount.accountNumber }} - {{ request.shipToAccount.name }}</strong>
+            <strong
+              >{{ request.shipToAccount.accountNumber }} -
+              {{ request.shipToAccount.name }}</strong
+            >
             <br />
             <sub>
               {{ request.shipToAccount.address.addressLine1 }},
@@ -125,9 +129,7 @@
               class="container-knob"
               [(ngModel)]="container.currentPercentage"
               [valueColor]="
-                container.currentPercentage < 15
-                  ? '#DF0404'
-                  : '#3C82F6'
+                container.currentPercentage < 15 ? '#DF0404' : '#3C82F6'
               "
             ></p-knob>
             <table>
