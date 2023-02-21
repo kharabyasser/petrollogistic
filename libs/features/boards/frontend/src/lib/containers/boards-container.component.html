@@ -1,7 +1,28 @@
-<div class="flex align-items-stretch flex-wrap container">
+<div class="layout-control">
+  <p-selectButton
+    [options]="layoutOptions"
+    [(ngModel)]="selectedLayout"
+    optionLabel="icon"
+    optionValue="value"
+  >
+    <ng-template let-item>
+      <i [class]="item.icon"></i>
+    </ng-template>
+  </p-selectButton>
+</div>
+<div
+  *ngIf="selectedLayout === 'table'"
+  class="flex align-items-stretch flex-wrap container"
+>
   <petrologistic-table
     class="list"
     [@slideInOut]="detailsState"
   ></petrologistic-table>
   <petrologistic-details class="details"></petrologistic-details>
+</div>
+<div *ngIf="selectedLayout === 'map'">
+  <petrologistic-maps
+    style="--height: 90vh"
+    [deliveriesCoordinates]="selectedCoordinates"
+  ></petrologistic-maps>
 </div>
