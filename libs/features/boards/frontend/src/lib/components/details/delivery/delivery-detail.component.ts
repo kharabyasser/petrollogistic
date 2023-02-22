@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
-import { DeliveryRequest } from '../../domain/deliveryrequest';
+import { DeliveryRequestsFacade } from '../../../+state/delivery-requests-facade';
+import { DeliveryRequest } from '../../../domain/deliveryrequest';
 
 @Component({
   selector: 'petrologistic-delivery-detail',

@@ -27,9 +27,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
 import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
 import { BoardsContainerComponent } from './containers/boards-container.component';
-import { DetailsComponent } from './components/details/delivery-detail.component';
+import { DetailsComponent } from './components/details/delivery/delivery-detail.component';
 import { MapsComponent } from './components/maps/maps.component';
 import { RoutingService } from './services/routing-service';
+import { TruckComponent } from './components/details/truck/truck.component';
 
 @NgModule({
   imports: [
@@ -53,7 +54,13 @@ import { RoutingService } from './services/routing-service';
     StoreModule.forFeature('DeliveryRequests', reducers),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
   ],
-  declarations: [TableComponent, BoardsContainerComponent, DetailsComponent, MapsComponent],
+  declarations: [
+    TableComponent,
+    BoardsContainerComponent,
+    DetailsComponent,
+    MapsComponent,
+    TruckComponent,
+  ],
   exports: [BoardsContainerComponent],
   providers: [DeliveryRequestService, DeliveryRequestsFacade, RoutingService],
 })
