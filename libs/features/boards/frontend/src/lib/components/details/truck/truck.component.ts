@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'petrologistic-truck',
+  selector: 'petrologistic-truck-detail',
   templateUrl: './truck.component.html',
   styleUrls: ['./truck.component.css'],
 })

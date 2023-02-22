@@ -15,14 +15,21 @@
   class="flex align-items-stretch flex-wrap container"
 >
   <petrologistic-table
-    class="list"
+    class="main"
     [@slideInOut]="detailsState"
   ></petrologistic-table>
-  <petrologistic-delivery-detail class="details"></petrologistic-delivery-detail>
+  <petrologistic-delivery-detail
+    class="details"
+  ></petrologistic-delivery-detail>
 </div>
-<div *ngIf="selectedLayout === 'map'">
+<div
+  *ngIf="selectedLayout === 'map'"
+  class="flex align-items-stretch flex-wrap container"
+>
   <petrologistic-maps
     style="--height: 90vh"
     [deliveriesCoordinates]="selectedCoordinates"
+    class="map"
   ></petrologistic-maps>
+  <petrologistic-truck-detail> </petrologistic-truck-detail>
 </div>

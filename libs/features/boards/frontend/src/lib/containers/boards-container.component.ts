@@ -36,7 +36,7 @@ export class BoardsContainerComponent {
   deliveryRequests: DeliveryRequest[] = [];
   selectedCoordinates: number[][] = [];
   layoutOptions: any[] = [];
-  selectedLayout = 'table';
+  selectedLayout = 'map';
   detailsState = '';
 
   constructor(private deliveriesFacade: DeliveryRequestsFacade) {
