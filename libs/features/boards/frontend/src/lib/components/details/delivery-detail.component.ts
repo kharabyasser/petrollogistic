@@ -3,9 +3,9 @@ import { DeliveryRequestsFacade } from '../../+state/delivery-requests-facade';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
 
 @Component({
-  selector: 'petrologistic-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss']
+  selector: 'petrologistic-delivery-detail',
+  templateUrl: './delivery-detail.component.html',
+  styleUrls: ['./delivery-detail.component.scss']
 })
 export class DetailsComponent {
 

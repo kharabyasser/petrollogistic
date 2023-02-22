@@ -27,7 +27,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
 import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
 import { BoardsContainerComponent } from './containers/boards-container.component';
-import { DetailsComponent } from './components/details/details.component';
+import { DetailsComponent } from './components/details/delivery-detail.component';
 import { MapsComponent } from './components/maps/maps.component';
 import { RoutingService } from './services/routing-service';
 
