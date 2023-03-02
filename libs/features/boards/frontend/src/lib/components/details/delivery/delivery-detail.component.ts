@@ -18,7 +18,7 @@ export class DetailsComponent {
   approxDrivingDuration = '';
   selectedRequestsCount = 0;
 
-  basicData: any;
+  productsData: any;
 
   horizontalOptions = {
     indexAxis: 'y',
@@ -64,7 +64,7 @@ export class DetailsComponent {
           color: c.requestedAmount > 1500 ? '#FF0049' : '#33C4FF'
         })));
 
-        this.basicData = {
+        this.productsData = {
           labels: productsData.map(d => d.label),
           datasets: [
             {

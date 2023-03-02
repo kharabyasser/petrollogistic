@@ -17,6 +17,8 @@ import { AccordionModule } from 'primeng/accordion';
 import { FieldsetModule } from 'primeng/fieldset';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { PanelModule } from 'primeng/panel';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './+state/delivery-requests-reducer';
@@ -51,6 +53,8 @@ import { TruckComponent } from './components/details/truck/truck.component';
     CoreFrontendApolloModule,
     FieldsetModule,
     SelectButtonModule,
+    PanelModule,
+    InputTextareaModule,
     StoreModule.forFeature('DeliveryRequests', reducers),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
   ],

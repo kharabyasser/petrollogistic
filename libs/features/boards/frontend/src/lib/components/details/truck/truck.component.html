@@ -1,14 +1,29 @@
-<p-accordion [multiple]="true">
-  <p-accordionTab>
-    <ng-template pTemplate="header">
-      <p>3478 - Frontliner (3/11)</p>
-      <i
-        class="pi pi-circle-on"
-        style="margin-left: 0.5rem; color: rgb(21, 186, 21)"
-      ></i>
-    </ng-template>
+<p-panel [toggleable]="true" [collapsed]="false">
+  <ng-template pTemplate="header">
+    <i class="pi pi-circle-on" style="margin-right: 0.5rem; color: rgb(21, 186, 21)"></i>
+    <i class="pi pi-tags"></i>
+    <div class="vertical-divider"></div>
+    <p>Frontliner #3748</p>
+    <div class="vertical-divider"></div>
+    <p>3/11</p>
+    <i class="pi pi-map-marker" style="margin-left: 0.5rem; margin-right: 0.5rem;"></i>
+  </ng-template>
+  <div class="flex align-items-stretch flex-wrap">
     <div>
-      <i class="pi pi-user"> John Smith</i>
+      <div>
+        <i class="pi pi-user"> John Smith</i>
+      </div>
+      <div style="margin-top: 1rem;">
+        <i class="pi pi-phone"> 514-612-1234</i>
+      </div>
     </div>
-  </p-accordionTab>
-</p-accordion>
+    <div style="margin-left: 3rem;">
+      <span class="p-input-icon-right">
+        <i class="pi pi-send"></i>
+        <textarea id="float-input" rows="2" cols="25" placeholder="Type a message..." pInputTextarea
+          [autoResize]="true"></textarea>
+      </span>
+    </div>
+  </div>
+  <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
+</p-panel>
