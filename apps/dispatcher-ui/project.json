@@ -1,4 +1,5 @@
 {
+  "name": "dispatcher-ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/dispatcher-ui/src",
@@ -6,9 +7,7 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/dispatcher-ui",
         "index": "apps/dispatcher-ui/src/index.html",
@@ -90,9 +89,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/apps/dispatcher-ui"
-      ],
+      "outputs": ["coverage/apps/dispatcher-ui"],
       "options": {
         "jestConfig": "apps/dispatcher-ui/jest.config.ts",
         "passWithNoTests": true

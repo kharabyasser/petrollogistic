@@ -1,4 +1,5 @@
 {
+  "name": "features-boards-backend-lib",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/features/boards/backend/lib",

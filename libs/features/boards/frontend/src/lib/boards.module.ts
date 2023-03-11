@@ -19,6 +19,8 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { PanelModule } from 'primeng/panel';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CardModule } from 'primeng/card';
+import { AvatarModule } from 'primeng/avatar';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './+state/delivery-requests-reducer';
@@ -55,6 +57,8 @@ import { TruckComponent } from './components/details/truck/truck.component';
     SelectButtonModule,
     PanelModule,
     InputTextareaModule,
+    CardModule,
+    AvatarModule,
     StoreModule.forFeature('DeliveryRequests', reducers),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
   ],

@@ -8,6 +8,9 @@ import { Component, OnInit } from '@angular/core';
 export class TruckComponent implements OnInit {
   productsData: any;
 
+  chartsCollapsed = false;
+  hideCharts = false;
+
   horizontalOptions = {
     indexAxis: 'y',
     scales: {
@@ -55,4 +58,12 @@ export class TruckComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  onBeforeToggle() {
+    if (this.chartsCollapsed) this.hideCharts = false;
+  }
+
+  onAfterToggle() {
+    this.hideCharts = this.chartsCollapsed;
+  }
 }

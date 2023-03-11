@@ -1,4 +1,5 @@
 {
+  "name": "core-frontend-apollo",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/core/frontend/apollo/src",

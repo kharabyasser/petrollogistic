@@ -1,4 +1,5 @@
 {
+  "name": "core-persistence-lib-test",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/core/persistence/lib-test",

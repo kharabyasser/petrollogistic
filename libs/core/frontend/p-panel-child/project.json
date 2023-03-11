@@ -1,15 +1,15 @@
 {
-  "name": "features-boards-frontend",
+  "name": "core-frontend-p-panel-child",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "libs/features/boards/frontend/src",
+  "sourceRoot": "libs/core/frontend/p-panel-child/src",
   "prefix": "petrologistic",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/features/boards/frontend"],
+      "outputs": ["coverage/libs/core/frontend/p-panel-child"],
       "options": {
-        "jestConfig": "libs/features/boards/frontend/jest.config.ts",
+        "jestConfig": "libs/core/frontend/p-panel-child/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -17,8 +17,8 @@
       "executor": "@nrwl/linter:eslint",
       "options": {
         "lintFilePatterns": [
-          "libs/features/boards/frontend/**/*.ts",
-          "libs/features/boards/frontend/**/*.html"
+          "libs/core/frontend/p-panel-child/**/*.ts",
+          "libs/core/frontend/p-panel-child/**/*.html"
         ]
       }
     }

@@ -1,29 +1,148 @@
-<p-panel [toggleable]="true" [collapsed]="false">
-  <ng-template pTemplate="header">
-    <i class="pi pi-circle-on" style="margin-right: 0.5rem; color: rgb(21, 186, 21)"></i>
-    <i class="pi pi-tags"></i>
-    <div class="vertical-divider"></div>
-    <p>Frontliner #3748</p>
-    <div class="vertical-divider"></div>
-    <p>3/11</p>
-    <i class="pi pi-map-marker" style="margin-left: 0.5rem; margin-right: 0.5rem;"></i>
-  </ng-template>
-  <div class="flex align-items-stretch flex-wrap">
-    <div>
-      <div>
-        <i class="pi pi-user"> John Smith</i>
+<div class="truck__panel">
+  <p-panel [toggleable]="true" [collapsed]="false">
+    <ng-template pTemplate="header">
+      <i class="pi pi-circle-on" style="margin-right: 0.5rem; color: rgb(21, 186, 21)"></i>
+      <i class="pi pi-tags"></i>
+      <div class="vertical-divider"></div>
+      <p>Frontliner #3748</p>
+      <div class="vertical-divider"></div>
+      <p>3/11</p>
+      <i class="pi pi-map-marker" style="margin-left: 0.5rem; margin-right: 0.5rem;"></i>
+      <p-avatar label="J" styleClass="mr-2"
+        [style]="{'background-color':'#2196F3', 'color': '#ffffff', 'margin-left': '5rem'}"></p-avatar>
+    </ng-template>
+    <p-panel class="p-panel-child" [toggleable]="true" [collapsed]="false">
+      <ng-template pTemplate="header">
+        <b>Basic Information</b>
+      </ng-template>
+      <div class="info__panel">
+        <div class="__item">
+          <p>Name </p>
+          <p class="__value">Frontliner</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Number </p>
+          <p class="__value">3748</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Description </p>
+          <p class="__value">Fuel 2012 International</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Truck's license </p>
+          <p class="__value">FVLL5D5S54DS</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Trailer's license </p>
+          <p class="__value">DDS81DGTR84FA</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Permit </p>
+          <p class="__value">D77D7S7S</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Truck System</p>
+          <p class="__value">None</p>
+        </div>
       </div>
-      <div style="margin-top: 1rem;">
-        <i class="pi pi-phone"> 514-612-1234</i>
+    </p-panel>
+    <p-panel class="p-panel-child" [toggleable]="true" (onBeforeToggle)="onBeforeToggle()"
+      (onAfterToggle)="onAfterToggle()" [(collapsed)]="chartsCollapsed">
+      <ng-template pTemplate="header">
+        <b>Products</b>
+      </ng-template>
+      <div [ngStyle]="{'display': !hideCharts ? 'block' : 'none' }" class="products__charts">
+        <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
       </div>
-    </div>
-    <div style="margin-left: 3rem;">
-      <span class="p-input-icon-right">
-        <i class="pi pi-send"></i>
-        <textarea id="float-input" rows="2" cols="25" placeholder="Type a message..." pInputTextarea
-          [autoResize]="true"></textarea>
-      </span>
-    </div>
-  </div>
-  <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
-</p-panel>
+    </p-panel>
+    <p-panel class="p-panel-child" [toggleable]="true" [collapsed]="false">
+      <ng-template pTemplate="header">
+        <b>Tickets</b>
+      </ng-template>
+      <div class="flex align-items-stretch card">
+        <div class="card__statusBar"></div>
+        <div class="card__body">
+          <div class="card__header">
+            <p>Ticket 1125.</p>
+            <div class="__status">
+              <div class="__icon"></div>
+              <p>ON TRUCK</p>
+            </div>
+          </div>
+          <div class="card__content">
+            <b style="margin: 0;">1500L of Clear Diseal.</b>
+            <div class="flex align-items-stretch">
+              <p style="color: gray;">For</p>
+              <p>, Account name</p>
+            </div>
+            <div class="__footer">
+              <div>
+                <p-tag styleClass="mr-2" severity="danger" value="Urgent"></p-tag>
+                <p-tag styleClass="mr-2" severity="warning" value="Fleet"></p-tag>
+              </div>
+              <p> Today, 8:47 PM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex align-items-stretch card">
+        <div class="card__statusBar"></div>
+        <div class="card__body">
+          <div class="card__header">
+            <p>Ticket 1125.</p>
+            <div class="__status">
+              <div class="__icon"></div>
+              <p>ON TRUCK</p>
+            </div>
+          </div>
+          <div class="card__content">
+            <b style="margin: 0;">1500L of Clear Diseal.</b>
+            <div class="flex align-items-stretch">
+              <p style="color: gray;">For</p>
+              <p>, Account name</p>
+            </div>
+            <div class="__footer">
+              <div>
+                <p-tag styleClass="mr-2" severity="danger" value="Urgent"></p-tag>
+                <p-tag styleClass="mr-2" severity="warning" value="Fleet"></p-tag>
+              </div>
+              <p> Today, 8:47 PM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex align-items-stretch card">
+        <div class="card__statusBar"></div>
+        <div class="card__body">
+          <div class="card__header">
+            <p>Ticket 1125.</p>
+            <div class="__status">
+              <div class="__icon"></div>
+              <p>ON TRUCK</p>
+            </div>
+          </div>
+          <div class="card__content">
+            <b style="margin: 0;">1500L of Clear Diseal.</b>
+            <div class="flex align-items-stretch">
+              <p style="color: gray;">For</p>
+              <p>, Account name</p>
+            </div>
+            <div class="__footer">
+              <div>
+                <p-tag styleClass="mr-2" severity="danger" value="Urgent"></p-tag>
+                <p-tag styleClass="mr-2" severity="warning" value="Fleet"></p-tag>
+              </div>
+              <p> Today, 8:47 PM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-panel>
+  </p-panel>
+</div>
