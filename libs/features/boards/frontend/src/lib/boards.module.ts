@@ -15,7 +15,8 @@ import { DividerModule } from 'primeng/divider';
 import { ChartModule } from 'primeng/chart';
 import { AccordionModule } from 'primeng/accordion';
 import { FieldsetModule } from 'primeng/fieldset';
-import {ProgressBarModule} from 'primeng/progressbar';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './+state/delivery-requests-reducer';
@@ -48,6 +49,7 @@ import { RoutingService } from './services/routing-service';
     AccordionModule,
     CoreFrontendApolloModule,
     FieldsetModule,
+    SelectButtonModule,
     StoreModule.forFeature('DeliveryRequests', reducers),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
   ],
