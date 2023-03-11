@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './truck.component.html',
   styleUrls: ['./truck.component.scss'],
 })
-export class TruckComponent implements OnInit {
+export class TruckComponent  {
   productsData: any;
 
   chartsCollapsed = false;
@@ -56,8 +56,6 @@ export class TruckComponent implements OnInit {
       ],
     };
   }
-
-  ngOnInit(): void {}
 
   onBeforeToggle() {
     if (this.chartsCollapsed) this.hideCharts = false;
