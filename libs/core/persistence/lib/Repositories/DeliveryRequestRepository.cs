@@ -4,6 +4,7 @@ using Petrologistic.Core.Persistence.Lib.Models;
 using Petrologistic.Core.Persistence.Lib.Models.Enums;
 using Petrologistic.Core.Persistence.Lib.Models.Location;
 using Petrologistic.Core.Persistence.Lib.Models.Pricing;
+using System.Linq;
 
 namespace Petrologistic.Core.Persistence.Lib.Repositories;
 
@@ -13,6 +14,15 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
   {
     string[] canadianProvincesAndTerritories = { "Ontario", "Nova Scotia", "New Brunswick", "Manitoba", "British Columbia", "Prince Edward Island", "Saskatchewan",
     "Alberta", "Quebec", "Newfoundland and Labrador"};
+    var products = new Dictionary<int, string>()
+    {
+      { 1, "Regular Gas"},
+      { 2, "Premium Gas"},
+      { 3, "Clear Diesel"},
+      { 4, "Dyed Diesel"},
+      { 5, "Furnace Oil"}
+    };
+
 
     var fakeAddress = new Faker<Address>()
       .RuleFor(d => d.AddressLine1, (f, u) => f.Address.StreetAddress())
@@ -25,11 +35,11 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
     Action<Faker, Account> fakeAccountDelegate = (f, u) =>
     {
       u.Id = Guid.NewGuid();
-      u.Name = f.Lorem.Word();
-      u.AccountNumber = f.Random.Number(999, 9999);
+      u.Name = f.Person.FullName;
+      u.AccountNumber = f.Random.Number(10000, 99999);
       u.PhoneNumber = f.Phone.PhoneNumber();
       u.EmailAddress = f.Internet.Email();
-      u.IsNotifyByMedium = f.Random.Bool();
+      u.NotifyByMedium = f.PickRandomWithout(NotifyByMedium.Unknown);
       u.IsNotifyOnDelivery = f.Random.Bool();
       u.IsNotifyOnDispatch = f.Random.Bool();
       u.Address = fakeAddress.Generate();
@@ -87,7 +97,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.Capacity, (f, u) => f.Random.Number())
       .RuleFor(d => d.IdealDeliveryQuantity, (f, u) => f.Random.Number())
       .RuleFor(d => d.UnitOfMeasurment, (f, u) => f.PickRandomWithout(UnitOfMeasurement.Default))
-      .RuleFor(d => d.CurrentPercentage, (f, u) => f.Random.Number(0, 100))
+      .RuleFor(d => d.CurrentPercentage, (f, u) => f.Random.Number(20, 60))
       .RuleFor(d => d.PercentageSource, (f, u) => f.PickRandomWithout(PercentageSource.Default))
       .RuleFor(d => d.PercentageMeasurementDateTime, (f, u) => f.Date.Past())
       .RuleFor(d => d.SerialNumber, (f, u) => new Randomizer().Replace("**-******"))
@@ -98,8 +108,8 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.AlternativeTag, (f, u) => f.Commerce.Ean8())
       .RuleFor(d => d.Product, (f, u) => new Product
       {
-        Number = f.Random.Number(10, 50),
-        Description = f.Random.Word()
+        Number = f.PickRandom(products.Keys.ToArray()),
+        Description = f.PickRandom(products.Values.ToArray())
       })
       .RuleFor(d => d.RequestedAmount, (f, u) => f.Random.Number(450, 2250))
       .RuleFor(d => d.RequestedAmountUnit, (f, u) => f.PickRandomWithout(UnitOfMeasurement.Default))
@@ -108,7 +118,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
     var fakeDeliveries = new Faker<DeliveryRequest>()
       .RuleFor(d => d.Id, (f, u) => Guid.NewGuid())
       .RuleFor(d => d.Source, (f, u) => f.PickRandomWithout(Source.Default))
-      .RuleFor(d => d.TargetDate, (f, u) => f.Date.Future())
+      .RuleFor(d => d.TargetDate, (f, u) => f.Date.Future(1))
       .RuleFor(d => d.IsUrgent, (f, u) => f.Random.Bool())
       .RuleFor(d => d.PurchaseOrder, (f, u) => f.Random.Number(9999, 99999))
       .RuleFor(d => d.CreationDate, (f, u) => f.Date.Past())
@@ -120,14 +130,19 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.IsBringDeliveryTicketToOffice, (f, u) => f.Random.Bool())
       .RuleFor(d => d.CultureCode, (f, u) => "En-Ca")
       .RuleFor(d => d.Currency, (f, u) => "CAD")
-      .RuleFor(d => d.DeliveryTicketHeaderNotes, (f, u) => f.Lorem.Words())
-      .RuleFor(d => d.DeliveryTicketFooterNotes, (f, u) => f.Lorem.Words())
+      .RuleFor(d => d.DeliveryTicketHeaderNotes, (f, u) => f.Lorem.Words(8))
+      .RuleFor(d => d.DeliveryTicketFooterNotes, (f, u) => f.Lorem.Words(6))
       .RuleFor(d => d.BillToAccount, (f, u) => fakeAccounts.Generate("BillingAccount"))
       .RuleFor(d => d.ShipToAccount, (f, u) => fakeAccounts.Generate("ShippingAccount"))
-      .RuleFor(d => d.DispatchStatus, (f, u) => DispatchStatus.Pending)
-      .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(1, 3));
+      .RuleFor(d => d.DispatchStatus, (f, u) => f.PickRandomWithout(DispatchStatus.Default, DispatchStatus.Assigned, DispatchStatus.OnTruck, DispatchStatus.InProgress))
+      .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(1, 3))
+      .RuleFor(d => d.DispatchedToTruck, (f, u) =>
+      (u.DispatchStatus > DispatchStatus.Assigned && u.DispatchStatus != DispatchStatus.Canceled) ? new Truck()
+      {
+        Name = f.Random.Number(10, 20).ToString("00")
+      } : null);
 
-    var deliveryRequests = fakeDeliveries.Generate(100).AsEnumerable();
+    var deliveryRequests = fakeDeliveries.Generate(1000).AsEnumerable();
 
     return Task.FromResult(deliveryRequests);
   }

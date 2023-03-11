@@ -130,7 +130,7 @@ export class TableComponent implements OnInit {
         field: 'dispatchedToTruck',
         header: 'Truck',
         sortCol: 'dispatchedToTruck',
-        filterType: 'text',
+        filterType: 'dispatchedToTruck.name',
       },
       {
         selector: 'dispatchDate',
