@@ -21,20 +21,22 @@ import { PanelModule } from 'primeng/panel';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 import { StoreModule } from '@ngrx/store';
-import { reducers } from './+state/delivery-requests-reducer';
 
 import { DeliveryRequestService } from './services/deliveryrequest-service';
 import { CoreFrontendApolloModule } from '@petrologistic/core/frontend/apollo';
+import { CoreFrontendPPanelChildModule } from '@petrologistic/core/frontend/p-panel-child'
 import { EffectsModule } from '@ngrx/effects';
-import { DeliveryRequestsEffect } from './+state/delivery-requests-effects';
-import { DeliveryRequestsFacade } from './+state/delivery-requests-facade';
 import { BoardsContainerComponent } from './containers/boards-container.component';
 import { DetailsComponent } from './components/details/delivery/delivery-detail.component';
 import { MapsComponent } from './components/maps/maps.component';
 import { RoutingService } from './services/routing-service';
 import { TruckComponent } from './components/details/truck/truck.component';
+import { DeliveryRequestsEffect } from './+state/delivery-requests/delivery-requests-effects';
+import { reducers } from './+state/delivery-requests/delivery-requests-reducer';
+import { DeliveryRequestsFacade } from './+state/delivery-requests/delivery-requests-facade';
 
 @NgModule({
   imports: [
@@ -53,12 +55,14 @@ import { TruckComponent } from './components/details/truck/truck.component';
     ChartModule,
     AccordionModule,
     CoreFrontendApolloModule,
+    CoreFrontendPPanelChildModule,
     FieldsetModule,
     SelectButtonModule,
     PanelModule,
     InputTextareaModule,
     CardModule,
     AvatarModule,
+    InputSwitchModule,
     StoreModule.forFeature('DeliveryRequests', reducers),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
   ],

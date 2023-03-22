@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class TruckComponent  {
   productsData: any;
 
+  miniTicketsView = false;
   chartsCollapsed = false;
   hideCharts = false;
 

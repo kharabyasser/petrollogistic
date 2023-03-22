@@ -22,6 +22,9 @@
       "@petrologistic/core/frontend/p-panel-child": [
         "libs/core/frontend/p-panel-child/src/index.ts"
       ],
+      "@petrologistic/core/frontend/p-panel-child/components": [
+        "libs/core/frontend/p-panel-child/src/lib/components/index.ts"
+      ],
       "@petrologistic/features/frontend/boards": [
         "libs/features/boards/frontend/src/index.ts"
       ]

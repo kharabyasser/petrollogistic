@@ -38,7 +38,6 @@ export class MapsComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.map = new Map({
         container: this.mapContainer.nativeElement,
         style: `https://api.maptiler.com/maps/streets-v2/style.json?key=9GLc7lJKzQasVymrF28T`,
-        center: [initialState.lng, initialState.lat],
         zoom: initialState.zoom,
         attributionControl: false,
       });
@@ -102,6 +101,24 @@ export class MapsComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.approxDrivingDistanceEvent.emit(0);
       this.approxDrivingTimeEvent.emit(0);
     }
+
+    // Adding Isochrones.
+    this.map.on('load', () => {
+      this.map.addSource('isochrones', {
+        type: 'geojson',
+        data: {},
+      });
+
+      this.map.addLayer({
+        id: 'isochrones',
+        type: 'fill',
+        source: 'isochrones',
+        paint: {
+          'fill-color': '#088',
+          'fill-opacity': 0.2,
+        },
+      });
+    });
   }
 
   ngOnDestroy() {

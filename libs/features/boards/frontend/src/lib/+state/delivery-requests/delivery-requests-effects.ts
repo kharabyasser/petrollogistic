@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, of } from "rxjs";
-import { DeliveryRequestService } from "../services/deliveryrequest-service";
+import { DeliveryRequestService } from "../../services/deliveryrequest-service";
 
 import * as RequestsActions from './delivery-requests-actions';
 
@@ -14,7 +14,7 @@ export class DeliveryRequestsEffect {
                     .getDeliveryRequests()
                     .pipe(
                         map(request => RequestsActions.getDeliveryRequestsSuccess({ data: request })),
-                        catchError(error => of(RequestsActions.getDeliveryRequestsFailure({ error: error.message }))));
+                        catchError(error => of(RequestsActions.onError({ error: error.message }))));
             }))
     )
 

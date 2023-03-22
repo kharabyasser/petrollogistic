@@ -1,0 +1,9 @@
+<p-panel [toggleable]="true" (onBeforeToggle)="onBeforeToggle()" (onAfterToggle)="onAfterToggle()"
+    [(collapsed)]="contentCollapsed">
+    <ng-template pTemplate="header">
+        <b>{{ title }}</b>
+    </ng-template>
+    <div [ngClass]="hideContent ? 'hideChild' : ''">
+        <ng-content></ng-content>
+    </div>
+</p-panel>

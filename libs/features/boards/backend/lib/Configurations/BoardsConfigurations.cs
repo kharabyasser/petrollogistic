@@ -10,6 +10,7 @@ public static class BoardsConfigurations
   public static void AddBoards(this IServiceCollection services)
   {
     services.AddSingleton<IDeliveryRequestService, DeliveryRequestService>();
+    services.AddSingleton<ITruckService, TruckService>();
 
     services.AddAutoMapper(typeof(DeliveryRequestProfile));
   }

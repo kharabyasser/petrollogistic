@@ -6,8 +6,8 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { DeliveryRequestsFacade } from '../+state/delivery-requests-facade';
 import { DeliveryRequest } from '../domain/deliveryrequest';
+import { DeliveryRequestsFacade } from '../+state/delivery-requests/delivery-requests-facade';
 
 @Component({
   selector: 'petrologistic-boards-container',

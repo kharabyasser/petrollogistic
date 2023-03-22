@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { createReducer, on } from "@ngrx/store";
-import { DeliveryRequest } from "../domain/deliveryrequest";
+import { DeliveryRequest } from "../../domain/deliveryrequest";
 
 import * as RequestsActions from './delivery-requests-actions';
 
@@ -30,7 +30,7 @@ export const reducers = createReducer(
          isLoading: false, 
          isLoaded: true,
         })),
-    on(RequestsActions.getDeliveryRequestsFailure, (state, action) => ({
+    on(RequestsActions.onError, (state, action) => ({
          ...state, 
          isLoading: false, 
          isLoaded: false,

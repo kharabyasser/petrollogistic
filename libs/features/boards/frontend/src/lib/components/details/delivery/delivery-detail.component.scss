@@ -1,28 +1,26 @@
 .details-wrapper {
-    width: 25vw;
-    padding: 7px;
+  width: 25vw;
+  padding: 7px;
+  overflow-y: scroll;
+  max-height: 100vh;
+  padding-bottom: 5rem;
 }
 
 .metric {
-    margin: 10px !important;
-}
-
-.details-wrapper {
-    overflow-y:scroll;
-    max-height: 100vh;
+  margin: 10px !important;
 }
 
 .container-fieldset {
-    margin: 8px;
+  margin: 8px;
 }
 
 .container-knob {
-    margin-right: 15px;
+  margin-right: 15px;
 }
 
 .fieldset-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
 }

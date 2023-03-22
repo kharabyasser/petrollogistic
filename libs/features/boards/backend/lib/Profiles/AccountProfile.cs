@@ -10,6 +10,6 @@ public class AccountProfile : Profile
   {
     CreateMap<Account, AccountDto>()
       .ForMember(dest => dest.Latitude, opt => opt.MapFrom((src, dest) => src.Coordinates.Latitude))
-      .ForMember(dest => dest.Longtitude, opt => opt.MapFrom((src, dest) => src.Coordinates.Longitude)); ;
+      .ForMember(dest => dest.Longtitude, opt => opt.MapFrom((src, dest) => src.Coordinates.Longitude));
   }
 }

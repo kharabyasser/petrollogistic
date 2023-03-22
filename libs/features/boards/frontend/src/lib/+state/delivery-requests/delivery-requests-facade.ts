@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { select, Store } from "@ngrx/store";
 import { requestsSelector, selectedDeliveriesSelector } from "./delivery-requests.selectors";
-import * as RequestsActions from '../+state/delivery-requests-actions';
-import { DeliveryRequest } from "../domain/deliveryrequest";
+import * as RequestsActions from './delivery-requests-actions';
 import { Observable } from "rxjs";
+import { DeliveryRequest } from "../../domain/deliveryrequest";
 
 @Injectable()
 export class DeliveryRequestsFacade {
