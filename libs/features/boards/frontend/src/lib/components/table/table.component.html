@@ -193,17 +193,37 @@
                       value="{{ option.label }}"
                       styleClass="mr-2"
                       [severity]="
-                        option.label === 'Dispatched'
-                          ? 'success'
-                          : option.label === 'Pending'
+                        option.label === 'DISPATCHED'
                           ? 'info'
-                          : 'warning'
+                          : option.label === 'PENDING'
+                          ? 'warning'
+                          : option.label === 'DELIVERED'
+                          ? 'success'
+                          : option.label === 'CANCELED'
+                          ? 'danger'
+                          : 'info'
                       "
                     ></p-tag>
                   </ng-template>
                 </p-dropdown>
               </ng-template>
             </p-columnFilter>
+          </div>
+          <div
+            *ngSwitchCase="'dispatchedToTruck'"
+            class="flex justify-content-between flex-wrap"
+          >
+            Truck
+            <div class="flex justify-content-start flex-wrap">
+              <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
+              <p-columnFilter
+                field="dispatchedToTruck"
+                type="text"
+                [showOperator]="true"
+                [showAddButton]="true"
+                display="menu"
+              ></p-columnFilter>
+            </div>
           </div>
           <div *ngSwitchDefault>
             <div class="flex justify-content-between flex-wrap">
@@ -304,10 +324,14 @@
               styleClass="mr-2"
               [severity]="
                 request['dispatchStatus'] === 'DISPATCHED'
-                  ? 'success'
-                  : request['dispatchStatus'] === 'ASSIGNED'
                   ? 'info'
-                  : 'warning'
+                  : request['dispatchStatus'] === 'PENDING'
+                  ? 'warning'
+                  : request['dispatchStatus'] === 'DELIVERED'
+                  ? 'success'
+                  : request['dispatchStatus'] === 'CANCELED'
+                  ? 'danger'
+                  : 'info'
               "
             ></p-tag>
           </div>

@@ -12,7 +12,7 @@ public class Account : BaseModel
   public string EmailAddress { get; set; } = default!;
   public bool IsNotifyOnDispatch { get; set; }
   public bool IsNotifyOnDelivery { get; set; }
-  public bool IsNotifyByMedium { get; set; }
+  public NotifyByMedium NotifyByMedium { get; set; }
   public Address Address { get; set; } = default!;
   public GeoCoordinates Coordinates { get; set; } = default!;
 }

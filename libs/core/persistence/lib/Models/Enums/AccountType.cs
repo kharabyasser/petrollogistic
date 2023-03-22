@@ -1,5 +1,5 @@
 namespace Petrologistic.Core.Persistence.Lib.Models.Enums;
-  public enum AccountType
+public enum AccountType
   {
       Default = 0,
       Billing = 1,
