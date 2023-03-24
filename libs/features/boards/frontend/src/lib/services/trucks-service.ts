@@ -3,7 +3,14 @@ import { Apollo, gql } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { Truck } from '../domain/truck';
 
-const GET_TRUCKS = gql`
+const GET_TRUCKS = gql`{
+  trucks {
+    id,
+    name,
+    latitude,
+    longtitude
+  }
+}
 `
 
 @Injectable()

@@ -22,7 +22,7 @@ export const initialState: State = adapter.getInitialState({
     error: null
 });
 
-export const reducers = createReducer(
+export const deliveryRequestsReducer = createReducer(
     initialState, 
     on(RequestsActions.getDeliveryRequests, (state) => ({ ...state, isLoading: true })),
     on(RequestsActions.getDeliveryRequestsSuccess, (state, action) => adapter.addMany(action.data, {

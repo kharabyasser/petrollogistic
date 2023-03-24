@@ -3,7 +3,7 @@
     <p-accordionTab header="Map and Products" [selected]="true">
       <petrologistic-maps
         style="--height: 30vh"
-        [deliveriesCoordinates]="selectedCoordinates"
+        [markers]="selectedCoordinates"
         (approxDrivingDistanceEvent)="onDistanceCalculated($event)"
         (approxDrivingTimeEvent)="onDurationCalculated($event)"
       ></petrologistic-maps>

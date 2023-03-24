@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
 import { DeliveryRequestsFacade } from '../../../+state/delivery-requests/delivery-requests-facade';
 import { DeliveryRequest } from '../../../domain/deliveryrequest';
+import { MapMarker } from '../../../models/map-marker';
 
 @Component({
   selector: 'petrologistic-delivery-detail',
   templateUrl: './delivery-detail.component.html',
-  styleUrls: ['./delivery-detail.component.scss']
+  styleUrls: ['./delivery-detail.component.scss'],
 })
 export class DetailsComponent {
-
   deliveryRequests: DeliveryRequest[] = [];
   selectedDeliveryRequests: DeliveryRequest[] = [];
 
-  selectedCoordinates: number[][] = [];
+  selectedCoordinates: MapMarker[] = [];
 
   approxDrivingDistance = 0;
   approxDrivingDuration = '';
@@ -24,59 +24,68 @@ export class DetailsComponent {
     indexAxis: 'y',
     plugins: {
       legend: {
-        display: false
-      }
+        display: false,
+      },
     },
     scales: {
       x: {
         ticks: {
-          color: '#495057'
+          color: '#495057',
         },
         grid: {
-          color: '#FFFFFF'
-        }
+          color: '#FFFFFF',
+        },
       },
       y: {
         ticks: {
-          color: '#495057'
+          color: '#495057',
         },
         grid: {
-          color: '#FFFFFF'
-        }
-      }
-    }
+          color: '#FFFFFF',
+        },
+      },
+    },
   };
 
   constructor(private deliveriesFacade: DeliveryRequestsFacade) {
-    this.deliveriesFacade.deliveryRequests$.subscribe(deliveries => this.deliveryRequests = deliveries);
+    this.deliveriesFacade.deliveryRequests$.subscribe(
+      (deliveries) => (this.deliveryRequests = deliveries)
+    );
 
-    this.deliveriesFacade.selectedRequests$
-      .subscribe(ids => {
-        this.selectedDeliveryRequests = this.deliveryRequests.filter(d => ids.includes(d.id));
-        this.selectedCoordinates = this.selectedDeliveryRequests.map(d => [d.shipToAccount.longtitude, 
-          d.shipToAccount.latitude]);
-        this.selectedRequestsCount = ids.length;
+    this.deliveriesFacade.selectedRequests$.subscribe((ids) => {
+      this.selectedDeliveryRequests = this.deliveryRequests.filter((d) =>
+        ids.includes(d.id)
+      );
+      this.selectedCoordinates = this.selectedDeliveryRequests.map((d) => new MapMarker (
+        d.shipToAccount.longtitude,
+        d.shipToAccount.latitude,
+        undefined,
+        '#FF0000'
+      ));
 
-        const productsData = this.selectedDeliveryRequests
-        .flatMap(r => r.destinationContainers.map(c => ({
+      this.selectedRequestsCount = ids.length;
+
+      const productsData = this.selectedDeliveryRequests.flatMap((r) =>
+        r.destinationContainers.map((c) => ({
           label: c.product.description,
           amount: c.requestedAmount,
-          color: c.requestedAmount > 1500 ? '#FF0049' : '#33C4FF'
-        })));
+          color: c.requestedAmount > 1500 ? '#FF0049' : '#33C4FF',
+        }))
+      );
 
-        this.productsData = {
-          labels: productsData.map(d => d.label),
-          datasets: [
-            {
-              backgroundColor: productsData.map(d => d.color),
-              borderColor: productsData.map(d =>  d.color),
-              data: productsData.map(d => d.amount),
-              maxBarThickness: 30,
-              borderWidth: 1
-            }
-          ]
-        };
-      });
+      this.productsData = {
+        labels: productsData.map((d) => d.label),
+        datasets: [
+          {
+            backgroundColor: productsData.map((d) => d.color),
+            borderColor: productsData.map((d) => d.color),
+            data: productsData.map((d) => d.amount),
+            maxBarThickness: 30,
+            borderWidth: 1,
+          },
+        ],
+      };
+    });
   }
 
   onDistanceCalculated(distance: number) {
@@ -89,6 +98,8 @@ export class DetailsComponent {
       return;
     }
 
-    this.approxDrivingDuration = new Date(duration * 1000).toISOString().slice(11, 16).replace(':', 'h') + 'm';
+    this.approxDrivingDuration =
+      new Date(duration * 1000).toISOString().slice(11, 16).replace(':', 'h') +
+      'm';
   }
 }

@@ -1,4 +1,6 @@
 export interface Truck {
     id: string,
-    name: string
+    name: string,
+    longtitude: number,
+    latitude: number
 }

@@ -12,6 +12,7 @@ import {
 import { Map, Marker } from 'maplibre-gl';
 import { RoutingMetric } from '../../domain/routing/enums/routing-metric';
 import { RoutingUnit } from '../../domain/routing/enums/routing-unit';
+import { MapMarker } from '../../models/map-marker';
 import { RoutingService } from '../../services/routing-service';
 
 @Component({
@@ -24,21 +25,21 @@ export class MapsComponent implements AfterViewInit, OnDestroy, OnChanges {
   currentMarkers!: Marker[];
   @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
 
-  @Input() deliveriesCoordinates!: number[][];
+  @Input() markers!: MapMarker[];
 
   @Output() approxDrivingDistanceEvent = new EventEmitter<number>();
   @Output() approxDrivingTimeEvent = new EventEmitter<number>();
 
+  initialState = { lng: 139.7525, lat: 35.6846, zoom: 14 };
+
   constructor(private routingService: RoutingService) {}
 
   ngAfterViewInit() {
-    const initialState = { lng: 139.7525, lat: 35.6846, zoom: 14 };
-
     if (this.map == null) {
       this.map = new Map({
         container: this.mapContainer.nativeElement,
         style: `https://api.maptiler.com/maps/streets-v2/style.json?key=9GLc7lJKzQasVymrF28T`,
-        zoom: initialState.zoom,
+        zoom: this.initialState.zoom,
         attributionControl: false,
       });
 
@@ -56,30 +57,52 @@ export class MapsComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     // Adding new markers.
-    this.deliveriesCoordinates.forEach((c) => {
-      const marker = new Marker({ color: '#FF0000' }).setLngLat([c[0], c[1]]);
-      this.currentMarkers.push(marker);
-      marker.addTo(this.map);
+    this.markers.forEach((c) => {
+      if (!c.icon) {
+        const marker = new Marker({ color: c.color }).setLngLat([
+          c.longitude,
+          c.latitude,
+        ]);
+        this.currentMarkers.push(marker);
+        marker.addTo(this.map);
+      } else {
+        const icon = document.createElement('div');
+        icon.style.width = '38px';
+        icon.style.height = '38px';
+        icon.style.backgroundSize = 'contain';
+        icon.style.backgroundImage = `url("assets/truck.png")`;
+        icon.style.cursor = 'pointer';
+
+        const marker = new Marker(icon, {
+          anchor: 'bottom',
+          offset: [0, 5],
+        }).setLngLat([c.longitude, c.latitude]);
+        this.currentMarkers.push(marker);
+        marker.addTo(this.map);
+      }
     });
 
     // Fiting all markers bounds.
     const padding = 0.1;
-    this.map.fitBounds([
-      [
-        Math.max(...this.deliveriesCoordinates.map((x) => x[0])) + padding,
-        Math.max(...this.deliveriesCoordinates.map((x) => x[1])) + padding,
-      ],
-      [
-        Math.min(...this.deliveriesCoordinates.map((x) => x[0])) - padding,
-        Math.min(...this.deliveriesCoordinates.map((x) => x[1])) - padding,
-      ],
-    ]);
+
+    if (this.markers.length > 0) {
+      this.map.fitBounds([
+        [
+          Math.max(...this.markers.map((x) => x.longitude)) + padding,
+          Math.max(...this.markers.map((x) => x.latitude)) + padding,
+        ],
+        [
+          Math.min(...this.markers.map((x) => x.longitude)) - padding,
+          Math.min(...this.markers.map((x) => x.latitude)) - padding,
+        ],
+      ]);
+    }
 
     // Calculating matrix.
-    if (this.deliveriesCoordinates.length > 1) {
+    if (this.markers.length > 1) {
       this.routingService
         .getMatrix({
-          locations: this.deliveriesCoordinates,
+          locations: this.markers.map((x) => [x.longitude, x.latitude]),
           metrics: [RoutingMetric.distance, RoutingMetric.duration],
           units: RoutingUnit.km,
         })
@@ -103,22 +126,22 @@ export class MapsComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     // Adding Isochrones.
-    this.map.on('load', () => {
-      this.map.addSource('isochrones', {
-        type: 'geojson',
-        data: {},
-      });
+    // this.map.on('load', () => {
+    //   this.map.addSource('isochrones', {
+    //     type: 'geojson',
+    //     data: {},
+    //   });
 
-      this.map.addLayer({
-        id: 'isochrones',
-        type: 'fill',
-        source: 'isochrones',
-        paint: {
-          'fill-color': '#088',
-          'fill-opacity': 0.2,
-        },
-      });
-    });
+    //   this.map.addLayer({
+    //     id: 'isochrones',
+    //     type: 'fill',
+    //     source: 'isochrones',
+    //     paint: {
+    //       'fill-color': '#088',
+    //       'fill-opacity': 0.2,
+    //     },
+    //   });
+    // });
   }
 
   ngOnDestroy() {

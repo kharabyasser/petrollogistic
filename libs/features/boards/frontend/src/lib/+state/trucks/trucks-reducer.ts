@@ -18,7 +18,7 @@ export const initialState: State = adapter.getInitialState({
   error: null,
 });
 
-export const reducers = createReducer(
+export const trucksReducer = createReducer(
   initialState,
   on(TrucksActions.getTrucks, (state) => ({ ...state, isLoading: true })),
   on(TrucksActions.getTrucksSuccess, (state, action) =>
