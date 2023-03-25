@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DeliveryRequestsFacade } from '../../../+state/delivery-requests/delivery-requests-facade';
 import { DeliveryRequest } from '../../../domain/deliveryrequest';
-import { MapMarker } from '../../../models/map-marker';
+import { MapMarker } from '../../../models/maps/map-marker';
 
 @Component({
   selector: 'petrologistic-delivery-detail',

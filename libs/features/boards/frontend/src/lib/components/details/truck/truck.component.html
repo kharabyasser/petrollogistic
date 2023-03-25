@@ -7,7 +7,9 @@
       <p>Frontliner #3748</p>
       <div class="vertical-divider"></div>
       <p>3/11</p>
+      <div class="vertical-divider"></div>
       <i class="pi pi-map-marker" style="margin-left: 0.5rem; margin-right: 0.5rem;"></i>
+      <img src="assets/isochrone.png" width="28px" height="28px" />
       <p-avatar label="J" styleClass="mr-2"
         [style]="{'background-color':'#2196F3', 'color': '#ffffff', 'margin-left': '5rem'}"></p-avatar>
     </ng-template>
@@ -55,7 +57,7 @@
     <petrologistic-p-panel-child title="Tickets">
       <p>Minimalistic view</p>
       <p-inputSwitch [(ngModel)]="miniTicketsView"></p-inputSwitch>
-      <div  *ngIf="miniTicketsView; else fullTicketsView">
+      <div *ngIf="miniTicketsView; else fullTicketsView">
         <div class="flex align-items-stretch card">
           <div class="card__statusBar"></div>
           <div class="card__body">

@@ -12,7 +12,7 @@ import {
 import { Map, Marker } from 'maplibre-gl';
 import { RoutingMetric } from '../../domain/routing/enums/routing-metric';
 import { RoutingUnit } from '../../domain/routing/enums/routing-unit';
-import { MapMarker } from '../../models/map-marker';
+import { MapMarker } from '../../models/maps/map-marker';
 import { RoutingService } from '../../services/routing-service';
 
 @Component({
@@ -26,6 +26,7 @@ export class MapsComponent implements AfterViewInit, OnDestroy, OnChanges {
   @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
 
   @Input() markers!: MapMarker[];
+  @Input() positionToCenter: number[] = [];
 
   @Output() approxDrivingDistanceEvent = new EventEmitter<number>();
   @Output() approxDrivingTimeEvent = new EventEmitter<number>();
@@ -85,53 +86,69 @@ export class MapsComponent implements AfterViewInit, OnDestroy, OnChanges {
     // Fiting all markers bounds.
     const padding = 0.1;
 
-    if (this.markers.length > 0) {
+    if (this.positionToCenter) {
       this.map.fitBounds([
         [
-          Math.max(...this.markers.map((x) => x.longitude)) + padding,
-          Math.max(...this.markers.map((x) => x.latitude)) + padding,
+          this.positionToCenter[0] + padding,
+          this.positionToCenter[1] + padding,
         ],
         [
-          Math.min(...this.markers.map((x) => x.longitude)) - padding,
-          Math.min(...this.markers.map((x) => x.latitude)) - padding,
+          this.positionToCenter[0] - padding,
+          this.positionToCenter[1] - padding,
         ],
       ]);
-    }
-
-    // Calculating matrix.
-    if (this.markers.length > 1) {
-      this.routingService
-        .getMatrix({
-          locations: this.markers.map((x) => [x.longitude, x.latitude]),
-          metrics: [RoutingMetric.distance, RoutingMetric.duration],
-          units: RoutingUnit.km,
-        })
-        .subscribe((x) => {
-          this.approxDrivingDistanceEvent.emit(
-            Math.max(
-              ...x.distances.map((a) =>
-                a.reduce((partialsum, d) => partialsum + d, 0)
-              )
-            )
-          );
-          this.approxDrivingTimeEvent.emit(
-            ...x.durations.map((a) =>
-              a.reduce((partialsum, d) => partialsum + d, 0)
-            )
-          );
-        });
     } else {
-      this.approxDrivingDistanceEvent.emit(0);
-      this.approxDrivingTimeEvent.emit(0);
+      if (this.markers.length > 0) {
+        this.map.fitBounds([
+          [
+            Math.max(...this.markers.map((x) => x.longitude)) + padding,
+            Math.max(...this.markers.map((x) => x.latitude)) + padding,
+          ],
+          [
+            Math.min(...this.markers.map((x) => x.longitude)) - padding,
+            Math.min(...this.markers.map((x) => x.latitude)) - padding,
+          ],
+        ]);
+      }
     }
+  }
 
+  // public getMetrix() {
+  //   // Calculating matrix.
+  //   if (this.markers.length > 1) {
+  //     this.routingService
+  //       .getMatrix({
+  //         locations: this.markers.map((x) => [x.longitude, x.latitude]),
+  //         metrics: [RoutingMetric.distance, RoutingMetric.duration],
+  //         units: RoutingUnit.km,
+  //       })
+  //       .subscribe((x) => {
+  //         this.approxDrivingDistanceEvent.emit(
+  //           Math.max(
+  //             ...x.distances.map((a) =>
+  //               a.reduce((partialsum, d) => partialsum + d, 0)
+  //             )
+  //           )
+  //         );
+  //         this.approxDrivingTimeEvent.emit(
+  //           ...x.durations.map((a) =>
+  //             a.reduce((partialsum, d) => partialsum + d, 0)
+  //           )
+  //         );
+  //       });
+  //   } else {
+  //     this.approxDrivingDistanceEvent.emit(0);
+  //     this.approxDrivingTimeEvent.emit(0);
+  //   }
+  // }
+
+  addIsochrones() {
     // Adding Isochrones.
     // this.map.on('load', () => {
     //   this.map.addSource('isochrones', {
     //     type: 'geojson',
     //     data: {},
     //   });
-
     //   this.map.addLayer({
     //     id: 'isochrones',
     //     type: 'fill',

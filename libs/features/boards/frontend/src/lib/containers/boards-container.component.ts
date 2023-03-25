@@ -8,7 +8,7 @@ import {
 } from '@angular/animations';
 import { DeliveryRequest } from '../domain/deliveryrequest';
 import { DeliveryRequestsFacade } from '../+state/delivery-requests/delivery-requests-facade';
-import { MapMarker } from '../models/map-marker';
+import { MapMarker } from '../models/maps/map-marker';
 import { TrucksFacade } from '../+state/trucks/trucks-facade';
 
 @Component({
