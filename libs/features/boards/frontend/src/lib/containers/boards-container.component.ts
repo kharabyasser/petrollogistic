@@ -10,6 +10,9 @@ import { DeliveryRequest } from '../domain/deliveryrequest';
 import { DeliveryRequestsFacade } from '../+state/delivery-requests/delivery-requests-facade';
 import { MapMarker } from '../models/maps/map-marker';
 import { TrucksFacade } from '../+state/trucks/trucks-facade';
+import { Coordinate } from '../models/maps/coordinate';
+import { Observable, of } from 'rxjs';
+import { MapsFacade } from '../+state/maps/maps-facade';
 
 @Component({
   selector: 'petrologistic-boards-container',
@@ -36,14 +39,16 @@ import { TrucksFacade } from '../+state/trucks/trucks-facade';
 })
 export class BoardsContainerComponent {
   deliveryRequests: DeliveryRequest[] = [];
-  selectedCoordinates: MapMarker[] = [];
+  markersList: MapMarker[] = [];
+  markers: Observable<MapMarker[]> = of(this.markersList);
   layoutOptions: any[] = [];
   selectedLayout = 'map';
   detailsState = '';
 
   constructor(
     private deliveriesFacade: DeliveryRequestsFacade,
-    private trucksFacade: TrucksFacade
+    private trucksFacade: TrucksFacade,
+    private mapsFacade: MapsFacade
   ) {
     this.deliveriesFacade.selectedRequests$.subscribe(
       (x) => (this.detailsState = x.length > 0 ? 'in' : 'out')
@@ -56,10 +61,9 @@ export class BoardsContainerComponent {
 
     this.deliveriesFacade.deliveryRequests$.subscribe((deliveries) =>
       deliveries.map((d) =>
-        this.selectedCoordinates.push(
+        this.markersList.push(
           new MapMarker(
-            d.shipToAccount.longtitude,
-            d.shipToAccount.latitude,
+            new Coordinate(d.shipToAccount.longtitude, d.shipToAccount.latitude),
             undefined,
             '#FF0000'
           )
@@ -69,10 +73,13 @@ export class BoardsContainerComponent {
 
     this.trucksFacade.trucks$.subscribe((trucks) =>
       trucks.map((d) =>
-        this.selectedCoordinates.push(
-          new MapMarker(d.longtitude, d.latitude, '../assets/truck.png', '#000000')
+        this.markersList.push(
+          new MapMarker(new Coordinate(d.longtitude, d.latitude), '../assets/truck.png', '#000000')
         )
       )
     );
+
+    this.markers.subscribe(x => 
+      this.mapsFacade.addMarkers(x));
   }
 }

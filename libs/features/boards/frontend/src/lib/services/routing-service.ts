@@ -1,9 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { DirectionsRequest } from "../domain/routing/directions-request";
-import { MatrixRequest } from "../domain/routing/matrix-request";
-import { MatrixResponse } from "../domain/routing/matrix-response";
 import { environment } from '@env/*';
+import { DirectionsRequest } from "../models/routing/directions-request";
+import { MatrixRequest } from "../models/routing/matrix-request";
+import { MatrixResponse } from "../models/routing/matrix-response";
 
 
 @Injectable()

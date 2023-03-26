@@ -7,9 +7,14 @@ export const setMarkersOnMap = createAction(
   props<{ data: MapMarker[] }>()
 );
 
-export const setCenteralPosition = createAction(
-  '[Map] Set Centeral Position',
+export const setCenterOnPosition = createAction(
+  '[Map] Set Center On Position',
   props<{ data: Coordinate }>()
+);
+
+export const setFitBounds = createAction(
+  '[Map] Set FitBounds',
+  props<{ data: boolean }>()
 );
 
 export const setIsochronesData = createAction(

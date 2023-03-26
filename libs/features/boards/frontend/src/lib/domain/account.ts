@@ -1,5 +1,5 @@
 import { AccountType } from "./enums/account-type";
-import { Address } from "./models/address";
+import { Address } from "../models/maps/address";
 
 export interface Account {
     id: string,

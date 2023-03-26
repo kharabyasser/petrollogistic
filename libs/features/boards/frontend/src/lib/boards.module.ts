@@ -41,6 +41,8 @@ import { TrucksFacade } from './+state/trucks/trucks-facade';
 import { DeliveryRequestsEffect } from './+state/delivery-requests/delivery-requests-effects';
 import { TrucksEffect } from './+state/trucks/trucks-effects';
 import { trucksReducer } from './+state/trucks/trucks-reducer';
+import { MapsFacade } from './+state/maps/maps-facade';
+import { mapsReducer } from './+state/maps/maps-reducer';
 
 @NgModule({
   imports: [
@@ -71,6 +73,7 @@ import { trucksReducer } from './+state/trucks/trucks-reducer';
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),
     EffectsModule.forFeature([TrucksEffect]),
+    StoreModule.forFeature('Maps', mapsReducer),
   ],
   declarations: [
     TableComponent,
@@ -84,7 +87,8 @@ import { trucksReducer } from './+state/trucks/trucks-reducer';
     DeliveryRequestService, 
     TrucksService, 
     DeliveryRequestsFacade, 
-    TrucksFacade, 
+    TrucksFacade,
+    MapsFacade, 
     RoutingService],
 })
 export class BoardsModule {}

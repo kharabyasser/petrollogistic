@@ -3,9 +3,6 @@
     <p-accordionTab header="Map and Products" [selected]="true">
       <petrologistic-maps
         style="--height: 30vh"
-        [markers]="selectedCoordinates"
-        (approxDrivingDistanceEvent)="onDistanceCalculated($event)"
-        (approxDrivingTimeEvent)="onDurationCalculated($event)"
       ></petrologistic-maps>
       <div class="flex justify-content-between flex-wrap metric">
         <table>

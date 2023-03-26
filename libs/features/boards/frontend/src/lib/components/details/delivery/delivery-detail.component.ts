@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { DeliveryRequestsFacade } from '../../../+state/delivery-requests/delivery-requests-facade';
+import { MapsFacade } from '../../../+state/maps/maps-facade';
 import { DeliveryRequest } from '../../../domain/deliveryrequest';
+import { Coordinate } from '../../../models/maps/coordinate';
 import { MapMarker } from '../../../models/maps/map-marker';
 
 @Component({
@@ -11,8 +13,6 @@ import { MapMarker } from '../../../models/maps/map-marker';
 export class DetailsComponent {
   deliveryRequests: DeliveryRequest[] = [];
   selectedDeliveryRequests: DeliveryRequest[] = [];
-
-  selectedCoordinates: MapMarker[] = [];
 
   approxDrivingDistance = 0;
   approxDrivingDuration = '';
@@ -47,7 +47,10 @@ export class DetailsComponent {
     },
   };
 
-  constructor(private deliveriesFacade: DeliveryRequestsFacade) {
+  constructor(
+    private deliveriesFacade: DeliveryRequestsFacade,
+    private mapsFacade: MapsFacade
+  ) {
     this.deliveriesFacade.deliveryRequests$.subscribe(
       (deliveries) => (this.deliveryRequests = deliveries)
     );
@@ -56,12 +59,20 @@ export class DetailsComponent {
       this.selectedDeliveryRequests = this.deliveryRequests.filter((d) =>
         ids.includes(d.id)
       );
-      this.selectedCoordinates = this.selectedDeliveryRequests.map((d) => new MapMarker (
-        d.shipToAccount.longtitude,
-        d.shipToAccount.latitude,
-        undefined,
-        '#FF0000'
-      ));
+
+      const selectedCoordinates = this.selectedDeliveryRequests.map(
+        (d) =>
+          new MapMarker(
+            new Coordinate(
+              d.shipToAccount.longtitude,
+              d.shipToAccount.latitude
+            ),
+            undefined,
+            '#FF0000'
+          )
+      );
+      
+      this.mapsFacade.addMarkers(selectedCoordinates);
 
       this.selectedRequestsCount = ids.length;
 

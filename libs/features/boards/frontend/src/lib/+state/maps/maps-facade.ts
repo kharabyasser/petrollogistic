@@ -1,22 +1,35 @@
+import { Injectable } from "@angular/core";
 import { select, Store } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { Coordinate } from "../../models/maps/coordinate";
 import { MapMarker } from "../../models/maps/map-marker";
-import { markerOnMap, centralPosition, isochroneData } from "./maps-selectors";
+import { markersOnMapSelector, centerOnPositionSelector, isochroneDataSelector, fitMarkersBoundSelector } from "./maps-selectors";
 
+import * as MapActions from './maps-actions';
+
+@Injectable()
 export class MapsFacade {
-    markerOnMap$: Observable<MapMarker[]>;
-    centralPosition$: Observable<Coordinate | undefined>;
+    markersOnMap$: Observable<MapMarker[]>;
+    fitMarkersBound$: Observable<boolean>;
+    centerOnPosition$: Observable<Coordinate | null>;
     isochroneData$: Observable<any>;
 
     constructor(private store: Store) {
-        this.markerOnMap$ = 
-        this.store.pipe(select(markerOnMap));
+        this.markersOnMap$ = 
+        this.store.pipe(select(markersOnMapSelector));
 
-        this.centralPosition$ = 
-        this.store.pipe(select(centralPosition));
+        this.fitMarkersBound$ = 
+        this.store.pipe(select(fitMarkersBoundSelector))
+
+        this.centerOnPosition$ = 
+        this.store.pipe(select(centerOnPositionSelector));
 
         this.isochroneData$ = 
-        this.store.pipe(select(isochroneData));
+        this.store.pipe(select(isochroneDataSelector));
+    }
+
+    
+    addMarkers(markers: MapMarker[]) {
+        this.store.dispatch(MapActions.setMarkersOnMap({ data: markers }))
     }
 }
