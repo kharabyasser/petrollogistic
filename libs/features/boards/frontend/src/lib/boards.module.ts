@@ -43,6 +43,7 @@ import { TrucksEffect } from './+state/trucks/trucks-effects';
 import { trucksReducer } from './+state/trucks/trucks-reducer';
 import { MapsFacade } from './+state/maps/maps-facade';
 import { mapsReducer } from './+state/maps/maps-reducer';
+import { MapService } from './services/maps-service';
 
 @NgModule({
   imports: [
@@ -79,8 +80,8 @@ import { mapsReducer } from './+state/maps/maps-reducer';
     TableComponent,
     BoardsContainerComponent,
     DetailsComponent,
-    MapsComponent,
     TruckComponent,
+    MapsComponent
   ],
   exports: [BoardsContainerComponent],
   providers: [
@@ -89,6 +90,7 @@ import { mapsReducer } from './+state/maps/maps-reducer';
     DeliveryRequestsFacade, 
     TrucksFacade,
     MapsFacade, 
+    MapService,
     RoutingService],
 })
 export class BoardsModule {}

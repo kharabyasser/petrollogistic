@@ -79,7 +79,7 @@ export class TableComponent implements OnInit {
   }
 
   // fix for paginator auto focus.
-  @HostListener('window:scroll') onScroll(e: Event): void {
+  @HostListener('window:scroll') onScroll(): void {
     window.scrollTo(0, window.scrollY);
  }
   ngOnInit() {

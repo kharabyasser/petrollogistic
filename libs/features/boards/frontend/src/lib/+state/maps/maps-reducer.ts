@@ -7,15 +7,13 @@ import * as MapsActions from './maps-actions';
 export interface MapState {
   markersOnMap: MapMarker[];
   isochroneData: any;
-  fitMarkersBound: boolean;
   centerOnPosition: Coordinate | null;
 }
 
 export const initialState: MapState = {
   markersOnMap: [],
   centerOnPosition: null,
-  isochroneData: null,
-  fitMarkersBound: false
+  isochroneData: null
 };
 
 export const mapsReducer = createReducer(
