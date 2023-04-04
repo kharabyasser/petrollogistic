@@ -10,8 +10,12 @@
       <div class="vertical-divider"></div>
       <p-button icon="pi pi-map-marker" styleClass="p-button-text panel-button" (click)="locate(truck)"></p-button>
       <p-button icon="pi pi-sitemap" styleClass="p-button-text panel-button" (click)="isochrone(truck)"></p-button>
-      <p-avatar label="J" styleClass="mr-2"
-        [style]="{'background-color':'#2196F3', 'color': '#ffffff', 'margin-left': '1rem'}"></p-avatar>
+      <div class="panel-avatar">
+        <p-avatar label="J" styleClass="mr-2" [style]="{
+        'background-color':'#2196F3', 
+        'color': '#ffffff'
+      }"></p-avatar>
+      </div>
     </ng-template>
     <petrologistic-p-panel-child title="Basic Information" [collapsed]="true">
       <div class="info__panel">
