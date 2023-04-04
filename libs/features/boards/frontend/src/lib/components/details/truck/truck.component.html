@@ -1,19 +1,19 @@
 <div class="truck__panel">
-  <p-panel *ngFor="let truck of trucks" [toggleable]="true" [collapsed]="false">
+  <p-panel *ngFor="let truck of trucks; let i = index" [toggleable]="true" [collapsed]="i !== 0">
     <ng-template pTemplate="header">
       <i class="pi pi-circle-on" style="margin-right: 0.5rem; color: rgb(21, 186, 21)"></i>
       <i class="pi pi-tags"></i>
       <div class="vertical-divider"></div>
-      <p>Frontliner #3748</p>
+      <p>{{ truck.name }} #3748</p>
       <div class="vertical-divider"></div>
       <p>3/11</p>
       <div class="vertical-divider"></div>
-      <i class="pi pi-map-marker" style="margin-left: 0.5rem; margin-right: 0.5rem;"></i>
-      <img src="assets/isochrone.png" width="28px" height="28px" />
+      <p-button icon="pi pi-map-marker" styleClass="p-button-text panel-button" (click)="locate(truck)"></p-button>
+      <p-button icon="pi pi-sitemap" styleClass="p-button-text panel-button" (click)="isochrone(truck)"></p-button>
       <p-avatar label="J" styleClass="mr-2"
-        [style]="{'background-color':'#2196F3', 'color': '#ffffff', 'margin-left': '5rem'}"></p-avatar>
+        [style]="{'background-color':'#2196F3', 'color': '#ffffff', 'margin-left': '2rem'}"></p-avatar>
     </ng-template>
-    <petrologistic-p-panel-child title="Basic Information">
+    <petrologistic-p-panel-child title="Basic Information" [collapsed]="true">
       <div class="info__panel">
         <div class="__item">
           <p>Name </p>
@@ -51,7 +51,7 @@
         </div>
       </div>
     </petrologistic-p-panel-child>
-    <petrologistic-p-panel-child title="Products">
+    <petrologistic-p-panel-child title="Products" [collapsed]="true">
       <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
     </petrologistic-p-panel-child>
     <petrologistic-p-panel-child title="Tickets">

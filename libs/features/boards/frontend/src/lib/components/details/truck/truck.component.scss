@@ -99,3 +99,13 @@
     }
   }
 }
+
+:host ::ng-deep .p-panel {
+  margin-bottom: 5px;
+}
+
+:host ::ng-deep .panel-button {
+  width: 25px;
+  height: 25px !important;
+  margin-right: 5px;
+}

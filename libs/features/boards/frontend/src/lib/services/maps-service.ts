@@ -17,6 +17,7 @@ export class MapService {
 
   private initialState = { lng: -73.62, lat: 45.5, zoom: 14 };
   private padding = 0.1;
+  private colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0'];
 
   constructor(
     private mapsFacade: MapsFacade,
@@ -83,7 +84,7 @@ export class MapService {
               Math.min(...this.markers.map((x) => x.coordinate.latitude)) -
                 this.padding,
             ],
-          ]); 
+          ]);
         }, 0);
       }
     });
@@ -96,6 +97,44 @@ export class MapService {
           [position.longitude - this.padding, position.latitude - this.padding],
         ]);
       }
+    });
+
+    this.mapsFacade.isochroneData$.subscribe((isochrones) => {
+      if (!this.map.loaded()) {
+        return;
+      }
+
+      if (this.map.getSource('isochroneSource')) {
+        this.map.removeLayer('isochroneLayer');
+        this.map.removeSource('isochroneSource');
+      }
+
+      this.map.addSource('isochroneSource', {
+        type: 'geojson',
+        data: isochrones,
+      });
+
+      this.map.addLayer({
+        id: 'isochroneLayer',
+        type: 'fill',
+        source: 'isochroneSource',
+        paint: {
+          'fill-color': [
+            'match',
+            ['get', 'value'],
+            100, this.colors[0],
+            200, this.colors[1],
+            300, this.colors[2],
+            400, this.colors[3],
+            500, this.colors[4],
+            600, this.colors[5],
+            700, this.colors[6],
+            '#FFFFFF' // Default color if the value doesn't match any of the above
+          ],
+          'fill-outline-color': 'rgba(255, 0, 0, 0)',
+          'fill-opacity': 0.5,
+        },
+      });
     });
   }
 

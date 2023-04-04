@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DeliveryRequestsFacade } from '../../../+state/delivery-requests/delivery-requests-facade';
 import { MapsFacade } from '../../../+state/maps/maps-facade';
 import { DeliveryRequest } from '../../../domain/deliveryrequest';
@@ -10,7 +10,7 @@ import { MapMarker } from '../../../models/maps/map-marker';
   templateUrl: './delivery-detail.component.html',
   styleUrls: ['./delivery-detail.component.scss'],
 })
-export class DetailsComponent {
+export class DetailsComponent implements OnInit {
   deliveryRequests: DeliveryRequest[] = [];
   selectedDeliveryRequests: DeliveryRequest[] = [];
 
@@ -97,6 +97,10 @@ export class DetailsComponent {
         ],
       };
     });
+  }
+
+  ngOnInit(): void {
+    this.mapsFacade.clear();
   }
 
   onDistanceCalculated(distance: number) {

@@ -21,3 +21,6 @@ export const setIsochronesData = createAction(
   '[Map] Set Isochrones Data',
   props<{ data: unknown }>()
 );
+
+export const clear = createAction(
+  '[Map] Clear');

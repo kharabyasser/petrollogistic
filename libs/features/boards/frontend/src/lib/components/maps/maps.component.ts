@@ -25,23 +25,4 @@ export class MapsComponent implements AfterViewInit {
 
       this.mapService.map.resize();
   }
-
-  addIsochrones() {
-    // Adding Isochrones.
-    // this.map.on('load', () => {
-    //   this.map.addSource('isochrones', {
-    //     type: 'geojson',
-    //     data: {},
-    //   });
-    //   this.map.addLayer({
-    //     id: 'isochrones',
-    //     type: 'fill',
-    //     source: 'isochrones',
-    //     paint: {
-    //       'fill-color': '#088',
-    //       'fill-opacity': 0.2,
-    //     },
-    //   });
-    // });
-  }
 }

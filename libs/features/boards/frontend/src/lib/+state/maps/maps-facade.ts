@@ -6,6 +6,7 @@ import { MapMarker } from "../../models/maps/map-marker";
 import { markersOnMapSelector, centerOnPositionSelector, isochroneDataSelector } from "./maps-selectors";
 
 import * as MapActions from './maps-actions';
+import { IsochronesResponse } from "../../models/routing/isochrones-response";
 
 @Injectable()
 export class MapsFacade {
@@ -27,5 +28,17 @@ export class MapsFacade {
     
     addMarkers(markers: MapMarker[]) {
         this.store.dispatch(MapActions.setMarkersOnMap({ data: markers }))
+    }
+
+    addIsochroneData(isochroneData: IsochronesResponse) {
+        this.store.dispatch(MapActions.setIsochronesData({ data: isochroneData}));
+    }
+
+    centerOn(location: Coordinate) {
+        this.store.dispatch(MapActions.setCenterOnPosition({ data: location }))
+    }
+
+    clear() {
+        this.store.dispatch(MapActions.clear());
     }
 }

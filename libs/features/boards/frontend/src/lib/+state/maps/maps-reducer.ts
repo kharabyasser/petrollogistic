@@ -36,4 +36,10 @@ export const mapsReducer = createReducer(
     ...state,
     isochroneData: action.data
   })),
+  on(MapsActions.clear, (state) => ({
+    ...state,
+    markersOnMap: [],
+    centerOnPosition: null,
+    isochroneData: null,
+  })),
 );

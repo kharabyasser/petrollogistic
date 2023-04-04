@@ -7,15 +7,15 @@ import { Component, Input } from '@angular/core';
 })
 export class PPanelChildComponent {
   @Input() title = "";
+  @Input() collapsed = false;
 
-  contentCollapsed = false;
   hideContent = false;
 
   onBeforeToggle() {
-    if (this.contentCollapsed) this.hideContent = false;
+    if (this.collapsed) this.hideContent = false;
   }
 
   onAfterToggle() {
-    this.hideContent = this.contentCollapsed;
+    this.hideContent = this.collapsed;
   }
 }
