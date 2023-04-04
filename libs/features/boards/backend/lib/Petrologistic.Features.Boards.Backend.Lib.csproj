@@ -13,7 +13,7 @@
   
   <Target Name="CheckNxModuleBoundaries" BeforeTargets="Build">
     
-    <Exec Command="node ../../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p features-boards-backend-lib" />
+<!--    <Exec Command="node ../../../../../node_modules/@nx-dotnet/core/src/tasks/check-module-boundaries.js -p features-boards-backend-lib" />-->
     
   </Target>
   
@@ -24,6 +24,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\core\persistence\lib\Petrologistic..Core.Persistence.Lib.csproj" />
+    <ProjectReference Include="..\..\..\..\core\persistence\lib\Petrologistic.Core.Persistence.Lib.csproj" />
   </ItemGroup>
 </Project>

@@ -4,50 +4,50 @@
       <i class="pi pi-circle-on" style="margin-right: 0.5rem; color: rgb(21, 186, 21)"></i>
       <i class="pi pi-tags"></i>
       <div class="vertical-divider"></div>
-      <p>{{ truck.name }} #3748</p>
+      <p>{{ truck.name | truncate:8 }} #{{ truck.number }}</p>
       <div class="vertical-divider"></div>
       <p>3/11</p>
       <div class="vertical-divider"></div>
       <p-button icon="pi pi-map-marker" styleClass="p-button-text panel-button" (click)="locate(truck)"></p-button>
       <p-button icon="pi pi-sitemap" styleClass="p-button-text panel-button" (click)="isochrone(truck)"></p-button>
       <p-avatar label="J" styleClass="mr-2"
-        [style]="{'background-color':'#2196F3', 'color': '#ffffff', 'margin-left': '2rem'}"></p-avatar>
+        [style]="{'background-color':'#2196F3', 'color': '#ffffff', 'margin-left': '1rem'}"></p-avatar>
     </ng-template>
     <petrologistic-p-panel-child title="Basic Information" [collapsed]="true">
       <div class="info__panel">
         <div class="__item">
           <p>Name </p>
-          <p class="__value">Frontliner</p>
+          <p class="__value">{{ truck.name }}</p>
         </div>
         <p-divider></p-divider>
         <div class="__item">
           <p>Number </p>
-          <p class="__value">3748</p>
+          <p class="__value">{{ truck.number }}</p>
         </div>
         <p-divider></p-divider>
         <div class="__item">
           <p>Description </p>
-          <p class="__value">Fuel 2012 International</p>
+          <p class="__value">{{ truck.description }}</p>
         </div>
         <p-divider></p-divider>
         <div class="__item">
           <p>Truck's license </p>
-          <p class="__value">FVLL5D5S54DS</p>
+          <p class="__value">{{ truck.trucksLicense }}</p>
         </div>
         <p-divider></p-divider>
         <div class="__item">
           <p>Trailer's license </p>
-          <p class="__value">DDS81DGTR84FA</p>
+          <p class="__value"> {{ truck.trailersLicense }}</p>
         </div>
         <p-divider></p-divider>
         <div class="__item">
           <p>Permit </p>
-          <p class="__value">D77D7S7S</p>
+          <p class="__value">{{ truck.permit }}</p>
         </div>
         <p-divider></p-divider>
         <div class="__item">
           <p>Truck System</p>
-          <p class="__value">None</p>
+          <p class="__value">{{ truck.system }}</p>
         </div>
       </div>
     </petrologistic-p-panel-child>

@@ -7,8 +7,14 @@ const GET_TRUCKS = gql`{
   trucks {
     id,
     name,
+    number,
+    description,
+    trucksLicense,
+    trailersLicense,
+    permit,
     latitude,
-    longtitude
+    longtitude,
+    system
   }
 }
 `
