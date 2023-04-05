@@ -3,10 +3,6 @@
   padding-bottom: 0;
 }
 
-:host ::ng-deep .p-panel {
-  padding-top: 0;
-}
-
 .truck__panel {
   width: 29rem;
   overflow-y: scroll;
@@ -101,8 +97,8 @@
 }
 
 .panel-avatar {
-  position: absolute;
-  right: 75px;
+  position:absolute;
+  right: 70px;
 }
 
 :host ::ng-deep .p-panel {

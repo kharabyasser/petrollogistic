@@ -24,3 +24,11 @@
   justify-content: space-between;
   align-items: flex-start;
 }
+
+:host ::ng-deep .p-panel {
+  margin-bottom: 5px;
+}
+
+p {
+  margin: 1px;
+}

@@ -42,7 +42,7 @@ export class BoardsContainerComponent {
   deliveriesMarkersList: MapMarker[] = [];
   trucksMarkersList: MapMarker[] = [];
   layoutOptions: any[] = [];
-  _selectedLayout = 'map';
+  _selectedLayout = 'table';
   detailsState = '';
 
   constructor(
