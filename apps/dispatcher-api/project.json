@@ -1,13 +1,12 @@
 {
+  "name": "dispatcher-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/dispatcher-api",
   "targets": {
     "build": {
       "executor": "@nx-dotnet/core:build",
-      "outputs": [
-        "dist/apps/dispatcher-api"
-      ],
+      "outputs": ["dist/apps/dispatcher-api"],
       "options": {
         "configuration": "Debug",
         "noDependencies": true

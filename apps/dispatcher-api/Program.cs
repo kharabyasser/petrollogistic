@@ -1,10 +1,13 @@
 using Petrologistic.Core.Persistence.Lib.Configuration;
 using Petrologistic.DispatcherApi.Configurations;
-using Petrologistic.Features.Boards.Backend.Lib;
+using Petrologistic.Features.Boards.Backend.Lib.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddGraphQLServer().AddQueryType<DeliveryRequestQuery>();
+builder.Services.AddGraphQLServer()
+  .AddQueryType<Query>()
+  .AddTypeExtension<DeliveryRequestQuery>()
+  .AddTypeExtension<TrucksQuery>();
 
 builder.Services.AddCors(c =>
 {

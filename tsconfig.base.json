@@ -19,6 +19,15 @@
       "@petrologistic/core/frontend/apollo": [
         "libs/core/frontend/apollo/src/index.ts"
       ],
+      "@petrologistic/core/frontend/osiris-pipes": [
+        "libs/core/frontend/osiris-pipes/src/index.ts"
+      ],
+      "@petrologistic/core/frontend/p-panel-child": [
+        "libs/core/frontend/p-panel-child/src/index.ts"
+      ],
+      "@petrologistic/core/frontend/p-panel-child/components": [
+        "libs/core/frontend/p-panel-child/src/lib/components/index.ts"
+      ],
       "@petrologistic/features/frontend/boards": [
         "libs/features/boards/frontend/src/index.ts"
       ]

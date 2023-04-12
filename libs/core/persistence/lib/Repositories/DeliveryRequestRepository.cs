@@ -142,7 +142,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
         Name = f.Random.Number(10, 20).ToString("00")
       } : null);
 
-    var deliveryRequests = fakeDeliveries.Generate(1000).AsEnumerable();
+    var deliveryRequests = fakeDeliveries.Generate(35).AsEnumerable();
 
     return Task.FromResult(deliveryRequests);
   }

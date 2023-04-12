@@ -1,0 +1,34 @@
+.details-wrapper {
+  width: 25vw;
+  padding: 7px;
+  overflow-y: scroll;
+  max-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.metric {
+  margin: 10px !important;
+}
+
+.container-fieldset {
+  margin: 8px;
+}
+
+.container-knob {
+  margin-right: 15px;
+}
+
+.fieldset-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+:host ::ng-deep .p-panel {
+  margin-bottom: 5px;
+}
+
+p {
+  margin: 1px;
+}

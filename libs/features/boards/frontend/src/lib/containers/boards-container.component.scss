@@ -1,9 +1,18 @@
+.root {
+    height: 100vh;
+    overflow: hidden
+}
+
 .container {
     width: 125vw;
 }
 
-.list {
+.main {
     width: 100vw;
+}
+
+.map {
+    width: 75vw;
 }
 
 .details {

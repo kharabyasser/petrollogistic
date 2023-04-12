@@ -1,0 +1,187 @@
+<div class="truck__panel">
+  <p-panel *ngFor="let truck of trucks; let i = index" [toggleable]="true" [collapsed]="i !== 0">
+    <ng-template pTemplate="header">
+      <i class="pi pi-circle-on" style="margin-right: 0.5rem; color: rgb(21, 186, 21)"></i>
+      <i class="pi pi-tags"></i>
+      <div class="vertical-divider"></div>
+      <p>{{ truck.name | truncate:8 }} #{{ truck.number }}</p>
+      <div class="vertical-divider"></div>
+      <p>3/11</p>
+      <div class="vertical-divider"></div>
+      <p-button icon="pi pi-map-marker" styleClass="p-button-text panel-button" (click)="locate(truck)"></p-button>
+      <p-button icon="pi pi-sitemap" styleClass="p-button-text panel-button" (click)="isochrone(truck)"></p-button>
+      <div class="panel-avatar">
+        <p-avatar label="{{ i }}" styleClass="mr-2" [style]="{
+        'background-color':'#2196F3', 
+        'color': '#ffffff'
+      }"></p-avatar>
+      </div>
+    </ng-template>
+    <petrologistic-p-panel-child title="Basic Information" [collapsed]="true">
+      <div class="info__panel">
+        <div class="__item">
+          <p>Name </p>
+          <p class="__value">{{ truck.name }}</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Number </p>
+          <p class="__value">{{ truck.number }}</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Description </p>
+          <p class="__value">{{ truck.description }}</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Truck's license </p>
+          <p class="__value">{{ truck.trucksLicense }}</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Trailer's license </p>
+          <p class="__value"> {{ truck.trailersLicense }}</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Permit </p>
+          <p class="__value">{{ truck.permit }}</p>
+        </div>
+        <p-divider></p-divider>
+        <div class="__item">
+          <p>Truck System</p>
+          <p class="__value">{{ truck.system }}</p>
+        </div>
+      </div>
+    </petrologistic-p-panel-child>
+    <petrologistic-p-panel-child title="Products" [collapsed]="true">
+      <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
+    </petrologistic-p-panel-child>
+    <petrologistic-p-panel-child title="Tickets">
+      <p>Minimalistic view</p>
+      <p-inputSwitch [(ngModel)]="miniTicketsView"></p-inputSwitch>
+      <div *ngIf="miniTicketsView; else fullTicketsView">
+        <div class="flex align-items-stretch card">
+          <div class="card__statusBar"></div>
+          <div class="card__body">
+            <div class="card__header">
+              <p>Ticket 1125,</p>
+              <p>1500L of Clear Diseal.</p>
+              <div class="__status">
+                <div class="__icon"></div>
+                <p>ON TRUCK</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex align-items-stretch card">
+          <div class="card__statusBar"></div>
+          <div class="card__body">
+            <div class="card__header">
+              <p>Ticket 1125,</p>
+              <p>1500L of Clear Diseal.</p>
+              <div class="__status">
+                <div class="__icon"></div>
+                <p>ON TRUCK</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex align-items-stretch card">
+          <div class="card__statusBar"></div>
+          <div class="card__body">
+            <div class="card__header">
+              <p>Ticket 1125,</p>
+              <p>1500L of Clear Diseal.</p>
+              <div class="__status">
+                <div class="__icon"></div>
+                <p>ON TRUCK</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #fullTicketsView>
+        <div class="flex align-items-stretch card">
+          <div class="card__statusBar"></div>
+          <div class="card__body">
+            <div class="card__header">
+              <p>Ticket 1125.</p>
+              <div class="__status">
+                <div class="__icon"></div>
+                <p>ON TRUCK</p>
+              </div>
+            </div>
+            <div class="card__content">
+              <b style="margin: 0;">1500L of Clear Diseal.</b>
+              <div class="flex align-items-stretch">
+                <p style="color: gray;">For</p>
+                <p>, Account name</p>
+              </div>
+              <div class="__footer">
+                <div>
+                  <p-tag styleClass="mr-2" severity="danger" value="Urgent"></p-tag>
+                  <p-tag styleClass="mr-2" severity="warning" value="Fleet"></p-tag>
+                </div>
+                <p> Today, 8:47 PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex align-items-stretch card">
+          <div class="card__statusBar"></div>
+          <div class="card__body">
+            <div class="card__header">
+              <p>Ticket 1125.</p>
+              <div class="__status">
+                <div class="__icon"></div>
+                <p>ON TRUCK</p>
+              </div>
+            </div>
+            <div class="card__content">
+              <b style="margin: 0;">1500L of Clear Diseal.</b>
+              <div class="flex align-items-stretch">
+                <p style="color: gray;">For</p>
+                <p>, Account name</p>
+              </div>
+              <div class="__footer">
+                <div>
+                  <p-tag styleClass="mr-2" severity="danger" value="Urgent"></p-tag>
+                  <p-tag styleClass="mr-2" severity="warning" value="Fleet"></p-tag>
+                </div>
+                <p> Today, 8:47 PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex align-items-stretch card">
+          <div class="card__statusBar"></div>
+          <div class="card__body">
+            <div class="card__header">
+              <p>Ticket 1125.</p>
+              <div class="__status">
+                <div class="__icon"></div>
+                <p>ON TRUCK</p>
+              </div>
+            </div>
+            <div class="card__content">
+              <b style="margin: 0;">1500L of Clear Diseal.</b>
+              <div class="flex align-items-stretch">
+                <p style="color: gray;">For</p>
+                <p>, Account name</p>
+              </div>
+              <div class="__footer">
+                <div>
+                  <p-tag styleClass="mr-2" severity="danger" value="Urgent"></p-tag>
+                  <p-tag styleClass="mr-2" severity="warning" value="Fleet"></p-tag>
+                </div>
+                <p> Today, 8:47 PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </petrologistic-p-panel-child>
+  </p-panel>
+</div>

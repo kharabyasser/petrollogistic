@@ -1,0 +1,15 @@
+:host ::ng-deep .p-panel .p-panel-header {
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+:host ::ng-deep .p-panel .p-panel-content {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.hideChild {
+  display: none;
+}

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {
+  Component
+} from '@angular/core';
 import {
   animate,
   state,
@@ -6,8 +8,12 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { DeliveryRequestsFacade } from '../+state/delivery-requests-facade';
-import { DeliveryRequest } from '../domain/deliveryrequest';
+import { DeliveryRequestsFacade } from '../+state/delivery-requests/delivery-requests-facade';
+import { MapMarker } from '../models/maps/map-marker';
+import { TrucksFacade } from '../+state/trucks/trucks-facade';
+import { Coordinate } from '../models/maps/coordinate';
+import { MapsFacade } from '../+state/maps/maps-facade';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'petrologistic-boards-container',
@@ -33,13 +39,17 @@ import { DeliveryRequest } from '../domain/deliveryrequest';
   ],
 })
 export class BoardsContainerComponent {
-  deliveryRequests: DeliveryRequest[] = [];
-  selectedCoordinates: number[][] = [];
+  deliveriesMarkersList: MapMarker[] = [];
+  trucksMarkersList: MapMarker[] = [];
   layoutOptions: any[] = [];
-  selectedLayout = 'table';
+  _selectedLayout = 'table';
   detailsState = '';
 
-  constructor(private deliveriesFacade: DeliveryRequestsFacade) {
+  constructor(
+    private deliveriesFacade: DeliveryRequestsFacade,
+    private trucksFacade: TrucksFacade,
+    private mapsFacade: MapsFacade
+  ) {
     this.deliveriesFacade.selectedRequests$.subscribe(
       (x) => (this.detailsState = x.length > 0 ? 'in' : 'out')
     );
@@ -48,13 +58,63 @@ export class BoardsContainerComponent {
       { icon: 'pi pi-table', value: 'table' },
       { icon: 'pi pi-map', value: 'map' },
     ];
+  }
 
-    this.deliveriesFacade.deliveryRequests$.subscribe(
-      (deliveries) =>
-        (this.selectedCoordinates = deliveries.map((d) => [
-          d.shipToAccount.longtitude,
-          d.shipToAccount.latitude,
-        ]))
-    );
+  set selectedLayout(value: string) {
+    if (value === 'map' && this._selectedLayout !== 'map') {
+      this._selectedLayout = value;
+      this.initMaps();
+    } else {
+      this._selectedLayout = value;
+    }
+  }
+
+  get selectedLayout () {
+    return this._selectedLayout;
+  }
+
+  initMaps() {
+    this.deliveriesFacade.deliveryRequests$
+      .pipe(
+        map((deliveries) =>
+          deliveries.map(
+            (d) =>
+              new MapMarker(
+                new Coordinate(
+                  d.shipToAccount.longtitude,
+                  d.shipToAccount.latitude
+                ),
+                undefined,
+                '#FF0000'
+              )
+          )
+        )
+      )
+      .subscribe((markers) => {
+        this.deliveriesMarkersList = markers;
+        this.mapsFacade.addMarkers(
+          this.deliveriesMarkersList.concat(this.trucksMarkersList)
+        );
+      });
+
+    this.trucksFacade.trucks$
+      .pipe(
+        map((trucks) =>
+          trucks.map(
+            (d) =>
+              new MapMarker(
+                new Coordinate(d.longtitude, d.latitude),
+                '../assets/truck.png',
+                '#000000'
+              )
+          )
+        )
+      )
+      .subscribe((markers) => {
+        this.trucksMarkersList = markers;
+        this.mapsFacade.addMarkers(
+          this.trucksMarkersList.concat(this.deliveriesMarkersList)
+        );
+      });
   }
 }

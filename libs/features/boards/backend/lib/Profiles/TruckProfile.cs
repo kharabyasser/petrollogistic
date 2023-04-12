@@ -8,6 +8,8 @@ public class TruckProfile : Profile
 {
   public TruckProfile()
   {
-    CreateMap<Truck, TruckDto>();
+    CreateMap<Truck, TruckDto>()
+      .ForMember(dest => dest.Latitude, opt => opt.MapFrom((src, dest) => src.Position?.Latitude))
+      .ForMember(dest => dest.Longtitude, opt => opt.MapFrom((src, dest) => src.Position?.Longitude));
   }
 }

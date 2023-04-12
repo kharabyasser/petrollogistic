@@ -1,28 +1,18 @@
-<div class="layout-control">
-  <p-selectButton
-    [options]="layoutOptions"
-    [(ngModel)]="selectedLayout"
-    optionLabel="icon"
-    optionValue="value"
-  >
-    <ng-template let-item>
-      <i [class]="item.icon"></i>
-    </ng-template>
-  </p-selectButton>
-</div>
-<div
-  *ngIf="selectedLayout === 'table'"
-  class="flex align-items-stretch flex-wrap container"
->
-  <petrologistic-table
-    class="list"
-    [@slideInOut]="detailsState"
-  ></petrologistic-table>
-  <petrologistic-details class="details"></petrologistic-details>
-</div>
-<div *ngIf="selectedLayout === 'map'">
-  <petrologistic-maps
-    style="--height: 90vh"
-    [deliveriesCoordinates]="selectedCoordinates"
-  ></petrologistic-maps>
+<div class="root">
+  <div class="layout-control">
+    <p-selectButton [options]="layoutOptions" [(ngModel)]="selectedLayout" optionLabel="icon" optionValue="value">
+      <ng-template let-item>
+        <i [class]="item.icon"></i>
+      </ng-template>
+    </p-selectButton>
+  </div>
+  <div *ngIf="selectedLayout === 'table'" class="flex align-items-stretch flex-wrap container">
+    <petrologistic-table class="main" [@slideInOut]="detailsState"></petrologistic-table>
+    <petrologistic-delivery-detail class="details"></petrologistic-delivery-detail>
+  </div>
+  <div *ngIf="selectedLayout === 'map'" class="flex align-items-stretch flex-wrap container">
+    <petrologistic-maps style="--height: 93vh"
+      class="map"></petrologistic-maps>
+    <petrologistic-truck-detail style="margin-left: 0.5rem;"> </petrologistic-truck-detail>
+  </div>
 </div>

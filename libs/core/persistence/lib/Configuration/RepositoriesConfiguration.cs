@@ -9,6 +9,7 @@ public static class RepositoriesConfiguration
   public static IServiceCollection AddRepositories(this IServiceCollection services)
   {
     services.AddSingleton<IDeliveryRequestRepository, DeliveryRequestRepository>();
+    services.AddSingleton<ITruckRepository, TruckRepository>();
 
     return services;
   }
