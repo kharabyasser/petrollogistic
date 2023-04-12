@@ -7,6 +7,7 @@ import { RoutingUnit } from '../models/routing/enums/routing-unit';
 import { MatrixResponse } from '../models/routing/matrix-response';
 import { MatrixResult } from '../models/routing/matrix-result';
 import { RoutingService } from './routing-service';
+import { IsochronesResponse } from '../models/routing/isochrones-response';
 
 @Injectable()
 export class MapService {
@@ -17,7 +18,7 @@ export class MapService {
 
   private initialState = { lng: -73.62, lat: 45.5, zoom: 14 };
   private padding = 0.1;
-  private colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0'];
+  private colors = ['#f54242', '#f542ce', '#c542f5', '#7b42f5', '#2f47fa', '#2fa9fa'];
 
   constructor(
     private mapsFacade: MapsFacade,
@@ -109,10 +110,16 @@ export class MapService {
         this.map.removeSource('isochroneSource');
       }
 
+      let orderedisochrones = JSON.parse(JSON.stringify(isochrones)) as IsochronesResponse;
+
+      orderedisochrones.features.reverse();
+
       this.map.addSource('isochroneSource', {
         type: 'geojson',
-        data: isochrones,
+        data: orderedisochrones,
       });
+
+      console.log(orderedisochrones);
 
       this.map.addLayer({
         id: 'isochroneLayer',
@@ -122,17 +129,16 @@ export class MapService {
           'fill-color': [
             'match',
             ['get', 'value'],
-            100, this.colors[0],
-            200, this.colors[1],
-            300, this.colors[2],
-            400, this.colors[3],
-            500, this.colors[4],
-            600, this.colors[5],
-            700, this.colors[6],
-            '#FFFFFF' // Default color if the value doesn't match any of the above
+            200, this.colors[0],
+            400, this.colors[1],
+            600, this.colors[2],
+            800, this.colors[3],
+            1000, this.colors[4],
+            1200, this.colors[5],
+            "#000000"
           ],
-          'fill-outline-color': 'rgba(255, 0, 0, 0)',
-          'fill-opacity': 0.5,
+          'fill-outline-color': 'rgb(255, 255, 255)',
+          'fill-opacity': 0.3,
         },
       });
     });

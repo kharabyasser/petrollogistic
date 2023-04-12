@@ -89,7 +89,7 @@ export class TruckComponent implements OnInit {
 
   isochrone(truck: Truck) {
     const ranges: number[] = [];
-    for (let i = 700; i >= 0; i -= 100) {
+    for (let i = 1200; i >= 0; i -= 200) {
       ranges.push(i);
     }
 

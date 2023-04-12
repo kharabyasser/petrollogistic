@@ -12,7 +12,7 @@ import { IsochronesResponse } from "../../models/routing/isochrones-response";
 export class MapsFacade {
     markersOnMap$: Observable<MapMarker[]>;
     centerOnPosition$: Observable<Coordinate | null>;
-    isochroneData$: Observable<any>;
+    isochroneData$: Observable<IsochronesResponse>;
 
     constructor(private store: Store) {
         this.markersOnMap$ = 
