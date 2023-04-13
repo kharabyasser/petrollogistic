@@ -29,8 +29,8 @@ import { StoreModule } from '@ngrx/store';
 
 import { DeliveryRequestService } from './services/deliveryrequest-service';
 import { CoreFrontendApolloModule } from '@petrologistic/core/frontend/apollo';
-import { CoreFrontendPPanelChildModule } from '@petrologistic/core/frontend/p-panel-child'
-import { CoreFrontendOsirisPipesModule } from '@petrologistic/core/frontend/osiris-pipes'
+import { CoreFrontendPPanelChildModule } from '@petrologistic/core/frontend/p-panel-child';
+import { CoreFrontendOsirisPipesModule } from '@petrologistic/core/frontend/osiris-pipes';
 import { EffectsModule } from '@ngrx/effects';
 import { BoardsContainerComponent } from './containers/boards-container.component';
 import { DetailsComponent } from './components/details/delivery/delivery-detail.component';
@@ -47,6 +47,7 @@ import { trucksReducer } from './+state/trucks/trucks-reducer';
 import { MapsFacade } from './+state/maps/maps-facade';
 import { mapsReducer } from './+state/maps/maps-reducer';
 import { MapService } from './services/maps-service';
+import { QuickDispatchComponent } from './components/models/quick-dispatch/quick-dispatch.component';
 
 @NgModule({
   imports: [
@@ -87,16 +88,18 @@ import { MapService } from './services/maps-service';
     BoardsContainerComponent,
     DetailsComponent,
     TruckComponent,
-    MapsComponent
+    MapsComponent,
+    QuickDispatchComponent,
   ],
   exports: [BoardsContainerComponent],
   providers: [
-    DeliveryRequestService, 
-    TrucksService, 
-    DeliveryRequestsFacade, 
+    DeliveryRequestService,
+    TrucksService,
+    DeliveryRequestsFacade,
     TrucksFacade,
-    MapsFacade, 
+    MapsFacade,
     MapService,
-    RoutingService],
+    RoutingService,
+  ],
 })
 export class BoardsModule {}
