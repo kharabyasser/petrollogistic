@@ -23,6 +23,7 @@ import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { DialogService } from 'primeng/dynamicdialog';
 
 import { StoreModule } from '@ngrx/store';
 
@@ -74,6 +75,7 @@ import { MapService } from './services/maps-service';
     AvatarModule,
     InputSwitchModule,
     ToggleButtonModule,
+    DialogService,
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),

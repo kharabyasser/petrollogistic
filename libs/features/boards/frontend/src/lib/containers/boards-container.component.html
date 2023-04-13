@@ -1,6 +1,9 @@
 <div class="root">
   <div class="layout-control">
-    <p-selectButton [options]="layoutOptions" [(ngModel)]="selectedLayout" optionLabel="icon" optionValue="value">
+    <div>
+      <p-button label="Smart Dispatch" class="__button" styleClass="p-button-raised p-button-text p-button-sm"></p-button>
+    </div>
+    <p-selectButton class="__layout_switch" [options]="layoutOptions" [(ngModel)]="selectedLayout" optionLabel="icon" optionValue="value">
       <ng-template let-item>
         <i [class]="item.icon"></i>
       </ng-template>

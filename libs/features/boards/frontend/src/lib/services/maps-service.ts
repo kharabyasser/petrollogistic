@@ -110,7 +110,7 @@ export class MapService {
         this.map.removeSource('isochroneSource');
       }
 
-      let orderedisochrones = JSON.parse(JSON.stringify(isochrones)) as IsochronesResponse;
+      const orderedisochrones = JSON.parse(JSON.stringify(isochrones)) as IsochronesResponse;
 
       orderedisochrones.features.reverse();
 
