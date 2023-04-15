@@ -24,6 +24,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DialogService } from 'primeng/dynamicdialog';
+import { CheckboxModule } from 'primeng/checkbox';
 
 import { StoreModule } from '@ngrx/store';
 
@@ -47,7 +48,7 @@ import { trucksReducer } from './+state/trucks/trucks-reducer';
 import { MapsFacade } from './+state/maps/maps-facade';
 import { mapsReducer } from './+state/maps/maps-reducer';
 import { MapService } from './services/maps-service';
-import { QuickDispatchComponent } from './components/models/quick-dispatch/quick-dispatch.component';
+import { QuickDispatchComponent } from './components/dialogs/quick-dispatch/quick-dispatch.component';
 
 @NgModule({
   imports: [
@@ -76,7 +77,7 @@ import { QuickDispatchComponent } from './components/models/quick-dispatch/quick
     AvatarModule,
     InputSwitchModule,
     ToggleButtonModule,
-    DialogService,
+    CheckboxModule,
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),
@@ -100,6 +101,7 @@ import { QuickDispatchComponent } from './components/models/quick-dispatch/quick
     MapsFacade,
     MapService,
     RoutingService,
+    DialogService
   ],
 })
 export class BoardsModule {}

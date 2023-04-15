@@ -14,6 +14,8 @@ import { TrucksFacade } from '../+state/trucks/trucks-facade';
 import { Coordinate } from '../models/maps/coordinate';
 import { MapsFacade } from '../+state/maps/maps-facade';
 import { map } from 'rxjs';
+import { DialogService } from 'primeng/dynamicdialog';
+import { QuickDispatchComponent } from '../components/dialogs/quick-dispatch/quick-dispatch.component';
 
 @Component({
   selector: 'petrologistic-boards-container',
@@ -41,14 +43,20 @@ import { map } from 'rxjs';
 export class BoardsContainerComponent {
   deliveriesMarkersList: MapMarker[] = [];
   trucksMarkersList: MapMarker[] = [];
+
   layoutOptions: any[] = [];
+
   _selectedLayout = 'table';
   detailsState = '';
+
+  private readonly DIALOG_WIDTH = '1200px';
+  private readonly DIALOG_HEIGHT = 'fit-content';
 
   constructor(
     private deliveriesFacade: DeliveryRequestsFacade,
     private trucksFacade: TrucksFacade,
-    private mapsFacade: MapsFacade
+    private mapsFacade: MapsFacade,
+    private dialogService: DialogService
   ) {
     this.deliveriesFacade.selectedRequests$.subscribe(
       (x) => (this.detailsState = x.length > 0 ? 'in' : 'out')
@@ -116,5 +124,13 @@ export class BoardsContainerComponent {
           this.trucksMarkersList.concat(this.deliveriesMarkersList)
         );
       });
+  }
+
+  openQuickDispatch() {
+    this.dialogService
+      .open(QuickDispatchComponent, {
+        header: 'Quick Dispatch',
+        width: this.DIALOG_WIDTH
+      })
   }
 }

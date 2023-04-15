@@ -1,9 +1,9 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FilterService, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { Container } from '../../domain/container';
 import { DeliveryRequestsFacade } from '../../+state/delivery-requests/delivery-requests-facade';
@@ -14,6 +14,8 @@ import { DeliveryRequestsFacade } from '../../+state/delivery-requests/delivery-
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
+  @Input() liteMode = false;
+
   deliveryRequests$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
   selectedRequests: DeliveryRequest[] = [];
 
@@ -47,6 +49,16 @@ export class TableComponent implements OnInit {
           ),
         }))
       )
+    );
+
+    this.deliveryRequests$ = this.deliveryRequests$.pipe(
+      switchMap((reqs) => {
+        if (this.liteMode) {
+          return of(reqs.filter((req) => req.dispatchStatus.toString() === "PENDING"));
+        } else {
+          return of(reqs);
+        }
+      })
     );
 
     this.deliveryRequests$
@@ -85,61 +97,85 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.deliveriesFacade.loadDeliveryRequests();
 
-    this.cols = [
-      { selector: 'tags', field: 'tags', header: 'Tags' },
-      {
-        selector: 'purchaseOrder',
-        field: 'purchaseOrder',
-        header: 'Purchase Order',
-        sortCol: 'purchaseOrder',
-        filterType: 'numeric',
-      },
-      {
-        selector: 'shipToAccount',
-        field: 'shipToAccount',
-        header: 'Ship to Account',
-        sortCol: 'shipToAccount.name',
-      },
-      {
-        selector: 'lowestContainer',
-        field: 'lowestContainer',
-        header: 'Percentage',
-        sortCol: 'lowestContainer.currentPercentage',
-      },
-      {
-        selector: 'targetDate',
-        field: 'targetDate',
-        header: 'Target Date',
-        sortCol: 'targetDate',
-        filterType: 'date',
-      },
-      {
-        selector: 'product',
-        field: 'lowestContainer',
-        header: 'Product',
-        sortCol: 'lowestContainer.requestedAmount',
-      },
-      {
-        selector: 'dispatchStatus',
-        field: 'dispatchStatus',
-        header: 'Status',
-        sortCol: 'dispatchStatus',
-      },
-      {
-        selector: 'dispatchedToTruck',
-        field: 'dispatchedToTruck',
-        header: 'Truck',
-        sortCol: 'dispatchedToTruck',
-        filterType: 'dispatchedToTruck.name',
-      },
-      {
-        selector: 'dispatchDate',
-        field: 'dispatchDate',
-        header: 'Dispatch Date',
-        sortCol: 'dispatchDate',
-        filterType: 'date',
-      },
-    ];
+    if (!this.liteMode) {
+      this.cols = [
+        { selector: 'tags', field: 'tags', header: 'Tags' },
+        {
+          selector: 'purchaseOrder',
+          field: 'purchaseOrder',
+          header: 'Purchase Order',
+          sortCol: 'purchaseOrder',
+          filterType: 'numeric',
+        },
+        {
+          selector: 'shipToAccount',
+          field: 'shipToAccount',
+          header: 'Ship to Account',
+          sortCol: 'shipToAccount.name',
+        },
+        {
+          selector: 'lowestContainer',
+          field: 'lowestContainer',
+          header: 'Percentage',
+          sortCol: 'lowestContainer.currentPercentage',
+        },
+        {
+          selector: 'targetDate',
+          field: 'targetDate',
+          header: 'Target Date',
+          sortCol: 'targetDate',
+          filterType: 'date',
+        },
+        {
+          selector: 'product',
+          field: 'lowestContainer',
+          header: 'Product',
+          sortCol: 'lowestContainer.requestedAmount',
+        },
+        {
+          selector: 'dispatchStatus',
+          field: 'dispatchStatus',
+          header: 'Status',
+          sortCol: 'dispatchStatus',
+        },
+        {
+          selector: 'dispatchedToTruck',
+          field: 'dispatchedToTruck',
+          header: 'Truck',
+          sortCol: 'dispatchedToTruck',
+          filterType: 'dispatchedToTruck.name',
+        },
+        {
+          selector: 'dispatchDate',
+          field: 'dispatchDate',
+          header: 'Dispatch Date',
+          sortCol: 'dispatchDate',
+          filterType: 'date',
+        },
+      ];
+    } else {
+      this.cols = [
+        {
+          selector: 'purchaseOrder',
+          field: 'purchaseOrder',
+          header: 'Purchase Order',
+          sortCol: 'purchaseOrder',
+          filterType: 'numeric',
+        },
+        {
+          selector: 'shipToAccount',
+          field: 'shipToAccount',
+          header: 'Ship to Account',
+          sortCol: 'shipToAccount.name',
+        },
+        {
+          selector: 'product',
+          field: 'lowestContainer',
+          header: 'Product',
+          sortCol: 'lowestContainer.requestedAmount',
+        },
+      ];
+    }
 
     this.selectedCols = this.cols;
 
@@ -293,11 +329,13 @@ export class TableComponent implements OnInit {
   }
 
   onRowSelect(event: any) {
-    this.deliveriesFacade.addSelectedRequest(event.data.id);
+    if (!this.liteMode) {
+      this.deliveriesFacade.addSelectedRequest(event.data.id);
+    }
   }
 
   onHeaderSelectionToggle(event: any) {
-    if (event.checked) {
+    if (event.checked && !this.liteMode) {
       this.deliveriesFacade.addAllRequestsToSelection();
     } else {
       this.deliveriesFacade.removeAllRequestsFromSelection();
@@ -305,6 +343,8 @@ export class TableComponent implements OnInit {
   }
 
   onRowUnselect(event: any) {
-    this.deliveriesFacade.removeSelectedRequest(event.data.id);
+    if (!this.liteMode) {
+      this.deliveriesFacade.removeSelectedRequest(event.data.id);
+    }
   }
 }

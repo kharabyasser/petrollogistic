@@ -1,23 +1,31 @@
 <div class="truck__panel">
-  <p-panel *ngFor="let truck of trucks; let i = index" [toggleable]="true" [collapsed]="i !== 0">
+  <p-panel *ngFor="let truck of trucks; let i = index" [toggleable]="true" [collapsed]="liteMode ? true : i !== 0">
     <ng-template pTemplate="header">
+      <p-checkbox *ngIf="liteMode" style="margin-right: 10px;"></p-checkbox>
       <i class="pi pi-circle-on" style="margin-right: 0.5rem; color: rgb(21, 186, 21)"></i>
-      <i class="pi pi-tags"></i>
+      <i *ngIf="!liteMode" class="pi pi-tags"></i>
       <div class="vertical-divider"></div>
       <p>{{ truck.name | truncate:8 }} #{{ truck.number }}</p>
       <div class="vertical-divider"></div>
       <p>3/11</p>
-      <div class="vertical-divider"></div>
-      <p-button icon="pi pi-map-marker" styleClass="p-button-text panel-button" (click)="locate(truck)"></p-button>
-      <p-button icon="pi pi-sitemap" styleClass="p-button-text panel-button" (click)="isochrone(truck)"></p-button>
-      <div class="panel-avatar">
+      <p-toggleButton onLabel="RTO" offLabel="OR" [style]="{ 
+        'padding': '0', 
+        'height': '2rem', 
+        'width': '3rem'
+      }"></p-toggleButton>
+      <div *ngIf="!liteMode" class="vertical-divider"></div>
+      <p-button *ngIf="!liteMode" icon="pi pi-map-marker" styleClass="p-button-text panel-button"
+        (click)="locate(truck)"></p-button>
+      <p-button *ngIf="!liteMode" icon="pi pi-sitemap" styleClass="p-button-text panel-button"
+        (click)="isochrone(truck)"></p-button>
+      <div *ngIf="!liteMode" class="panel-avatar">
         <p-avatar label="{{ i }}" styleClass="mr-2" [style]="{
         'background-color':'#2196F3', 
         'color': '#ffffff'
       }"></p-avatar>
       </div>
     </ng-template>
-    <petrologistic-p-panel-child title="Basic Information" [collapsed]="true">
+    <petrologistic-p-panel-child *ngIf="!liteMode" title="Basic Information" [collapsed]="true">
       <div class="info__panel">
         <div class="__item">
           <p>Name </p>
@@ -55,12 +63,17 @@
         </div>
       </div>
     </petrologistic-p-panel-child>
-    <petrologistic-p-panel-child title="Products" [collapsed]="true">
-      <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
+    <petrologistic-p-panel-child *ngIf="liteMode; else fullProductsMode" title="Products" [collapsed]="true">
+      <p-chart type="bar" [data]="liteModeProductsData" [options]="liteModehorizontalOptions"></p-chart>
     </petrologistic-p-panel-child>
+    <ng-template #fullProductsMode>
+      <petrologistic-p-panel-child>
+        <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
+      </petrologistic-p-panel-child>
+    </ng-template>
     <petrologistic-p-panel-child title="Tickets">
-      <p>Minimalistic view</p>
-      <p-inputSwitch [(ngModel)]="miniTicketsView"></p-inputSwitch>
+      <p *ngIf="!liteMode">Minimalistic view</p>
+      <p-inputSwitch *ngIf="!liteMode" [(ngModel)]="miniTicketsView"></p-inputSwitch>
       <div *ngIf="miniTicketsView; else fullTicketsView">
         <div class="flex align-items-stretch card">
           <div class="card__statusBar"></div>

@@ -1,60 +1,30 @@
 <div class="card">
-  <p-table
-    #tableList
-    dataKey="id"
-    [value]="(deliveryRequests$ | async) || selectedRequests"
-    [columns]="selectedColumns"
-    [paginator]="true"
-    [rows]="13"
-    [resizableColumns]="true"
-    [reorderableColumns]="true"
-    [showCurrentPageReport]="true"
-    styleClass="p-datatable-striped"
-    responsiveLayout="scroll"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [rowsPerPageOptions]="[13, 30, 50]"
-    scrollHeight="83vh"
-    selectionMode="multiple"
-    [(selection)]="selectedRequests"
-    (onRowSelect)="onRowSelect($event)"
-    (onRowUnselect)="onRowUnselect($event)"
-    (onHeaderCheckboxToggle)="onHeaderSelectionToggle($event)"
-    sortMode="single"
+  <p-table #tableList dataKey="id" [value]="(deliveryRequests$ | async) || selectedRequests" [columns]="selectedColumns"
+    [paginator]="!liteMode" [rows]="13" [resizableColumns]="true" [reorderableColumns]="!liteMode" [showCurrentPageReport]="!liteMode"
+    styleClass="p-datatable-striped" responsiveLayout="scroll"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[13, 30, 50]"
+    scrollHeight="83vh" selectionMode="multiple" [(selection)]="selectedRequests" (onRowSelect)="onRowSelect($event)"
+    (onRowUnselect)="onRowUnselect($event)" (onHeaderCheckboxToggle)="onHeaderSelectionToggle($event)" sortMode="single"
     [globalFilterFields]="[
       'tags',
       'purchaseOrder',
       'shipToAccount.name',
       'shipToAccount.address.addressLine1',
       'shipToAccount.phoneNumber'
-    ]"
-  >
+    ]">
     <ng-template pTemplate="caption">
       <div class="flex">
-        <button
-          pButton
-          label="Clear"
-          class="p-button-outlined"
-          icon="pi pi-filter-slash"
-          (click)="clear(tableList)"
-        ></button>
-        <p-multiSelect
-          class="ml-3"
-          [options]="cols"
-          [(ngModel)]="selectedColumns"
-          optionLabel="header"
-          selectedItemsLabel="{0} columns selected"
-          placeholder="Choose Columns"
-        ></p-multiSelect>
+        <button pButton [label]="liteMode ? '' : 'Clear'" class="p-button-outlined" icon="pi pi-filter-slash"
+          (click)="clear(tableList)"></button>
+        <div *ngIf="liteMode === false">
+          <p-multiSelect class="ml-3" [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+            selectedItemsLabel="{0} columns selected" placeholder="Choose Columns"></p-multiSelect>
+        </div>
         <span class="p-input-icon-left ml-auto">
           <i class="pi pi-search"></i>
-          <input
-            pInputText
-            type="text"
-            (input)="
+          <input pInputText type="text" (input)="
               tableList.filterGlobal($any($event.target).value, 'contains')
-            "
-            placeholder="Search keyword"
-          />
+            " placeholder="Search deliveries" />
         </span>
       </div>
     </ng-template>
@@ -63,42 +33,16 @@
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th
-          *ngFor="let col of selectedColumns"
-          [ngSwitch]="col.selector"
-          pResizableColumn
-          pReorderableColumn
-          [pSortableColumn]="col.sortCol"
-        >
-          <div
-            *ngSwitchCase="'tags'"
-            class="flex justify-content-between flex-wrap"
-          >
+        <th *ngFor="let col of selectedColumns" [ngSwitch]="col.selector" pResizableColumn pReorderableColumn
+          [pSortableColumn]="col.sortCol">
+          <div *ngSwitchCase="'tags'" class="flex justify-content-between flex-wrap">
             Tags
-            <p-columnFilter
-              field="tags"
-              [matchModeOptions]="tagFilterModeOptions"
-              [showMatchModes]="true"
-              [showOperator]="false"
-              [showAddButton]="false"
-              display="menu"
-            >
-              <ng-template
-                pTemplate="filter"
-                let-value
-                let-filter="filterCallback"
-              >
-                <p-multiSelect
-                  [ngModel]="value"
-                  [options]="tags"
-                  (onChange)="filter($event.value)"
-                  placeholder="Any"
-                >
+            <p-columnFilter field="tags" [matchModeOptions]="tagFilterModeOptions" [showMatchModes]="true"
+              [showOperator]="false" [showAddButton]="false" display="menu">
+              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-multiSelect [ngModel]="value" [options]="tags" (onChange)="filter($event.value)" placeholder="Any">
                   <ng-template let-option pTemplate="item">
-                    <p-tag
-                      value="{{ option.label }}"
-                      styleClass="mr-2"
-                      [severity]="
+                    <p-tag value="{{ option.label }}" styleClass="mr-2" [severity]="
                         option.label === 'CA'
                           ? 'success'
                           : option.label === 'AU'
@@ -106,93 +50,47 @@
                           : option.label === 'UR'
                           ? 'danger'
                           : 'warning'
-                      "
-                    ></p-tag>
+                      "></p-tag>
                   </ng-template>
                 </p-multiSelect>
               </ng-template>
             </p-columnFilter>
           </div>
-          <div
-            *ngSwitchCase="'shipToAccount'"
-            class="flex justify-content-between flex-wrap"
-          >
+          <div *ngSwitchCase="'shipToAccount'" class="flex justify-content-between flex-wrap">
             Account
             <div class="flex justify-content-start flex-wrap">
               <p-sortIcon class="sort" field="{{ col.sortCol }}"></p-sortIcon>
-              <p-columnFilter
-                field="shipToAccount"
-                type="text"
-                [matchModeOptions]="accountFilterModeOptions"
-                [showOperator]="true"
-                [showAddButton]="true"
-                display="menu"
-              >
+              <p-columnFilter field="shipToAccount" type="text" [matchModeOptions]="accountFilterModeOptions"
+                [showOperator]="true" [showAddButton]="true" display="menu">
               </p-columnFilter>
             </div>
           </div>
-          <div
-            *ngSwitchCase="'lowestContainer'"
-            class="flex justify-content-between flex-wrap"
-          >
+          <div *ngSwitchCase="'lowestContainer'" class="flex justify-content-between flex-wrap">
             Percentage
             <div class="flex justify-content-start flex-wrap">
               <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
-              <p-columnFilter
-                field="{{ col.sortCol }}"
-                type="numeric"
-                [showOperator]="true"
-                [showAddButton]="true"
-                display="menu"
-              ></p-columnFilter>
+              <p-columnFilter field="{{ col.sortCol }}" type="numeric" [showOperator]="true" [showAddButton]="true"
+                display="menu"></p-columnFilter>
             </div>
           </div>
-          <div
-            *ngSwitchCase="'product'"
-            class="flex justify-content-between flex-wrap"
-          >
+          <div *ngSwitchCase="'product'" class="flex justify-content-between flex-wrap">
             Product
             <div class="flex justify-content-start flex-wrap">
               <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
-              <p-columnFilter
-                field="{{ col.sortCol }}"
-                type="numeric"
-                [showOperator]="true"
-                [showAddButton]="true"
-                display="menu"
-              ></p-columnFilter>
+              <p-columnFilter field="{{ col.sortCol }}" type="numeric" [showOperator]="true" [showAddButton]="true"
+                display="menu"></p-columnFilter>
             </div>
           </div>
-          <div
-            *ngSwitchCase="'dispatchStatus'"
-            class="flex justify-content-between flex-wrap"
-          >
+          <div *ngSwitchCase="'dispatchStatus'" class="flex justify-content-between flex-wrap">
             Status
             <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
-            <p-columnFilter
-              field="dispatchStatus"
-              [matchModeOptions]="dispatchStatusesModeOptions"
-              [showMatchModes]="true"
-              [showOperator]="false"
-              [showAddButton]="false"
-              display="menu"
-            >
-              <ng-template
-                pTemplate="filter"
-                let-value
-                let-filter="filterCallback"
-              >
-                <p-dropdown
-                  [ngModel]="value"
-                  [options]="dispatchStatuses"
-                  (onChange)="filter($event.value)"
-                  placeholder="Any"
-                >
+            <p-columnFilter field="dispatchStatus" [matchModeOptions]="dispatchStatusesModeOptions"
+              [showMatchModes]="true" [showOperator]="false" [showAddButton]="false" display="menu">
+              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-dropdown [ngModel]="value" [options]="dispatchStatuses" (onChange)="filter($event.value)"
+                  placeholder="Any">
                   <ng-template let-option pTemplate="item">
-                    <p-tag
-                      value="{{ option.label }}"
-                      styleClass="mr-2"
-                      [severity]="
+                    <p-tag value="{{ option.label }}" styleClass="mr-2" [severity]="
                         option.label === 'DISPATCHED'
                           ? 'info'
                           : option.label === 'PENDING'
@@ -202,27 +100,18 @@
                           : option.label === 'CANCELED'
                           ? 'danger'
                           : 'info'
-                      "
-                    ></p-tag>
+                      "></p-tag>
                   </ng-template>
                 </p-dropdown>
               </ng-template>
             </p-columnFilter>
           </div>
-          <div
-            *ngSwitchCase="'dispatchedToTruck'"
-            class="flex justify-content-between flex-wrap"
-          >
+          <div *ngSwitchCase="'dispatchedToTruck'" class="flex justify-content-between flex-wrap">
             Truck
             <div class="flex justify-content-start flex-wrap">
               <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
-              <p-columnFilter
-                field="dispatchedToTruck"
-                type="text"
-                [showOperator]="true"
-                [showAddButton]="true"
-                display="menu"
-              ></p-columnFilter>
+              <p-columnFilter field="dispatchedToTruck" type="text" [showOperator]="true" [showAddButton]="true"
+                display="menu"></p-columnFilter>
             </div>
           </div>
           <div *ngSwitchDefault>
@@ -230,38 +119,21 @@
               {{ col.header }}
               <div class="flex justify-content-start flex-wrap">
                 <p-sortIcon field="{{ col.field }}"></p-sortIcon>
-                <p-columnFilter
-                  type="{{ col.filterType }}"
-                  field="{{ col.field }}"
-                  display="menu"
-                ></p-columnFilter>
+                <p-columnFilter type="{{ col.filterType }}" field="{{ col.field }}" display="menu"></p-columnFilter>
               </div>
             </div>
           </div>
         </th>
       </tr>
     </ng-template>
-    <ng-template
-      pTemplate="body"
-      let-request
-      let-columns="columns"
-      let-rowIndex="rowIndex"
-      let-expanded="expanded"
-    >
+    <ng-template pTemplate="body" let-request let-columns="columns" let-rowIndex="rowIndex" let-expanded="expanded">
       <tr [pSelectableRow]="request" [pSelectableRowIndex]="rowIndex">
         <td>
-          <p-tableCheckbox
-            [value]="request"
-            (click)="$event.stopPropagation()"
-          ></p-tableCheckbox>
+          <p-tableCheckbox [value]="request" (click)="$event.stopPropagation()"></p-tableCheckbox>
         </td>
         <td *ngFor="let col of selectedColumns" [ngSwitch]="col.selector">
           <div *ngSwitchCase="'tags'">
-            <p-tag
-              *ngFor="let tag of request['tags']"
-              value="{{ tag }}"
-              styleClass="mr-2"
-              [severity]="
+            <p-tag *ngFor="let tag of request['tags']" value="{{ tag }}" styleClass="mr-2" [severity]="
                 tag === 'CA'
                   ? 'success'
                   : tag === 'AU'
@@ -269,47 +141,30 @@
                   : tag === 'UR'
                   ? 'danger'
                   : 'warning'
-              "
-            ></p-tag>
+              "></p-tag>
           </div>
           <div *ngSwitchCase="'shipToAccount'">
-           {{ request[col.field].name }} 
+            {{ request[col.field].name }}
           </div>
-          <div
-            *ngSwitchCase="'lowestContainer'"
-            class="flex justify-content-between flex-wrap flex align-items-center justify-content-center"
-          >
+          <div *ngSwitchCase="'lowestContainer'"
+            class="flex justify-content-between flex-wrap flex align-items-center justify-content-center">
             <div style="position: relative; overflow: hidden; width: 75%">
-              <p-progressBar
-                class="containerBar"
-                [ngClass]="{
+              <p-progressBar class="containerBar" [ngClass]="{
                   lowContainerBar: request[col.field].currentPercentage < 25
-                }"
-                [value]="request[col.field].currentPercentage"
-                [showValue]="false"
-              ></p-progressBar>
+                }" [value]="request[col.field].currentPercentage" [showValue]="false"></p-progressBar>
               <div class="progress__value">
                 {{ request[col.field].currentPercentage }} %
               </div>
             </div>
             <div>
-              <button
-                type="button"
-                pButton
-                pRipple
-                [pRowToggler]="request"
+              <button type="button" pButton pRipple [pRowToggler]="request"
                 class="p-button-text p-button-plain p-button-sm"
-                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-              ></button>
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
             </div>
           </div>
-          <div
-            *ngSwitchCase="'product'"
-            class="flex flex-column card-container"
-          >
+          <div *ngSwitchCase="'product'" class="flex flex-column card-container">
             <div>
-              <b
-                >{{ request[col.field].product.number }} -
+              <b>{{ request[col.field].product.number }} -
                 {{ request[col.field].product.description }}
               </b>
             </div>
@@ -319,10 +174,7 @@
             </div>
           </div>
           <div *ngSwitchCase="'dispatchStatus'">
-            <p-tag
-              value="{{ request['dispatchStatus'] }}"
-              styleClass="mr-2"
-              [severity]="
+            <p-tag value="{{ request['dispatchStatus'] }}" styleClass="mr-2" [severity]="
                 request['dispatchStatus'] === 'DISPATCHED'
                   ? 'info'
                   : request['dispatchStatus'] === 'PENDING'
@@ -332,8 +184,7 @@
                   : request['dispatchStatus'] === 'CANCELED'
                   ? 'danger'
                   : 'info'
-              "
-            ></p-tag>
+              "></p-tag>
           </div>
           <div *ngSwitchDefault>
             <div *ngIf="request[col.field] !== null; else emptyCell">
@@ -348,46 +199,43 @@
       <tr class="expendedrow">
         <td colspan="12">
           <div class="p-3">
-            <p-table
-              [value]="spread(request.destinationContainers)"
-              dataKey="id"
-            >
+            <p-table [value]="spread(request.destinationContainers)" dataKey="id">
               <ng-template pTemplate="header">
-                <tr>
-                  <th pSortableColumn="requestedAmount">
-                    Requested Amount
-                    <p-sortIcon field="requestedAmount"></p-sortIcon>
-                  </th>
-                  <th pSortableColumn="requestedAmountUnit">
-                    Unit <p-sortIcon field="requestedAmountUnit"></p-sortIcon>
-                  </th>
-                  <th pSortableColumn="currentPercentage">
-                    Percentage
-                    <p-sortIcon field="currentPercentage"></p-sortIcon>
-                  </th>
-                  <th pSortableColumn="product.description">
-                    Product Name
-                    <p-sortIcon field="product.description"></p-sortIcon>
-                  </th>
-                  <th pSortableColumn="product.number">
-                    Product Code
-                    <p-sortIcon field="product.number"></p-sortIcon>
-                  </th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-container>
-                <tr>
-                  <td>{{ container.requestedAmount }}</td>
-                  <td>{{ container.requestedAmountUnit }}</td>
-                  <td>{{ container.currentPercentage }}</td>
-                  <td>{{ container.product.description }}</td>
-                  <td>{{ container.product.number }}</td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
-        </td>
+      <tr>
+        <th pSortableColumn="requestedAmount">
+          Requested Amount
+          <p-sortIcon field="requestedAmount"></p-sortIcon>
+        </th>
+        <th pSortableColumn="requestedAmountUnit">
+          Unit <p-sortIcon field="requestedAmountUnit"></p-sortIcon>
+        </th>
+        <th pSortableColumn="currentPercentage">
+          Percentage
+          <p-sortIcon field="currentPercentage"></p-sortIcon>
+        </th>
+        <th pSortableColumn="product.description">
+          Product Name
+          <p-sortIcon field="product.description"></p-sortIcon>
+        </th>
+        <th pSortableColumn="product.number">
+          Product Code
+          <p-sortIcon field="product.number"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-container>
+      <tr>
+        <td>{{ container.requestedAmount }}</td>
+        <td>{{ container.requestedAmountUnit }}</td>
+        <td>{{ container.currentPercentage }}</td>
+        <td>{{ container.product.description }}</td>
+        <td>{{ container.product.number }}</td>
       </tr>
     </ng-template>
   </p-table>
+</div>
+</td>
+</tr>
+</ng-template>
+</p-table>
 </div>

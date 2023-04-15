@@ -5,8 +5,8 @@
 
 .truck__panel {
   width: 29rem;
-  overflow-y: scroll;
-  max-height: 100vh;
+  overflow-y: auto;
+  max-height: var(--height, 100vh);
   padding-bottom: 5rem;
   & .header__content {
     display: flex;
@@ -97,8 +97,6 @@
 }
 
 .panel-avatar {
-  position:absolute;
-  right: 70px;
 }
 
 :host ::ng-deep .p-panel {
