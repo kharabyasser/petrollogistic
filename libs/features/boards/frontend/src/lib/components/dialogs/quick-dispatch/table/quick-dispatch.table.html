@@ -1,0 +1,155 @@
+<div class="card">
+    <p-table #tableList dataKey="id" [value]="(deliveryRequests$ | async) || selectedRequests"
+        [columns]="selectedColumns" [paginator]="false" [rows]="13" [resizableColumns]="true"
+        [reorderableColumns]="false" [showCurrentPageReport]="false" styleClass="p-datatable-striped"
+        responsiveLayout="scroll" [rowsPerPageOptions]="[13, 30, 50]" scrollHeight="83vh" selectionMode="multiple"
+        [(selection)]="selectedRequests" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+        (onHeaderCheckboxToggle)="onHeaderSelectionToggle($event)" sortMode="single" [globalFilterFields]="[
+        'purchaseOrder',
+        'shipToAccount.name',
+        'shipToAccount.address.addressLine1',
+        'shipToAccount.phoneNumber'
+      ]">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <button pButton [label]="''" class="p-button-outlined" icon="pi pi-filter-slash"
+                    (click)="clear(tableList)"></button>
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="
+                tableList.filterGlobal($any($event.target).value, 'contains')
+              " placeholder="Search deliveries" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox style="margin: 7px;"></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of selectedColumns" [ngSwitch]="col.selector" pResizableColumn pReorderableColumn
+                    [pSortableColumn]="col.sortCol">
+                    <div *ngSwitchCase="'shipToAccount'" class="flex justify-content-between flex-wrap">
+                        Account
+                        <div class="flex justify-content-start flex-wrap">
+                            <p-sortIcon class="sort" field="{{ col.sortCol }}"></p-sortIcon>
+                            <p-columnFilter field="shipToAccount" type="text"
+                                [matchModeOptions]="accountFilterModeOptions" [showOperator]="true"
+                                [showAddButton]="true" display="menu">
+                            </p-columnFilter>
+                        </div>
+                    </div>
+                    <div *ngSwitchCase="'product'" class="flex justify-content-between flex-wrap">
+                        Product
+                        <div class="flex justify-content-start flex-wrap">
+                            <p-sortIcon field="{{ col.sortCol }}"></p-sortIcon>
+                            <p-columnFilter field="{{ col.sortCol }}" type="numeric" [showOperator]="true"
+                                [showAddButton]="true" display="menu"></p-columnFilter>
+                        </div>
+                    </div>
+                    <div *ngSwitchCase="'constraints'">
+                    </div>
+                    <div *ngSwitchCase="'constraintsParams'">
+                    </div>
+                    <div *ngSwitchDefault>
+                        <div class="flex justify-content-between flex-wrap">
+                            {{ col.header }}
+                            <div class="flex justify-content-start flex-wrap">
+                                <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                                <p-columnFilter type="{{ col.filterType }}" field="{{ col.field }}"
+                                    display="menu"></p-columnFilter>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-request let-columns="columns" let-rowIndex="rowIndex" let-expanded="expanded">
+            <tr [pSelectableRow]="request" [pSelectableRowIndex]="rowIndex">
+                <td>
+                    <p-tableCheckbox [value]="request" (click)="$event.stopPropagation()"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of selectedColumns" [ngSwitch]="col.selector">
+                    <div *ngSwitchCase="'shipToAccount'">
+                        {{ request[col.field].name }}
+                    </div>
+                    <div *ngSwitchCase="'product'" class="flex flex-row flex-wrap">
+                        <div class="flex flex-column card-container">
+                            <div>
+                                <b>{{ request[col.field].product.number }} -
+                                    {{ request[col.field].product.description }}
+                                </b>
+                            </div>
+                            <div>
+                                {{ request[col.field].requestedAmount }} -
+                                {{ request[col.field].requestedAmountUnit }}
+                            </div>
+                        </div>
+                        <div style="margin: 7px;">
+                            <button type="button" pButton pRipple [pRowToggler]="request"
+                                class="p-button-text p-button-plain p-button-sm"
+                                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                        </div>
+                    </div>
+                    <div *ngSwitchCase="'constraints'">
+                        <div>
+                            <p-tag class="__chip">BF</p-tag>
+                        </div>
+                    </div>
+                    <div *ngSwitchCase="'constraintsParams'">
+                        <button pButton type="button" icon="pi pi-cog" class="p-button-rounded p-button-text"
+                            (click)="openDispatchSettings()"></button>
+                    </div>
+                    <div *ngSwitchDefault>
+                        <div *ngIf="request[col.field] !== null; else emptyCell">
+                            {{ request[col.field] }}
+                        </div>
+                        <ng-template #emptyCell><b>-</b></ng-template>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-request>
+            <tr class="expendedrow">
+                <td colspan="12">
+                    <div class="p-3">
+                        <p-table [value]="spread(request.destinationContainers)" dataKey="id">
+                            <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="requestedAmount">
+                    Requested Amount
+                    <p-sortIcon field="requestedAmount"></p-sortIcon>
+                </th>
+                <th pSortableColumn="requestedAmountUnit">
+                    Unit <p-sortIcon field="requestedAmountUnit"></p-sortIcon>
+                </th>
+                <th pSortableColumn="currentPercentage">
+                    Percentage
+                    <p-sortIcon field="currentPercentage"></p-sortIcon>
+                </th>
+                <th pSortableColumn="product.description">
+                    Product Name
+                    <p-sortIcon field="product.description"></p-sortIcon>
+                </th>
+                <th pSortableColumn="product.number">
+                    Product Code
+                    <p-sortIcon field="product.number"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-container>
+            <tr>
+                <td>{{ container.requestedAmount }}</td>
+                <td>{{ container.requestedAmountUnit }}</td>
+                <td>{{ container.currentPercentage }}</td>
+                <td>{{ container.product.description }}</td>
+                <td>{{ container.product.number }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+</td>
+</tr>
+</ng-template>
+</p-table>
+</div>

@@ -3,7 +3,7 @@ import { FilterService, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
 import { DeliveryRequest } from '../../domain/deliveryrequest';
-import { map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { Container } from '../../domain/container';
 import { DeliveryRequestsFacade } from '../../+state/delivery-requests/delivery-requests-facade';
@@ -14,9 +14,9 @@ import { DeliveryRequestsFacade } from '../../+state/delivery-requests/delivery-
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
-  @Input() liteMode = false;
-
-  deliveryRequests$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
+  deliveryRequests$: Observable<DeliveryRequest[]> = new Observable<
+    DeliveryRequest[]
+  >();
   selectedRequests: DeliveryRequest[] = [];
 
   cols: any[] = [];
@@ -51,16 +51,6 @@ export class TableComponent implements OnInit {
       )
     );
 
-    this.deliveryRequests$ = this.deliveryRequests$.pipe(
-      switchMap((reqs) => {
-        if (this.liteMode) {
-          return of(reqs.filter((req) => req.dispatchStatus.toString() === "PENDING"));
-        } else {
-          return of(reqs);
-        }
-      })
-    );
-
     this.deliveryRequests$
       .pipe(
         map((reqs) =>
@@ -93,89 +83,65 @@ export class TableComponent implements OnInit {
   // fix for paginator auto focus.
   @HostListener('window:scroll') onScroll(): void {
     window.scrollTo(0, window.scrollY);
- }
+  }
   ngOnInit() {
     this.deliveriesFacade.loadDeliveryRequests();
 
-    if (!this.liteMode) {
-      this.cols = [
-        { selector: 'tags', field: 'tags', header: 'Tags' },
-        {
-          selector: 'purchaseOrder',
-          field: 'purchaseOrder',
-          header: 'Purchase Order',
-          sortCol: 'purchaseOrder',
-          filterType: 'numeric',
-        },
-        {
-          selector: 'shipToAccount',
-          field: 'shipToAccount',
-          header: 'Ship to Account',
-          sortCol: 'shipToAccount.name',
-        },
-        {
-          selector: 'lowestContainer',
-          field: 'lowestContainer',
-          header: 'Percentage',
-          sortCol: 'lowestContainer.currentPercentage',
-        },
-        {
-          selector: 'targetDate',
-          field: 'targetDate',
-          header: 'Target Date',
-          sortCol: 'targetDate',
-          filterType: 'date',
-        },
-        {
-          selector: 'product',
-          field: 'lowestContainer',
-          header: 'Product',
-          sortCol: 'lowestContainer.requestedAmount',
-        },
-        {
-          selector: 'dispatchStatus',
-          field: 'dispatchStatus',
-          header: 'Status',
-          sortCol: 'dispatchStatus',
-        },
-        {
-          selector: 'dispatchedToTruck',
-          field: 'dispatchedToTruck',
-          header: 'Truck',
-          sortCol: 'dispatchedToTruck',
-          filterType: 'dispatchedToTruck.name',
-        },
-        {
-          selector: 'dispatchDate',
-          field: 'dispatchDate',
-          header: 'Dispatch Date',
-          sortCol: 'dispatchDate',
-          filterType: 'date',
-        },
-      ];
-    } else {
-      this.cols = [
-        {
-          selector: 'purchaseOrder',
-          field: 'purchaseOrder',
-          header: 'Purchase Order',
-          sortCol: 'purchaseOrder',
-          filterType: 'numeric',
-        },
-        {
-          selector: 'shipToAccount',
-          field: 'shipToAccount',
-          header: 'Ship to Account',
-          sortCol: 'shipToAccount.name',
-        },
-        {
-          selector: 'product',
-          field: 'lowestContainer',
-          header: 'Product',
-          sortCol: 'lowestContainer.requestedAmount',
-        },
-      ];
-    }
+    this.cols = [
+      { selector: 'tags', field: 'tags', header: 'Tags' },
+      {
+        selector: 'purchaseOrder',
+        field: 'purchaseOrder',
+        header: 'Purchase Order',
+        sortCol: 'purchaseOrder',
+        filterType: 'numeric',
+      },
+      {
+        selector: 'shipToAccount',
+        field: 'shipToAccount',
+        header: 'Ship to Account',
+        sortCol: 'shipToAccount.name',
+      },
+      {
+        selector: 'lowestContainer',
+        field: 'lowestContainer',
+        header: 'Percentage',
+        sortCol: 'lowestContainer.currentPercentage',
+      },
+      {
+        selector: 'targetDate',
+        field: 'targetDate',
+        header: 'Target Date',
+        sortCol: 'targetDate',
+        filterType: 'date',
+      },
+      {
+        selector: 'product',
+        field: 'lowestContainer',
+        header: 'Product',
+        sortCol: 'lowestContainer.requestedAmount',
+      },
+      {
+        selector: 'dispatchStatus',
+        field: 'dispatchStatus',
+        header: 'Status',
+        sortCol: 'dispatchStatus',
+      },
+      {
+        selector: 'dispatchedToTruck',
+        field: 'dispatchedToTruck',
+        header: 'Truck',
+        sortCol: 'dispatchedToTruck',
+        filterType: 'dispatchedToTruck.name',
+      },
+      {
+        selector: 'dispatchDate',
+        field: 'dispatchDate',
+        header: 'Dispatch Date',
+        sortCol: 'dispatchDate',
+        filterType: 'date',
+      },
+    ];
 
     this.selectedCols = this.cols;
 
@@ -329,22 +295,14 @@ export class TableComponent implements OnInit {
   }
 
   onRowSelect(event: any) {
-    if (!this.liteMode) {
-      this.deliveriesFacade.addSelectedRequest(event.data.id);
-    }
+    this.deliveriesFacade.addSelectedRequest(event.data.id);
   }
 
   onHeaderSelectionToggle(event: any) {
-    if (event.checked && !this.liteMode) {
-      this.deliveriesFacade.addAllRequestsToSelection();
-    } else {
-      this.deliveriesFacade.removeAllRequestsFromSelection();
-    }
+    this.deliveriesFacade.addAllRequestsToSelection();
   }
 
   onRowUnselect(event: any) {
-    if (!this.liteMode) {
-      this.deliveriesFacade.removeSelectedRequest(event.data.id);
-    }
+    this.deliveriesFacade.removeSelectedRequest(event.data.id);
   }
 }

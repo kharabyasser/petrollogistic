@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MapsFacade } from '../../../+state/maps/maps-facade';
 import { TrucksFacade } from '../../../+state/trucks/trucks-facade';
 import { Truck } from '../../../domain/truck';
@@ -11,12 +11,9 @@ import { RoutingService } from '../../../services/routing-service';
   styleUrls: ['./truck.component.scss'],
 })
 export class TruckComponent implements OnInit {
-  @Input() liteMode = false;
-
   trucks: Truck[] = [];
 
   productsData: any;
-  liteModeProductsData: any;
 
   miniTicketsView = true;
   chartsCollapsed = false;
@@ -39,45 +36,6 @@ export class TruckComponent implements OnInit {
         },
         grid: {
           color: '#ebedef',
-        },
-      },
-    },
-  };
-
-  liteModehorizontalOptions = {
-    indexAxis: 'y',
-    maintainAspectRatio: false,
-    aspectRatio: 0.8,
-    plugins: {
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-      },
-      legend: {
-        labels: {
-          color: '#000',
-        },
-      },
-    },
-    scales: {
-      x: {
-        stacked: true,
-        ticks: {
-          color: '#495057',
-        },
-        grid: {
-          color: '#ebedef',
-          drawBorder: false,
-        },
-      },
-      y: {
-        stacked: true,
-        ticks: {
-          color: '#495057',
-        },
-        grid: {
-          color: '#ebedef',
-          drawBorder: false,
         },
       },
     },
@@ -108,33 +66,6 @@ export class TruckComponent implements OnInit {
           borderColor: 'blue',
           maxBarThickness: 30,
           borderWidth: 1,
-        },
-      ],
-    };
-
-    this.liteModeProductsData = {
-      labels: ['In truck'],
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Product 1',
-          backgroundColor: '#eba834',
-          borderColor: 'blue',
-          data: [1000, 900, 1050],
-        },
-        {
-          type: 'bar',
-          label: 'Product 2',
-          backgroundColor: '#3440eb',
-          borderColor: 'blue',
-          data: [900, 1050],
-        },
-        {
-          type: 'bar',
-          label: 'Product 3',
-          backgroundColor: '#FF0d80',
-          borderColor: 'blue',
-          data: [1050],
         },
       ],
     };

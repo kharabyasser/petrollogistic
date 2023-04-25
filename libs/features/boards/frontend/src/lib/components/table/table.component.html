@@ -1,6 +1,6 @@
 <div class="card">
   <p-table #tableList dataKey="id" [value]="(deliveryRequests$ | async) || selectedRequests" [columns]="selectedColumns"
-    [paginator]="!liteMode" [rows]="13" [resizableColumns]="true" [reorderableColumns]="!liteMode" [showCurrentPageReport]="!liteMode"
+    [paginator]="true" [rows]="13" [resizableColumns]="true" [reorderableColumns]="true" [showCurrentPageReport]="true"
     styleClass="p-datatable-striped" responsiveLayout="scroll"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[13, 30, 50]"
     scrollHeight="83vh" selectionMode="multiple" [(selection)]="selectedRequests" (onRowSelect)="onRowSelect($event)"
@@ -14,9 +14,9 @@
     ]">
     <ng-template pTemplate="caption">
       <div class="flex">
-        <button pButton [label]="liteMode ? '' : 'Clear'" class="p-button-outlined" icon="pi pi-filter-slash"
+        <button pButton [label]="'Clear'" class="p-button-outlined" icon="pi pi-filter-slash"
           (click)="clear(tableList)"></button>
-        <div *ngIf="liteMode === false">
+        <div>
           <p-multiSelect class="ml-3" [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
             selectedItemsLabel="{0} columns selected" placeholder="Choose Columns"></p-multiSelect>
         </div>
@@ -162,15 +162,17 @@
                 [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
             </div>
           </div>
-          <div *ngSwitchCase="'product'" class="flex flex-column card-container">
-            <div>
-              <b>{{ request[col.field].product.number }} -
-                {{ request[col.field].product.description }}
-              </b>
-            </div>
-            <div>
-              {{ request[col.field].requestedAmount }} -
-              {{ request[col.field].requestedAmountUnit }}
+          <div *ngSwitchCase="'product'" class="flex flex-row flex-wrap">
+            <div class="flex flex-column card-container">
+              <div>
+                <b>{{ request[col.field].product.number }} -
+                  {{ request[col.field].product.description }}
+                </b>
+              </div>
+              <div>
+                {{ request[col.field].requestedAmount }} -
+                {{ request[col.field].requestedAmountUnit }}
+              </div>
             </div>
           </div>
           <div *ngSwitchCase="'dispatchStatus'">

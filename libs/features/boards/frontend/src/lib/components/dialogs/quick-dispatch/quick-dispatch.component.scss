@@ -1,0 +1,22 @@
+.constraints-container {
+  display: flex;
+  justify-content: space-between;
+  overflow-y: hidden;
+  height: 70vh;
+  & .__tickets {
+    width: 50vw;
+  }
+  & .__trucks {
+    width: 15vw;
+    margin-right: 0;
+  }
+}
+
+.p-button-success {
+  float: right;
+  margin-top: 30px;
+}
+
+.p-button-secondary {
+  margin-top: 30px;
+}

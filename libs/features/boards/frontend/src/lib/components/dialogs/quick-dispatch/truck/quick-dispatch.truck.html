@@ -1,0 +1,74 @@
+<div class="truck__panel">
+    <p-panel *ngFor="let truck of trucks" [toggleable]="true" [collapsed]="true">
+        <ng-template pTemplate="header">
+            <div class="flex flex-column card-container header__content">
+                <div class="__title">
+                    <p-checkbox style="margin-right: 5px;"></p-checkbox>
+                    <b>{{ truck.name }} #{{ truck.number }} ({{ '3' }})</b>
+                </div>
+                <div>
+                    <p-tag class="__chip">RTO</p-tag>
+                    <p-tag class="__chip">CA</p-tag>
+                    <p-tag class="__chip">OA</p-tag>
+                </div>
+            </div>
+        </ng-template>
+        <petrologistic-p-panel-child title="Constraints">
+            <div class="constraints-form">
+                <p>Return to</p>
+                <p-dropdown [options]="returnSites" style="margin-left: 10px;"></p-dropdown>
+                <p>ATO Mode</p>
+                <p-dropdown [options]="atoModes" style="margin-left: 10px;"></p-dropdown>
+                <p>Capacitated</p>
+                <p-inputSwitch style="margin: 10px;"></p-inputSwitch>
+            </div>
+        </petrologistic-p-panel-child>
+        <petrologistic-p-panel-child title="Container's Products">
+            <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
+        </petrologistic-p-panel-child>
+        <petrologistic-p-panel-child title="Assigned Tickets">
+            <div class="flex align-items-stretch card">
+                <div class="card__statusBar"></div>
+                <div class="card__body">
+                    <div class="card__header">
+                        <p-checkbox style="margin-right: 1px;"></p-checkbox>
+                        <p>Ticket 1125,</p>
+                        <p>1500L of Clear Diseal.</p>
+                        <div class="__status">
+                            <div class="__icon"></div>
+                            <p>ON TRUCK</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex align-items-stretch card">
+                <div class="card__statusBar"></div>
+                <div class="card__body">
+                    <div class="card__header">
+                        <p-checkbox style="margin-right: 1px;"></p-checkbox>
+                        <p>Ticket 1125,</p>
+                        <p>1500L of Clear Diseal.</p>
+                        <div class="__status">
+                            <div class="__icon"></div>
+                            <p>ON TRUCK</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex align-items-stretch card">
+                <div class="card__statusBar"></div>
+                <div class="card__body">
+                    <div class="card__header">
+                        <p-checkbox style="margin-right: 1px;"></p-checkbox>
+                        <p>Ticket 1125,</p>
+                        <p>1500L of Clear Diseal.</p>
+                        <div class="__status">
+                            <div class="__icon"></div>
+                            <p>ON TRUCK</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </petrologistic-p-panel-child>
+    </p-panel>
+</div>

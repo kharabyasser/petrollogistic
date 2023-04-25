@@ -1,7 +1,0 @@
-.dialog__container {
-  display: flex;
-  justify-content: space-between;
-  margin: 5px;
-  overflow-y: hidden;
-  height: 70vh;
-}

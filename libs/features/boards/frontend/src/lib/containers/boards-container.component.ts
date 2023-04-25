@@ -49,7 +49,7 @@ export class BoardsContainerComponent {
   _selectedLayout = 'table';
   detailsState = '';
 
-  private readonly DIALOG_WIDTH = '1200px';
+  private readonly DIALOG_WIDTH = '1500px';
   private readonly DIALOG_HEIGHT = 'fit-content';
 
   constructor(

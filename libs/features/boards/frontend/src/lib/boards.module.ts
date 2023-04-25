@@ -25,6 +25,9 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ChipModule } from 'primeng/chip';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CalendarModule } from 'primeng/calendar';
 
 import { StoreModule } from '@ngrx/store';
 
@@ -49,6 +52,9 @@ import { MapsFacade } from './+state/maps/maps-facade';
 import { mapsReducer } from './+state/maps/maps-reducer';
 import { MapService } from './services/maps-service';
 import { QuickDispatchComponent } from './components/dialogs/quick-dispatch/quick-dispatch.component';
+import { QuickDispatchTruckComponent } from './components/dialogs/quick-dispatch/truck/quick-dispatch.truck';
+import { QuickDispatchTableComponent } from './components/dialogs/quick-dispatch/table/quick-dispatch.table';
+import { DeliverySettingsComponent } from './components/dialogs/quick-dispatch/dispatch-delivery-settings/delivery-settings.component';
 
 @NgModule({
   imports: [
@@ -77,7 +83,10 @@ import { QuickDispatchComponent } from './components/dialogs/quick-dispatch/quic
     AvatarModule,
     InputSwitchModule,
     ToggleButtonModule,
+    ChipModule,
     CheckboxModule,
+    InputNumberModule,
+    CalendarModule,
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),
@@ -91,6 +100,9 @@ import { QuickDispatchComponent } from './components/dialogs/quick-dispatch/quic
     TruckComponent,
     MapsComponent,
     QuickDispatchComponent,
+    QuickDispatchTruckComponent,
+    QuickDispatchTableComponent,
+    DeliverySettingsComponent
   ],
   exports: [BoardsContainerComponent],
   providers: [
