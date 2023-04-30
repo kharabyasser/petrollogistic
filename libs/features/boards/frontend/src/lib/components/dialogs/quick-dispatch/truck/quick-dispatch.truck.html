@@ -3,7 +3,8 @@
         <ng-template pTemplate="header">
             <div class="flex flex-column card-container header__content">
                 <div class="__title">
-                    <p-checkbox style="margin-right: 5px;"></p-checkbox>
+                    <p-checkbox [value]="truck" [ngModel]="true" [binary]="true"
+                        (ngModelChange)="selectTruck($event, truck)"></p-checkbox>
                     <b>{{ truck.name }} #{{ truck.number }} ({{ '3' }})</b>
                 </div>
                 <div>
@@ -16,11 +17,11 @@
         <petrologistic-p-panel-child title="Constraints">
             <div class="constraints-form">
                 <p>Return to</p>
-                <p-dropdown [options]="returnSites" style="margin-left: 10px;"></p-dropdown>
+                <p-dropdown [options]="returnSites"></p-dropdown>
                 <p>ATO Mode</p>
-                <p-dropdown [options]="atoModes" style="margin-left: 10px;"></p-dropdown>
+                <p-dropdown [options]="atoModes"></p-dropdown>
                 <p>Capacitated</p>
-                <p-inputSwitch style="margin: 10px;"></p-inputSwitch>
+                <p-inputSwitch></p-inputSwitch>
             </div>
         </petrologistic-p-panel-child>
         <petrologistic-p-panel-child title="Container's Products">
@@ -31,7 +32,7 @@
                 <div class="card__statusBar"></div>
                 <div class="card__body">
                     <div class="card__header">
-                        <p-checkbox style="margin-right: 1px;"></p-checkbox>
+                        <p-checkbox></p-checkbox>
                         <p>Ticket 1125,</p>
                         <p>1500L of Clear Diseal.</p>
                         <div class="__status">
@@ -45,7 +46,7 @@
                 <div class="card__statusBar"></div>
                 <div class="card__body">
                     <div class="card__header">
-                        <p-checkbox style="margin-right: 1px;"></p-checkbox>
+                        <p-checkbox></p-checkbox>
                         <p>Ticket 1125,</p>
                         <p>1500L of Clear Diseal.</p>
                         <div class="__status">
@@ -59,7 +60,7 @@
                 <div class="card__statusBar"></div>
                 <div class="card__body">
                     <div class="card__header">
-                        <p-checkbox style="margin-right: 1px;"></p-checkbox>
+                        <p-checkbox></p-checkbox>
                         <p>Ticket 1125,</p>
                         <p>1500L of Clear Diseal.</p>
                         <div class="__status">

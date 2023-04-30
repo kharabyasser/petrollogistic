@@ -1,7 +1,10 @@
-
 import { Component, OnInit } from '@angular/core';
 import { TrucksFacade } from '../../../../+state/trucks/trucks-facade';
 import { Truck } from '../../../../domain/truck';
+import { MapsFacade } from '../../../../+state/maps/maps-facade';
+import { map } from 'rxjs';
+import { MapMarker } from '../../../../models/maps/map-marker';
+import { Coordinate } from '../../../../models/maps/coordinate';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-truck',
@@ -10,8 +13,8 @@ import { Truck } from '../../../../domain/truck';
 })
 export class QuickDispatchTruckComponent implements OnInit {
   trucks: Truck[] = [];
-  returnSites = ['NAN', 'Deopt #1', 'Depot #2', 'Depot #3']
-  atoModes = ['Optimize', 'Forced', 'Custom']
+  returnSites = ['NAN', 'Deopt #1', 'Depot #2', 'Depot #3'];
+  atoModes = ['Optimize', 'Forced', 'Custom'];
 
   productsData: any;
 
@@ -60,8 +63,12 @@ export class QuickDispatchTruckComponent implements OnInit {
 
   constructor(
     private trucksFacade: TrucksFacade,
+    private mapsFacade: MapsFacade
   ) {
-    this.trucksFacade.trucks$.subscribe((trucks) => (this.trucks = trucks));
+    this.trucksFacade.trucks$.subscribe((trucks) => {
+      this.trucks = trucks;
+      this.trucks.forEach((t) => this.addToOptimizationVehicules(t));
+    });
 
     this.productsData = {
       labels: ['In truck'],
@@ -101,5 +108,22 @@ export class QuickDispatchTruckComponent implements OnInit {
 
   onAfterToggle() {
     this.hideCharts = this.chartsCollapsed;
+  }
+
+  selectTruck(checked: boolean, truck: Truck) {
+    if (checked) {
+      this.addToOptimizationVehicules(truck);
+    } else {
+      this.mapsFacade.removeOptimizationVehicule(truck.number);
+    }
+  }
+
+  addToOptimizationVehicules(truck: Truck) {
+    this.mapsFacade.addOptimizationVehicule({
+      id: truck.number,
+      profile: 'driving-car',
+      start: [truck.longtitude, truck.latitude],
+      end: [truck.longtitude, truck.latitude],
+    });
   }
 }

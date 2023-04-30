@@ -3,38 +3,66 @@ import { Coordinate } from '../../models/maps/coordinate';
 import { MapMarker } from '../../models/maps/map-marker';
 
 import * as MapsActions from './maps-actions';
+import { Job, Vehicle } from '../../models/routing/vrp-request';
+import { GeoJsonResponse } from '../../models/routing/geojson-response';
 
 export interface MapState {
   markersOnMap: MapMarker[];
-  isochroneData: any;
+  isochroneData: GeoJsonResponse | null;
+  routes: GeoJsonResponse[];
   centerOnPosition: Coordinate | null;
+  optimizationVehicules: Vehicle[];
+  optimizationJobs: Job[];
 }
 
 export const initialState: MapState = {
   markersOnMap: [],
   centerOnPosition: null,
-  isochroneData: null
+  isochroneData: null,
+  routes: [],
+  optimizationVehicules: [],
+  optimizationJobs: []
 };
 
 export const mapsReducer = createReducer(
   initialState,
-  on(MapsActions.setMarkersOnMap, (state, action) => ({
+  on(MapsActions.addMarkersOnMap, (state, action) => ({
     ...state,
     markersOnMap: action.data
   })),
-  on(MapsActions.setCenterOnPosition, (state, action) => ({
+  on(MapsActions.centerOnPosition, (state, action) => ({
     ...state,
     centerOnPosition: action.data,
     fitMarkersBound: false
   })),
-  on(MapsActions.setFitBounds, (state, action) => ({
+  on(MapsActions.fitBounds, (state, action) => ({
     ...state,
     centerOnPosition: action.data ? null : state.centerOnPosition,
     fitMarkersBound: action.data
   })),
-  on(MapsActions.setIsochronesData, (state, action) => ({
+  on(MapsActions.addIsochronesData, (state, action) => ({
     ...state,
     isochroneData: action.data
+  })),
+  on(MapsActions.addRoute, (state, action) => ({
+    ...state,
+    routes: [...state.routes, action.data],
+  })),
+  on(MapsActions.addOptimizationVehicule, (state, action) => ({
+    ...state,
+    optimizationVehicules: [...state.optimizationVehicules, action.data],
+  })),
+  on(MapsActions.removeOptimizationVehicule, (state, action) => ({
+    ...state,
+    optimizationVehicules: state.optimizationVehicules.filter((job) => job.id !== action.data),
+  })),
+  on(MapsActions.addOptimizationJob, (state, action) => ({
+    ...state,
+    optimizationJobs: [...state.optimizationJobs, action.data],
+  })),
+  on(MapsActions.removeOptimizationJob, (state, action) => ({
+    ...state,
+    optimizationJobs: state.optimizationJobs.filter((job) => job.id !== action.data),
   })),
   on(MapsActions.clear, (state) => ({
     ...state,

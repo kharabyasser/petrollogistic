@@ -8,5 +8,6 @@ export interface Truck {
     permit: string,
     longtitude: number,
     latitude: number
-    system: string
+    system: string,
+    selected: boolean,
 }

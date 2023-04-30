@@ -6,7 +6,7 @@ public class DeliveryRequestDto
 {
   public Guid Id { get; set; }
   public string[] Tags { get; set; } = default!;
-  public string PurchaseOrder { get; set; } = default!;
+  public int PurchaseOrder { get; set; } = default!;
   public AccountDto ShipToAccount { get; set; } = default!;
   public IList<ContainerDto> DestinationContainers { get; set; } = default!;
   public DateTime CreationDate { get; set; }

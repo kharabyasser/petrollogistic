@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Map, Marker } from 'maplibre-gl';
+import { Map, Marker, Popup } from 'maplibre-gl';
 import { MapsFacade } from '../+state/maps/maps-facade';
 import { MapMarker } from '../models/maps/map-marker';
 import { RoutingMetric } from '../models/routing/enums/routing-metric';
@@ -7,7 +7,7 @@ import { RoutingUnit } from '../models/routing/enums/routing-unit';
 import { MatrixResponse } from '../models/routing/matrix-response';
 import { MatrixResult } from '../models/routing/matrix-result';
 import { RoutingService } from './routing-service';
-import { IsochronesResponse } from '../models/routing/isochrones-response';
+import { GeoJsonResponse } from '../models/routing/geojson-response';
 
 @Injectable()
 export class MapService {
@@ -18,7 +18,14 @@ export class MapService {
 
   private initialState = { lng: -73.62, lat: 45.5, zoom: 14 };
   private padding = 0.1;
-  private colors = ['#f54242', '#f542ce', '#c542f5', '#7b42f5', '#2f47fa', '#2fa9fa'];
+  private colors = [
+    '#f54242',
+    '#f542ce',
+    '#c542f5',
+    '#7b42f5',
+    '#2f47fa',
+    '#2fa9fa',
+  ];
 
   constructor(
     private mapsFacade: MapsFacade,
@@ -46,6 +53,7 @@ export class MapService {
       // Adding new markers.
       mapMarkers.forEach((c) => {
         if (!c.icon) {
+
           const marker = new Marker({ color: c.color }).setLngLat([
             c.coordinate.longitude,
             c.coordinate.latitude,
@@ -110,7 +118,9 @@ export class MapService {
         this.map.removeSource('isochroneSource');
       }
 
-      const orderedisochrones = JSON.parse(JSON.stringify(isochrones)) as IsochronesResponse;
+      const orderedisochrones = JSON.parse(
+        JSON.stringify(isochrones)
+      ) as GeoJsonResponse;
 
       orderedisochrones.features.reverse();
 
@@ -118,8 +128,6 @@ export class MapService {
         type: 'geojson',
         data: orderedisochrones,
       });
-
-      console.log(orderedisochrones);
 
       this.map.addLayer({
         id: 'isochroneLayer',
@@ -129,18 +137,75 @@ export class MapService {
           'fill-color': [
             'match',
             ['get', 'value'],
-            200, this.colors[0],
-            400, this.colors[1],
-            600, this.colors[2],
-            800, this.colors[3],
-            1000, this.colors[4],
-            1200, this.colors[5],
-            "#000000"
+            200,
+            this.colors[0],
+            400,
+            this.colors[1],
+            600,
+            this.colors[2],
+            800,
+            this.colors[3],
+            1000,
+            this.colors[4],
+            1200,
+            this.colors[5],
+            '#000000',
           ],
           'fill-outline-color': 'rgb(255, 255, 255)',
           'fill-opacity': 0.3,
         },
       });
+    });
+
+    this.mapsFacade.routes$.subscribe((routes) => {
+      let attempts = 0;
+      const checkLoaded = setInterval(() => {
+        attempts++;
+        if (this.map.loaded() || attempts >= 3) {
+          clearInterval(checkLoaded);
+          if (!this.map.loaded()) {
+            return;
+          }
+
+          if (this.map.getSource('routesSource')) {
+            this.map.removeLayer('routesLayer');
+            this.map.removeSource('routesSource');
+          }
+
+          let index = 0;
+          routes.forEach(r => {
+            const routesJson = JSON.parse(
+              JSON.stringify(r)
+            ) as GeoJsonResponse;
+  
+            this.map.addSource(`routesSource_${index}`, {
+              type: 'geojson',
+              data: routesJson,
+            });
+  
+            this.map.addLayer({
+              id: `routesLayer_${index}`,
+              type: 'line',
+              source: `routesSource_${index}`,
+              layout: {
+                'line-join': 'round',
+                'line-cap': 'round',
+              },
+              paint: {
+                'line-color': this.colors[index],
+                'line-width': 3,
+              },
+            });
+
+            ++index;
+          })
+
+          this.map.fitBounds([
+            [routes[0].bbox[0], routes[0].bbox[1]],
+            [routes[0].bbox[2], routes[0].bbox[3]],
+          ]);
+        }
+      }, 1000);
     });
   }
 

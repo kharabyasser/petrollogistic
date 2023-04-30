@@ -8,6 +8,11 @@ import { DeliveryRequestsFacade } from '../../../../+state/delivery-requests/del
 import { Container } from '../../../../domain/container';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DeliverySettingsComponent } from '../dispatch-delivery-settings/delivery-settings.component';
+import { MapsFacade } from '../../../../+state/maps/maps-facade';
+import { MapMarker } from '../../../../models/maps/map-marker';
+import { Coordinate } from '../../../../models/maps/coordinate';
+import { TrucksFacade } from '../../../../+state/trucks/trucks-facade';
+import { Truck } from '../../../../domain/truck';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-table',
@@ -22,6 +27,7 @@ export class QuickDispatchTableComponent implements OnInit {
   cols: any[] = [];
   selectedCols: any[] = [];
   selectedRequests: DeliveryRequest[] = [];
+  trucksMarkers: MapMarker[] = [];
 
   private readonly DIALOG_WIDTH = '500px';
   private readonly DIALOG_HEIGHT = 'fit-content';
@@ -32,7 +38,9 @@ export class QuickDispatchTableComponent implements OnInit {
   constructor(
     private filterService: FilterService,
     private deliveryRequestsFacade: DeliveryRequestsFacade,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private mapsFacade: MapsFacade,
+    private trucksFacade: TrucksFacade
   ) {
     this.deliveryRequests$ = this.deliveryRequestsFacade.deliveryRequests$.pipe(
       map((reqs) =>
@@ -47,6 +55,29 @@ export class QuickDispatchTableComponent implements OnInit {
           .filter((req) => req.dispatchStatus.toString() === 'PENDING')
       )
     );
+
+    this.deliveryRequests$.subscribe((reqs) => {
+      this.selectedRequests = reqs;
+      this.updateSelectedOnMap();
+      this.selectedRequests.forEach((x) => this.addToOptimizationJobs(x));
+    });
+
+    this.trucksFacade.trucks$
+      .pipe(
+        map((trucks) =>
+          trucks.map(
+            (d) =>
+              new MapMarker(
+                new Coordinate(d.longtitude, d.latitude),
+                '../assets/truck.png',
+                '#000000'
+              )
+          )
+        )
+      )
+      .subscribe((markers) => {
+        this.trucksMarkers = markers;
+      });
   }
 
   ngOnInit() {
@@ -72,12 +103,12 @@ export class QuickDispatchTableComponent implements OnInit {
       },
       {
         selector: 'constraints',
-        header: 'Constraints'
+        header: 'Constraints',
       },
       {
         selector: 'constraintsParams',
-        header: ''
-      }
+        header: '',
+      },
     ];
 
     this.selectedCols = this.cols;
@@ -164,18 +195,71 @@ export class QuickDispatchTableComponent implements OnInit {
     return [...items];
   }
 
-  onRowSelect(event: any) {}
+  onRowSelect(event: any) {
+    this.addToOptimizationJobs(event.data);
+    this.updateSelectedOnMap();
+  }
 
-  onHeaderSelectionToggle(event: any) {}
+  onHeaderSelectionToggle(event: any) {
+    if (!event.checked) {
+      this.deliveryRequests$
+        .pipe(
+          map((requests) =>
+            requests.map((request) =>
+              this.mapsFacade.removeOptimizationJob(request.purchaseOrder)
+            )
+          )
+        )
+        .subscribe();
+    } else {
+      this.deliveryRequests$
+        .pipe(
+          map((requests) =>
+            requests.map((request) => this.addToOptimizationJobs(request))
+          )
+        )
+        .subscribe();
+    }
+  }
 
-  onRowUnselect(event: any) {}
+  onRowUnselect(event: any) {
+    this.mapsFacade.removeOptimizationJob(event.data.id);
+    this.updateSelectedOnMap();
+  }
 
   openDispatchSettings() {
-    this.dialogService
-      .open(DeliverySettingsComponent, {
-        header: 'Ticket Dispatch Constraints',
-        width: this.DIALOG_WIDTH,
-        height: this.DIALOG_HEIGHT
-      })
+    this.dialogService.open(DeliverySettingsComponent, {
+      header: 'Ticket Dispatch Constraints',
+      width: this.DIALOG_WIDTH,
+      height: this.DIALOG_HEIGHT,
+    });
+  }
+
+  addToOptimizationJobs(request: DeliveryRequest) {
+    this.mapsFacade.addOptimizationJob({
+      id: request.purchaseOrder,
+      location: [
+        request.shipToAccount.longtitude,
+        request.shipToAccount.latitude,
+      ],
+    });
+  }
+
+  updateSelectedOnMap() {
+    this.mapsFacade.addMarkers(
+      this.trucksMarkers.concat(
+        this.selectedRequests.map(
+          (d) =>
+            new MapMarker(
+              new Coordinate(
+                d.shipToAccount.longtitude,
+                d.shipToAccount.latitude
+              ),
+              undefined,
+              '#FF0000'
+            )
+        )
+      )
+    );
   }
 }

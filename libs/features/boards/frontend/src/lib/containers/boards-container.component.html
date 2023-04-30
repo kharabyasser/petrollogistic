@@ -1,9 +1,11 @@
 <div class="root">
   <div class="layout-control">
     <div>
-      <p-button label="Smart Dispatch" class="__button" styleClass="p-button-raised p-button-text p-button-sm" (click)="openQuickDispatch()"></p-button>
+      <p-button label="Smart Dispatch" class="__button" styleClass="p-button-raised p-button-text p-button-sm"
+        (click)="openQuickDispatch()"></p-button>
     </div>
-    <p-selectButton class="__layout_switch" [options]="layoutOptions" [(ngModel)]="selectedLayout" optionLabel="icon" optionValue="value">
+    <p-selectButton class="__layout_switch" [options]="layoutOptions" [(ngModel)]="selectedLayout" optionLabel="icon"
+      optionValue="value">
       <ng-template let-item>
         <i [class]="item.icon"></i>
       </ng-template>
@@ -14,8 +16,7 @@
     <petrologistic-delivery-detail class="details"></petrologistic-delivery-detail>
   </div>
   <div *ngIf="selectedLayout === 'map'" class="flex align-items-stretch flex-wrap">
-    <petrologistic-maps style="--height: 93vh"
-      class="map"></petrologistic-maps>
+    <petrologistic-maps style="--height: 93vh" class="map"></petrologistic-maps>
     <petrologistic-truck-detail style="margin-left: 0.5rem;"> </petrologistic-truck-detail>
   </div>
 </div>

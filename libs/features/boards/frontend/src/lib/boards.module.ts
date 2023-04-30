@@ -28,6 +28,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
+import { TimelineModule } from 'primeng/timeline';
 
 import { StoreModule } from '@ngrx/store';
 
@@ -55,6 +56,7 @@ import { QuickDispatchComponent } from './components/dialogs/quick-dispatch/quic
 import { QuickDispatchTruckComponent } from './components/dialogs/quick-dispatch/truck/quick-dispatch.truck';
 import { QuickDispatchTableComponent } from './components/dialogs/quick-dispatch/table/quick-dispatch.table';
 import { DeliverySettingsComponent } from './components/dialogs/quick-dispatch/dispatch-delivery-settings/delivery-settings.component';
+import { VrpService } from './services/vrp-service';
 
 @NgModule({
   imports: [
@@ -87,6 +89,7 @@ import { DeliverySettingsComponent } from './components/dialogs/quick-dispatch/d
     CheckboxModule,
     InputNumberModule,
     CalendarModule,
+    TimelineModule,
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),
@@ -108,6 +111,7 @@ import { DeliverySettingsComponent } from './components/dialogs/quick-dispatch/d
   providers: [
     DeliveryRequestService,
     TrucksService,
+    VrpService,
     DeliveryRequestsFacade,
     TrucksFacade,
     MapsFacade,
