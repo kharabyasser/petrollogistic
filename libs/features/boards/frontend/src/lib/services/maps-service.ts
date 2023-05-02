@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Map, Marker, Popup } from 'maplibre-gl';
+import { GeoJSONSource, Map } from 'maplibre-gl';
 import { MapsFacade } from '../+state/maps/maps-facade';
 import { MapMarker } from '../models/maps/map-marker';
 import { RoutingMetric } from '../models/routing/enums/routing-metric';
@@ -7,13 +7,12 @@ import { RoutingUnit } from '../models/routing/enums/routing-unit';
 import { MatrixResponse } from '../models/routing/matrix-response';
 import { MatrixResult } from '../models/routing/matrix-result';
 import { RoutingService } from './routing-service';
-import { GeoJsonResponse } from '../models/routing/geojson-response';
+import { FeatureCollection, GeoJsonProperties, Polygon } from 'geojson';
 
 @Injectable()
 export class MapService {
   map!: Map;
-  private markers: MapMarker[] = [];
-  private currentMarkers!: Marker[];
+  private currentMarkersLayers: string[] = [];
   private fitBounds = false;
 
   private initialState = { lng: -73.62, lat: 45.5, zoom: 14 };
@@ -44,57 +43,101 @@ export class MapService {
       attributionControl: false,
     });
 
-    this.mapsFacade.markersOnMap$.subscribe((mapMarkers) => {
-      this.markers = mapMarkers;
-      // Cleaning old markers.
-      this.currentMarkers?.forEach((m) => m.remove());
-      this.currentMarkers = [];
+    const imageDelivery = document.createElement('img');
+    imageDelivery.width = 25;
+    imageDelivery.height = 25;
+    imageDelivery.src = '../assets/delivery.png';
 
-      // Adding new markers.
-      mapMarkers.forEach((c) => {
-        if (!c.icon) {
+    const imageTruck = document.createElement('img');
+    imageTruck.width = 25;
+    imageTruck.height = 25;
+    imageTruck.src = '../assets/truck.png';
 
-          const marker = new Marker({ color: c.color }).setLngLat([
-            c.coordinate.longitude,
-            c.coordinate.latitude,
-          ]);
-          this.currentMarkers.push(marker);
-          marker.addTo(this.map);
+    this.map.on('load', () => {
+      if (!this.map.hasImage('delivery-icon')) {
+        this.map.addImage('delivery-icon', imageDelivery);
+      }
+
+      if (!this.map.hasImage('truck-icon')) {
+        this.map.addImage('truck-icon', imageTruck);
+      }
+    });
+
+    this.mapsFacade.markersOnMap$.subscribe((markersFeatures) => {
+      // delete previous layers
+      this.currentMarkersLayers.forEach((l) => this.map.removeLayer(l));
+      this.currentMarkersLayers = [];
+
+      if (markersFeatures.length > 0) {
+        const markers: GeoJSON.GeoJSON = {
+          type: 'FeatureCollection',
+          features: markersFeatures,
+          bbox: [
+            Math.max(...markersFeatures.map((x) => x.geometry.coordinates[0])) +
+              this.padding,
+            Math.max(...markersFeatures.map((x) => x.geometry.coordinates[1])) +
+              this.padding,
+            Math.min(...markersFeatures.map((x) => x.geometry.coordinates[0])) -
+              this.padding,
+            Math.min(...markersFeatures.map((x) => x.geometry.coordinates[1])) -
+              this.padding,
+          ],
+        };
+
+        const sourceName = `mapMarkers_source`;
+        const source = this.map.getSource(sourceName) as GeoJSONSource;
+        if (source) {
+          source.setData(markers);
         } else {
-          const icon = document.createElement('div');
-          icon.style.width = '38px';
-          icon.style.height = '38px';
-          icon.style.backgroundSize = 'contain';
-          icon.style.backgroundImage = `url("assets/truck.png")`;
-          icon.style.cursor = 'pointer';
-
-          const marker = new Marker(icon, {
-            anchor: 'bottom',
-            offset: [0, 5],
-          }).setLngLat([c.coordinate.longitude, c.coordinate.latitude]);
-          this.currentMarkers.push(marker);
-          marker.addTo(this.map);
+          this.map.addSource(sourceName, {
+            type: 'geojson',
+            data: markers,
+          });
         }
-      });
 
-      // Fit bounds.
-      if (this.fitBounds && this.markers.length > 0) {
-        setTimeout(() => {
+        markers.features.forEach((feature) => {
+          const symbol =
+            feature.properties !== null ? feature.properties['symbol'] : '';
+          const id =
+            feature.properties !== null ? feature.properties['value'] : '';
+          const tag =
+            feature.properties !== null ? feature.properties['tag'] : '';
+          const layerID = 'tag-' + symbol + '-' + id;
+
+          if (!this.map.getLayer(layerID)) {
+            this.map.addLayer({
+              id: layerID,
+              type: 'symbol',
+              source: sourceName,
+              layout: {
+                'icon-image': tag === 'delivery' ? 'delivery-icon' : 'truck-icon',
+                'icon-overlap': 'always',
+                'text-field': symbol,
+                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                'text-size': 11,
+                'text-transform': 'uppercase',
+                'text-letter-spacing': 0.05,
+                'text-offset': [0, 1.5],
+              },
+              paint: {
+                'text-color': '#202',
+                'text-halo-color': '#fff',
+                'text-halo-width': 2,
+              },
+              filter: ['==', 'symbol', symbol],
+            });
+            this.currentMarkersLayers.push(layerID);
+          }
+        });
+
+        if (markers.bbox) {
           this.map.fitBounds([
-            [
-              Math.max(...this.markers.map((x) => x.coordinate.longitude)) +
-                this.padding,
-              Math.max(...this.markers.map((x) => x.coordinate.latitude)) +
-                this.padding,
-            ],
-            [
-              Math.min(...this.markers.map((x) => x.coordinate.longitude)) -
-                this.padding,
-              Math.min(...this.markers.map((x) => x.coordinate.latitude)) -
-                this.padding,
-            ],
+            markers.bbox[0],
+            markers.bbox[1],
+            markers.bbox[2],
+            markers.bbox[3],
           ]);
-        }, 0);
+        }
       }
     });
 
@@ -120,7 +163,7 @@ export class MapService {
 
       const orderedisochrones = JSON.parse(
         JSON.stringify(isochrones)
-      ) as GeoJsonResponse;
+      ) as FeatureCollection<Polygon, GeoJsonProperties> ;
 
       orderedisochrones.features.reverse();
 
@@ -173,16 +216,14 @@ export class MapService {
           }
 
           let index = 0;
-          routes.forEach(r => {
-            const routesJson = JSON.parse(
-              JSON.stringify(r)
-            ) as GeoJsonResponse;
-  
+          routes.forEach((r) => {
+            const routesJson = JSON.parse(JSON.stringify(r)) as  GeoJSON.GeoJSON;
+
             this.map.addSource(`routesSource_${index}`, {
               type: 'geojson',
               data: routesJson,
             });
-  
+
             this.map.addLayer({
               id: `routesLayer_${index}`,
               type: 'line',
@@ -198,12 +239,14 @@ export class MapService {
             });
 
             ++index;
-          })
+          });
 
-          this.map.fitBounds([
-            [routes[0].bbox[0], routes[0].bbox[1]],
-            [routes[0].bbox[2], routes[0].bbox[3]],
-          ]);
+          if (routes[0].bbox) {
+            this.map.fitBounds([
+              [routes[0].bbox[0], routes[0].bbox[1]],
+              [routes[0].bbox[2], routes[0].bbox[3]],
+            ]);
+          }
         }
       }, 1000);
     });

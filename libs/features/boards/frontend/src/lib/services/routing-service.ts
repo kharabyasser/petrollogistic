@@ -5,8 +5,6 @@ import { DirectionsRequest } from "../models/routing/directions-request";
 import { IsochronesRequest } from "../models/routing/isochrones-request";
 import { MatrixRequest } from "../models/routing/matrix-request";
 import { MatrixResponse } from "../models/routing/matrix-response";
-import { GeoJsonResponse } from "../models/routing/geojson-response";
-
 
 @Injectable()
 export class RoutingService {
@@ -22,6 +20,6 @@ export class RoutingService {
     }
 
     getIsochrone(body: IsochronesRequest) {
-        return this.http.post<GeoJsonResponse>(`${environment.openroutingserviceapi}/isochrones/driving-car`, body);
+        return this.http.post<GeoJSON.GeoJSON>(`${environment.openroutingserviceapi}/isochrones/driving-car`, body);
     }
 }

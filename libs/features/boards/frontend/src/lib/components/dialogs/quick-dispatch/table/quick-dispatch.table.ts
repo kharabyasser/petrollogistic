@@ -12,7 +12,7 @@ import { MapsFacade } from '../../../../+state/maps/maps-facade';
 import { MapMarker } from '../../../../models/maps/map-marker';
 import { Coordinate } from '../../../../models/maps/coordinate';
 import { TrucksFacade } from '../../../../+state/trucks/trucks-facade';
-import { Truck } from '../../../../domain/truck';
+import { Feature, GeoJsonProperties, Point } from 'geojson';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-table',
@@ -220,6 +220,8 @@ export class QuickDispatchTableComponent implements OnInit {
         )
         .subscribe();
     }
+
+    this.updateSelectedOnMap();
   }
 
   onRowUnselect(event: any) {
@@ -246,20 +248,22 @@ export class QuickDispatchTableComponent implements OnInit {
   }
 
   updateSelectedOnMap() {
-    this.mapsFacade.addMarkers(
-      this.trucksMarkers.concat(
-        this.selectedRequests.map(
-          (d) =>
-            new MapMarker(
-              new Coordinate(
-                d.shipToAccount.longtitude,
-                d.shipToAccount.latitude
-              ),
-              undefined,
-              '#FF0000'
-            )
-        )
-      )
+    this.mapsFacade.replaceMarkers(
+      this.selectedRequests.map((d) => {
+        const features: Feature<Point, GeoJsonProperties> = {
+          type: 'Feature',
+          properties: {
+            tag: 'delivery',
+            symbol: d.purchaseOrder.toString()
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [d.shipToAccount.longtitude, d.shipToAccount.latitude],
+          },
+        };
+
+        return features;
+      })
     );
   }
 }

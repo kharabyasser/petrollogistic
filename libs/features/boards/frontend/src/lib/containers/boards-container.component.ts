@@ -1,6 +1,4 @@
-import {
-  Component
-} from '@angular/core';
+import { Component } from '@angular/core';
 import {
   animate,
   state,
@@ -9,13 +7,12 @@ import {
   trigger,
 } from '@angular/animations';
 import { DeliveryRequestsFacade } from '../+state/delivery-requests/delivery-requests-facade';
-import { MapMarker } from '../models/maps/map-marker';
 import { TrucksFacade } from '../+state/trucks/trucks-facade';
-import { Coordinate } from '../models/maps/coordinate';
 import { MapsFacade } from '../+state/maps/maps-facade';
 import { map } from 'rxjs';
 import { DialogService } from 'primeng/dynamicdialog';
 import { QuickDispatchComponent } from '../components/dialogs/quick-dispatch/quick-dispatch.component';
+import { Feature, GeoJsonProperties, Point } from 'geojson';
 
 @Component({
   selector: 'petrologistic-boards-container',
@@ -41,9 +38,6 @@ import { QuickDispatchComponent } from '../components/dialogs/quick-dispatch/qui
   ],
 })
 export class BoardsContainerComponent {
-  deliveriesMarkersList: MapMarker[] = [];
-  trucksMarkersList: MapMarker[] = [];
-
   layoutOptions: any[] = [];
 
   _selectedLayout = 'table';
@@ -77,7 +71,7 @@ export class BoardsContainerComponent {
     }
   }
 
-  get selectedLayout () {
+  get selectedLayout() {
     return this._selectedLayout;
   }
 
@@ -85,52 +79,59 @@ export class BoardsContainerComponent {
     this.deliveriesFacade.deliveryRequests$
       .pipe(
         map((deliveries) =>
-          deliveries.map(
-            (d) =>
-              new MapMarker(
-                new Coordinate(
+          deliveries.map((d) => {
+            const features: Feature<Point, GeoJsonProperties> = {
+              type: 'Feature',
+              properties: {
+                tag: 'delivery',
+                symbol: d.purchaseOrder.toString()
+              },
+              geometry: {
+                type: 'Point',
+                coordinates: [
                   d.shipToAccount.longtitude,
-                  d.shipToAccount.latitude
-                ),
-                undefined,
-                '#FF0000'
-              )
-          )
+                  d.shipToAccount.latitude,
+                ],
+              },
+            };
+
+            return features;
+          })
         )
       )
-      .subscribe((markers) => {
-        this.deliveriesMarkersList = markers;
-        this.mapsFacade.addMarkers(
-          this.deliveriesMarkersList.concat(this.trucksMarkersList)
-        );
+      .subscribe((features) => {
+        this.mapsFacade.addMarkers(features);
       });
 
     this.trucksFacade.trucks$
       .pipe(
         map((trucks) =>
-          trucks.map(
-            (d) =>
-              new MapMarker(
-                new Coordinate(d.longtitude, d.latitude),
-                '../assets/truck.png',
-                '#000000'
-              )
-          )
+          trucks.map((d) => {
+            const features: Feature<Point, GeoJsonProperties> = {
+              type: 'Feature',
+              properties: {
+                tag: 'truck',
+                symbol: d.number.toString()
+              },
+              geometry: {
+                type: 'Point',
+                coordinates: [d.longtitude, d.latitude],
+              },
+            };
+
+            return features;
+          })
         )
       )
-      .subscribe((markers) => {
-        this.trucksMarkersList = markers;
-        this.mapsFacade.addMarkers(
-          this.trucksMarkersList.concat(this.deliveriesMarkersList)
-        );
+      .subscribe((features) => {
+        this.mapsFacade.addMarkers(features);
       });
   }
 
   openQuickDispatch() {
-    this.dialogService
-      .open(QuickDispatchComponent, {
-        header: 'Quick Dispatch',
-        width: this.DIALOG_WIDTH
-      })
+    this.dialogService.open(QuickDispatchComponent, {
+      header: 'Quick Dispatch',
+      width: this.DIALOG_WIDTH,
+    });
   }
 }

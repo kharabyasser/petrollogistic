@@ -1,10 +1,10 @@
 <div>
-    <div *ngIf="optimizationLevel === 'configuration'" class="constraints-container">
+    <div *ngIf="optimizationStep === 'configuration'" class="constraints-container">
         <petrologistic-quick-dispatch-truck class="__trucks" style="margin-left: 0.5rem; --height: 70vh">
         </petrologistic-quick-dispatch-truck>
         <petrologistic-quick-dispatch-table class="__tickets"></petrologistic-quick-dispatch-table>
     </div>
-    <div *ngIf="optimizationLevel === 'result'" class="results-container">
+    <div *ngIf="optimizationStep === 'result'" class="results-container">
         <div *ngIf="vrpResults !== null" class="__timeline">
             <div *ngFor="let route of vrpResults.routes">
                 <p-panel [toggleable]="true" [collapsed]="true">

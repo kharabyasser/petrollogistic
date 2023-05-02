@@ -1,15 +1,14 @@
 import { createReducer, on } from '@ngrx/store';
 import { Coordinate } from '../../models/maps/coordinate';
-import { MapMarker } from '../../models/maps/map-marker';
 
 import * as MapsActions from './maps-actions';
 import { Job, Vehicle } from '../../models/routing/vrp-request';
-import { GeoJsonResponse } from '../../models/routing/geojson-response';
+import { Feature, GeoJsonProperties, Point } from 'geojson';
 
 export interface MapState {
-  markersOnMap: MapMarker[];
-  isochroneData: GeoJsonResponse | null;
-  routes: GeoJsonResponse[];
+  markersOnMap: Array<Feature<Point, GeoJsonProperties>>;
+  isochroneData: GeoJSON.GeoJSON | null;
+  routes: GeoJSON.GeoJSON[];
   centerOnPosition: Coordinate | null;
   optimizationVehicules: Vehicle[];
   optimizationJobs: Job[];
@@ -28,7 +27,11 @@ export const mapsReducer = createReducer(
   initialState,
   on(MapsActions.addMarkersOnMap, (state, action) => ({
     ...state,
-    markersOnMap: action.data
+    markersOnMap: state.markersOnMap?.concat(action.data),
+  })),
+  on(MapsActions.replaceMarkersOnMap, (state, action) => ({
+    ...state,
+    markersOnMap: action.data,
   })),
   on(MapsActions.centerOnPosition, (state, action) => ({
     ...state,

@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DeliveryRequestsFacade } from '../../../+state/delivery-requests/delivery-requests-facade';
 import { MapsFacade } from '../../../+state/maps/maps-facade';
 import { DeliveryRequest } from '../../../domain/deliveryrequest';
-import { Coordinate } from '../../../models/maps/coordinate';
-import { MapMarker } from '../../../models/maps/map-marker';
+import { Feature, GeoJsonProperties, Point } from 'geojson';
 
 @Component({
   selector: 'petrologistic-delivery-detail',
@@ -60,19 +59,23 @@ export class DetailsComponent implements OnInit {
         ids.includes(d.id)
       );
 
-      const selectedCoordinates = this.selectedDeliveryRequests.map(
-        (d) =>
-          new MapMarker(
-            new Coordinate(
-              d.shipToAccount.longtitude,
-              d.shipToAccount.latitude
-            ),
-            undefined,
-            '#FF0000'
-          )
-      );
-      
-      this.mapsFacade.addMarkers(selectedCoordinates);
+      const selectedeliveriesFeatures = this.selectedDeliveryRequests.map((d) => {
+        const features: Feature<Point, GeoJsonProperties> = {
+          type: 'Feature',
+          properties: {
+            tag: 'delivery',
+            symbol: d.purchaseOrder.toString()
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [d.shipToAccount.longtitude, d.shipToAccount.latitude],
+          },
+        };
+
+        return features;
+      });
+
+      this.mapsFacade.replaceMarkers(selectedeliveriesFeatures);
 
       this.selectedRequestsCount = ids.length;
 

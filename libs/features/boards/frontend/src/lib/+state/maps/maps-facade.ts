@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Coordinate } from '../../models/maps/coordinate';
-import { MapMarker } from '../../models/maps/map-marker';
 import {
   markersOnMapSelector,
   centerOnPositionSelector,
@@ -14,14 +13,14 @@ import {
 
 import * as MapActions from './maps-actions';
 import { Job, Vehicle } from '../../models/routing/vrp-request';
-import { GeoJsonResponse } from '../../models/routing/geojson-response';
+import { Feature, GeoJsonProperties, Point } from 'geojson';
 
 @Injectable()
 export class MapsFacade {
-  markersOnMap$: Observable<MapMarker[]>;
+  markersOnMap$: Observable<Array<Feature<Point, GeoJsonProperties>>>;
   centerOnPosition$: Observable<Coordinate | null>;
-  isochroneData$: Observable<GeoJsonResponse | null>;
-  routes$: Observable<GeoJsonResponse[]>;
+  isochroneData$: Observable<GeoJSON.GeoJSON | null>;
+  routes$: Observable<GeoJSON.GeoJSON[]>;
   optimizationTrucks$: Observable<Vehicle[]>;
   optimizationJobs$: Observable<Job[]>;
 
@@ -39,15 +38,19 @@ export class MapsFacade {
     this.optimizationJobs$ = this.store.pipe(select(optimizationJobsSelector));
   }
 
-  addMarkers(markers: MapMarker[]) {
+  addMarkers(markers: Feature<Point, GeoJsonProperties>[]) {
     this.store.dispatch(MapActions.addMarkersOnMap({ data: markers }));
   }
 
-  addIsochroneData(isochroneData: GeoJsonResponse) {
+  replaceMarkers(markers: Feature<Point, GeoJsonProperties>[]) {
+    this.store.dispatch(MapActions.replaceMarkersOnMap({ data: markers }));
+  }
+
+  addIsochroneData(isochroneData: GeoJSON.GeoJSON) {
     this.store.dispatch(MapActions.addIsochronesData({ data: isochroneData }));
   }
 
-  addRoute(routesData: GeoJsonResponse) {
+  addRoute(routesData: GeoJSON.GeoJSON) {
     this.store.dispatch(MapActions.addRoute({ data: routesData }));
   }
 

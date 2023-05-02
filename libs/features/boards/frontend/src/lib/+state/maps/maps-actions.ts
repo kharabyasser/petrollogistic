@@ -1,12 +1,16 @@
 import { createAction, props } from '@ngrx/store';
 import { Coordinate } from '../../models/maps/coordinate';
-import { MapMarker } from '../../models/maps/map-marker';
 import { Job, Vehicle } from '../../models/routing/vrp-request';
-import { GeoJsonResponse } from '../../models/routing/geojson-response';
+import { Feature, GeoJsonProperties, Geometry, Point } from 'geojson';
 
 export const addMarkersOnMap = createAction(
   '[Map] Add Markers On Map',
-  props<{ data: MapMarker[] }>()
+  props<{ data: Array<Feature<Point, GeoJsonProperties>> }>()
+);
+
+export const replaceMarkersOnMap = createAction(
+  '[Map] Replace Markers On Map',
+  props<{ data: Array<Feature<Point, GeoJsonProperties>> }>()
 );
 
 export const centerOnPosition = createAction(
@@ -21,12 +25,12 @@ export const fitBounds = createAction(
 
 export const addIsochronesData = createAction(
   '[Map] Set Isochrones Data',
-  props<{ data: GeoJsonResponse }>()
+  props<{ data: GeoJSON.GeoJSON }>()
 );
 
 export const addRoute = createAction(
   '[Map] Add Route',
-  props<{ data: GeoJsonResponse }>()
+  props<{ data: GeoJSON.GeoJSON }>()
 );
 
 export const addOptimizationVehicule = createAction(
