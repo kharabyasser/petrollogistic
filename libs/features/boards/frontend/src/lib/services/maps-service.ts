@@ -14,6 +14,7 @@ export class MapService {
   map!: Map;
   private currentMarkersLayers: string[] = [];
   private fitBounds = false;
+  private routesCount = 0;
 
   private initialState = { lng: -73.62, lat: 45.5, zoom: 14 };
   private padding = 0.1;
@@ -61,6 +62,26 @@ export class MapService {
       if (!this.map.hasImage('truck-icon')) {
         this.map.addImage('truck-icon', imageTruck);
       }
+
+      this.map.addSource('empty', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+      });
+
+      this.map.addLayer({
+        id: 'z-index-1',
+        type: 'symbol',
+        source: 'empty',
+      });
+
+      this.map.addLayer(
+        {
+          id: 'z-index-0',
+          type: 'symbol',
+          source: 'empty',
+        },
+        'z-index-1'
+      );
     });
 
     this.mapsFacade.markersOnMap$.subscribe((markersFeatures) => {
@@ -105,27 +126,35 @@ export class MapService {
           const layerID = 'tag-' + symbol + '-' + id;
 
           if (!this.map.getLayer(layerID)) {
-            this.map.addLayer({
-              id: layerID,
-              type: 'symbol',
-              source: sourceName,
-              layout: {
-                'icon-image': tag === 'delivery' ? 'delivery-icon' : 'truck-icon',
-                'icon-overlap': 'always',
-                'text-field': symbol,
-                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                'text-size': 11,
-                'text-transform': 'uppercase',
-                'text-letter-spacing': 0.05,
-                'text-offset': [0, 1.5],
+            this.map.addLayer(
+              {
+                id: layerID,
+                type: 'symbol',
+                source: sourceName,
+                layout: {
+                  // 'text-allow-overlap': true,
+                  // 'text-ignore-placement': true,
+                  // 'icon-allow-overlap': true,
+                  // 'icon-ignore-placement': true,
+                  'icon-image':
+                    tag === 'delivery' ? 'delivery-icon' : 'truck-icon',
+                  'icon-overlap': 'always',
+                  'text-field': symbol,
+                  'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                  'text-size': 11,
+                  'text-transform': 'uppercase',
+                  'text-letter-spacing': 0.05,
+                  'text-offset': [0, 1.5],
+                },
+                paint: {
+                  'text-color': '#202',
+                  'text-halo-color': '#fff',
+                  'text-halo-width': 2,
+                },
+                filter: ['==', 'symbol', symbol],
               },
-              paint: {
-                'text-color': '#202',
-                'text-halo-color': '#fff',
-                'text-halo-width': 2,
-              },
-              filter: ['==', 'symbol', symbol],
-            });
+              'z-index-1'
+            );
             this.currentMarkersLayers.push(layerID);
           }
         });
@@ -163,7 +192,7 @@ export class MapService {
 
       const orderedisochrones = JSON.parse(
         JSON.stringify(isochrones)
-      ) as FeatureCollection<Polygon, GeoJsonProperties> ;
+      ) as FeatureCollection<Polygon, GeoJsonProperties>;
 
       orderedisochrones.features.reverse();
 
@@ -206,7 +235,7 @@ export class MapService {
         attempts++;
         if (this.map.loaded() || attempts >= 3) {
           clearInterval(checkLoaded);
-          if (!this.map.loaded()) {
+          if (!this.map.loaded() || routes.length == 0) {
             return;
           }
 
@@ -215,38 +244,46 @@ export class MapService {
             this.map.removeSource('routesSource');
           }
 
-          let index = 0;
           routes.forEach((r) => {
-            const routesJson = JSON.parse(JSON.stringify(r)) as  GeoJSON.GeoJSON;
+            const routesJson = JSON.parse(JSON.stringify(r)) as GeoJSON.GeoJSON;
 
-            this.map.addSource(`routesSource_${index}`, {
+            this.map.addSource(`routesSource_${this.routesCount}`, {
               type: 'geojson',
               data: routesJson,
             });
 
-            this.map.addLayer({
-              id: `routesLayer_${index}`,
-              type: 'line',
-              source: `routesSource_${index}`,
-              layout: {
-                'line-join': 'round',
-                'line-cap': 'round',
+            this.map.addLayer(
+              {
+                id: `routesLayer_${this.routesCount}`,
+                type: 'line',
+                source: `routesSource_${this.routesCount}`,
+                layout: {
+                  'line-join': 'round',
+                  'line-cap': 'round',
+                },
+                paint: {
+                  'line-color': this.colors[this.routesCount],
+                  'line-width': 5,
+                },
               },
-              paint: {
-                'line-color': this.colors[index],
-                'line-width': 3,
-              },
-            });
+              'z-index-0'
+            );
 
-            ++index;
+            this.routesCount++;
           });
 
-          if (routes[0].bbox) {
-            this.map.fitBounds([
-              [routes[0].bbox[0], routes[0].bbox[1]],
-              [routes[0].bbox[2], routes[0].bbox[3]],
-            ]);
-          }
+         const padding = this.padding / 3;
+
+          this.map.fitBounds([
+            Math.min(...routes.map((r) => (r.bbox ? r.bbox[0] : 0))) -
+              padding,
+            Math.min(...routes.map((r) => (r.bbox ? r.bbox[1] : 0))) -
+              padding,
+            Math.max(...routes.map((r) => (r.bbox ? r.bbox[2] : 0))) -
+              padding,
+            Math.max(...routes.map((r) => (r.bbox ? r.bbox[3] : 0))) +
+              padding,
+          ]);
         }
       }, 1000);
     });

@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{F6D547D6-7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "persistence", "persistence", "{A9E67092-2F5D-46C1-A609-1B9FD42860D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Petrologistic.Core.Persistence.Lib", "libs\core\persistence\lib\Petrologistic.Core.Persistence.Lib.csproj", "{23A5DFCC-E526-4CFF-9392-0FB5E85E5C47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Petrologistic.Core.Persistence", "libs\core\persistence\lib\Petrologistic.Core.Persistence.csproj", "{23A5DFCC-E526-4CFF-9392-0FB5E85E5C47}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "features", "features", "{63BB582C-021E-4155-94D8-64ABE87623F4}"
 EndProject
@@ -22,6 +22,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{3C35306E-C3F4-4A35-A27F-23EEC13515D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Petrologistic.Features.Boards.Backend.Lib", "libs\features\boards\backend\lib\Petrologistic.Features.Boards.Backend.Lib.csproj", "{E91BCEA6-FDF0-4CCA-86A2-49EAE71D582A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "routing", "routing", "{5793EADB-64FB-49BB-87F3-1FD35990288F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petrologistic.Core.Routing", "Petrologistic.Core.Routing\Petrologistic.Core.Routing.csproj", "{7C60F012-49B7-4B97-A919-E2143731338C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutingTest", "RoutingTest\RoutingTest.csproj", "{6D23D915-AE6D-483F-BA6F-B94C073958C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +47,14 @@ Global
 		{E91BCEA6-FDF0-4CCA-86A2-49EAE71D582A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E91BCEA6-FDF0-4CCA-86A2-49EAE71D582A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E91BCEA6-FDF0-4CCA-86A2-49EAE71D582A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C60F012-49B7-4B97-A919-E2143731338C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C60F012-49B7-4B97-A919-E2143731338C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C60F012-49B7-4B97-A919-E2143731338C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C60F012-49B7-4B97-A919-E2143731338C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D23D915-AE6D-483F-BA6F-B94C073958C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D23D915-AE6D-483F-BA6F-B94C073958C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D23D915-AE6D-483F-BA6F-B94C073958C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D23D915-AE6D-483F-BA6F-B94C073958C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +68,8 @@ Global
 		{60559825-ACC8-48D0-B029-23CFA1B6FD38} = {63BB582C-021E-4155-94D8-64ABE87623F4}
 		{3C35306E-C3F4-4A35-A27F-23EEC13515D3} = {60559825-ACC8-48D0-B029-23CFA1B6FD38}
 		{E91BCEA6-FDF0-4CCA-86A2-49EAE71D582A} = {3C35306E-C3F4-4A35-A27F-23EEC13515D3}
+		{5793EADB-64FB-49BB-87F3-1FD35990288F} = {F6D547D6-7D72-4C10-A236-B382CD5318CC}
+		{7C60F012-49B7-4B97-A919-E2143731338C} = {5793EADB-64FB-49BB-87F3-1FD35990288F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4F59A9DC-6E89-4D29-99E9-39E47D463CC2}

@@ -16,7 +16,7 @@ export class RoutingService {
     }
 
     getDirections(body: DirectionsRequest) {
-        return this.http.post<any>(`${environment.openroutingserviceapi}/directions/driving-car/geojson`, body);
+        return this.http.post<GeoJSON.GeoJSON>(`${environment.openroutingserviceapi}/directions/driving-car/geojson`, body);
     }
 
     getIsochrone(body: IsochronesRequest) {

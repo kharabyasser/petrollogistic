@@ -25,4 +25,8 @@
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Petrologistic.Core.Routing\Petrologistic.Core.Routing.csproj" />
+  </ItemGroup>
 </Project>

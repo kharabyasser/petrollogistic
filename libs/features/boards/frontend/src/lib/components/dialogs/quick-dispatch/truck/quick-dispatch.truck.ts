@@ -123,7 +123,6 @@ export class QuickDispatchTruckComponent implements OnInit {
       id: truck.number,
       profile: 'driving-car',
       start: [truck.longtitude, truck.latitude],
-      end: [truck.longtitude, truck.latitude],
     });
   }
 }

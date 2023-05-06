@@ -7,7 +7,7 @@ export interface Vehicle {
   id: number;
   profile: string;
   start: number[];
-  end: number[];
+  end?: number[];
 }
 
 export interface Job {
