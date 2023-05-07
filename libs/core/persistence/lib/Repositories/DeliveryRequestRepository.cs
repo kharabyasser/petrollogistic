@@ -148,7 +148,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.DeliveryTicketFooterNotes, (f, u) => f.Lorem.Words(6))
       .RuleFor(d => d.BillToAccount, (f, u) => fakeAccounts.Generate("BillingAccount"))
       .RuleFor(d => d.ShipToAccount, (f, u) => fakeAccounts.Generate("ShippingAccount"))
-      .RuleFor(d => d.DispatchStatus, (f, u) => f.PickRandomWithout(DispatchStatus.Default, DispatchStatus.Assigned, DispatchStatus.OnTruck, DispatchStatus.InProgress))
+      .RuleFor(d => d.DispatchStatus, (f, u) => DispatchStatus.Pending)
       .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(1, 3))
       .RuleFor(d => d.DispatchedToTruck, (f, u) =>
       (u.DispatchStatus > DispatchStatus.Assigned && u.DispatchStatus != DispatchStatus.Canceled) ? new Truck()

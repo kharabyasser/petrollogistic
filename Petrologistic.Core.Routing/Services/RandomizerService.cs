@@ -15,56 +15,76 @@ namespace Petrologistic.Core.Routing.Services
 
     public Coordinate[]? RandomCoordinatesSet(Bbox boundary, int count)
     {
+      var result = new Coordinate[count];
+
       using (var fileStream = new FileInfo(_routingConfig.OsmPbfFilePath).OpenRead())
       {
         var source = new PBFOsmStreamSource(fileStream);
 
         var sourceWays = source.Where(e => e.Tags.ContainsKey("highway"));
-        sourceWays = sourceWays.FilterNodes(n => IsNodeInBoundary(boundary, n.Longitude, n.Latitude));
+        //sourceWays = sourceWays.FilterNodes(n => IsNodeInBoundary(boundary, n.Longitude, n.Latitude));
 
-        var result = new Coordinate[count];
-        var foundNodes = 0;
+        var boundaryWidth = boundary.NorthEast.Longitude - boundary.SouthWest.Longitude;
+        var boundaryHeight = boundary.NorthEast.Latitude - boundary.SouthWest.Latitude;
+
+        var subBoundaryWidth = boundaryWidth / 5;
+        var subBoundaryHeight = boundaryHeight / 5;
+
+        var minRanLongitude = boundary.SouthWest.Longitude + subBoundaryWidth;
+        var maxRanLongitude = boundary.NorthEast.Longitude;
+        var minRanLatitude = boundary.SouthWest.Latitude + subBoundaryHeight;
+        var maxRanLatitude = boundary.NorthEast.Latitude;
+
+        // To ignore already found nodes.
         var resultHash = new HashSet<long?>();
 
         var random = new Random();
 
-        foreach (var element in sourceWays)
+        for (int foundNodes = 0; foundNodes < count;)
         {
-          if (foundNodes == count)
-          {
-            return result;
-          }
+          double randomLongitude = random.NextDouble() * (maxRanLongitude - minRanLongitude) + minRanLongitude;
+          double randomLatitude = random.NextDouble() * (maxRanLatitude - minRanLatitude) + minRanLatitude;
 
-          double randomNumber = random.NextDouble();
-          if (randomNumber > 0.1)
-          {
-            continue;
-          }
+          var subBoundaryElements = sourceWays.FilterNodes(n => IsNodeInBoundary(randomLongitude, randomLatitude, randomLongitude + subBoundaryWidth,
+            randomLatitude + subBoundaryHeight, n.Longitude, n.Latitude)) as IEnumerable<OsmSharp.OsmGeo>;
 
-          var node = element as OsmSharp.Node;
-          if (!resultHash.Contains(node.Id))
+          foreach (var randomElement in subBoundaryElements)
           {
-            Console.WriteLine(node.Latitude + " " + node.Longitude + " id: " + node.Id);
+            var node = randomElement as OsmSharp.Node;
 
-            result[foundNodes++] = new Coordinate((double)node.Longitude!, (double)node.Latitude!);
-            resultHash.Add(node.Id);
-          }
-          else
-          {
-            Console.WriteLine("out of bbox: " + node.Latitude + " " + node.Longitude);
+            if (!resultHash.Contains(node.Id))
+            {
+              Console.WriteLine(node.Latitude + " " + node.Longitude + " id: " + node.Id + " " + $"{foundNodes}/{count}");
+
+              result[foundNodes++] = new Coordinate((double)node.Longitude!, (double)node.Latitude!);
+              resultHash.Add(node.Id);
+              break;
+            }
+            else
+            {
+              Console.WriteLine("already added: " + node.Latitude + " " + node.Longitude + " " + $"{foundNodes}/{count}");
+            }
           }
         }
       }
 
-      return null;
+      return result;
     }
 
     private bool IsNodeInBoundary(Bbox boundary, double? longitude, double? latitude)
     {
-      var isInBound = boundary.SouthWest.Longitude < longitude &&
-        boundary.SouthWest.Latitude < latitude &&
-        boundary.NorthEast.Longitude > longitude &&
-        boundary.NorthEast.Latitude > latitude;
+      var isInBound = IsNodeInBoundary(boundary.SouthWest.Longitude, boundary.SouthWest.Latitude,
+        boundary.NorthEast.Longitude, boundary.NorthEast.Latitude, longitude, latitude);
+
+      return isInBound;
+    }
+
+    private bool IsNodeInBoundary(double swlong, double swlat, double nelong, double nelat, double? longitude, double? latitude)
+    {
+      var isInBound = swlong < longitude &&
+        swlat < latitude &&
+        nelong > longitude &&
+        nelat > latitude;
 
       return isInBound;
     }
