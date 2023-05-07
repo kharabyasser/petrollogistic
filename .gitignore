@@ -44,3 +44,5 @@ Thumbs.db
 
 **/bin
 **/obj
+docker/volumes
+!docker/volumes/conf/*

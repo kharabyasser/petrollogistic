@@ -22,6 +22,14 @@
 }
 
 .layout-control {
-    float: right;
+    display: flex;
+    justify-content: space-between;
     margin: 5px;
+    & .__button {
+        margin-right: 5px;
+        text-align: left;
+    }
+    & .__layout_switch {
+        text-align: right;
+    }
 }

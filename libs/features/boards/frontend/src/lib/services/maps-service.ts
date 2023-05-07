@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Map, Marker } from 'maplibre-gl';
+import { GeoJSONSource, Map } from 'maplibre-gl';
 import { MapsFacade } from '../+state/maps/maps-facade';
 import { MapMarker } from '../models/maps/map-marker';
 import { RoutingMetric } from '../models/routing/enums/routing-metric';
@@ -7,18 +7,25 @@ import { RoutingUnit } from '../models/routing/enums/routing-unit';
 import { MatrixResponse } from '../models/routing/matrix-response';
 import { MatrixResult } from '../models/routing/matrix-result';
 import { RoutingService } from './routing-service';
-import { IsochronesResponse } from '../models/routing/isochrones-response';
+import { FeatureCollection, GeoJsonProperties, Polygon } from 'geojson';
 
 @Injectable()
 export class MapService {
   map!: Map;
-  private markers: MapMarker[] = [];
-  private currentMarkers!: Marker[];
+  private currentMarkersLayers: string[] = [];
   private fitBounds = false;
+  private routesCount = 0;
 
   private initialState = { lng: -73.62, lat: 45.5, zoom: 14 };
   private padding = 0.1;
-  private colors = ['#f54242', '#f542ce', '#c542f5', '#7b42f5', '#2f47fa', '#2fa9fa'];
+  private colors = [
+    '#f54242',
+    '#f542ce',
+    '#c542f5',
+    '#7b42f5',
+    '#2f47fa',
+    '#2fa9fa',
+  ];
 
   constructor(
     private mapsFacade: MapsFacade,
@@ -37,56 +44,129 @@ export class MapService {
       attributionControl: false,
     });
 
-    this.mapsFacade.markersOnMap$.subscribe((mapMarkers) => {
-      this.markers = mapMarkers;
-      // Cleaning old markers.
-      this.currentMarkers?.forEach((m) => m.remove());
-      this.currentMarkers = [];
+    const imageDelivery = document.createElement('img');
+    imageDelivery.width = 25;
+    imageDelivery.height = 25;
+    imageDelivery.src = '../assets/delivery.png';
 
-      // Adding new markers.
-      mapMarkers.forEach((c) => {
-        if (!c.icon) {
-          const marker = new Marker({ color: c.color }).setLngLat([
-            c.coordinate.longitude,
-            c.coordinate.latitude,
-          ]);
-          this.currentMarkers.push(marker);
-          marker.addTo(this.map);
-        } else {
-          const icon = document.createElement('div');
-          icon.style.width = '38px';
-          icon.style.height = '38px';
-          icon.style.backgroundSize = 'contain';
-          icon.style.backgroundImage = `url("assets/truck.png")`;
-          icon.style.cursor = 'pointer';
+    const imageTruck = document.createElement('img');
+    imageTruck.width = 25;
+    imageTruck.height = 25;
+    imageTruck.src = '../assets/truck.png';
 
-          const marker = new Marker(icon, {
-            anchor: 'bottom',
-            offset: [0, 5],
-          }).setLngLat([c.coordinate.longitude, c.coordinate.latitude]);
-          this.currentMarkers.push(marker);
-          marker.addTo(this.map);
-        }
+    this.map.on('load', () => {
+      if (!this.map.hasImage('delivery-icon')) {
+        this.map.addImage('delivery-icon', imageDelivery);
+      }
+
+      if (!this.map.hasImage('truck-icon')) {
+        this.map.addImage('truck-icon', imageTruck);
+      }
+
+      this.map.addSource('empty', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
       });
 
-      // Fit bounds.
-      if (this.fitBounds && this.markers.length > 0) {
-        setTimeout(() => {
+      this.map.addLayer({
+        id: 'z-index-1',
+        type: 'symbol',
+        source: 'empty',
+      });
+
+      this.map.addLayer(
+        {
+          id: 'z-index-0',
+          type: 'symbol',
+          source: 'empty',
+        },
+        'z-index-1'
+      );
+    });
+
+    this.mapsFacade.markersOnMap$.subscribe((markersFeatures) => {
+      // delete previous layers
+      this.currentMarkersLayers.forEach((l) => this.map.removeLayer(l));
+      this.currentMarkersLayers = [];
+
+      if (markersFeatures.length > 0) {
+        const markers: GeoJSON.GeoJSON = {
+          type: 'FeatureCollection',
+          features: markersFeatures,
+          bbox: [
+            Math.max(...markersFeatures.map((x) => x.geometry.coordinates[0])) +
+              this.padding,
+            Math.max(...markersFeatures.map((x) => x.geometry.coordinates[1])) +
+              this.padding,
+            Math.min(...markersFeatures.map((x) => x.geometry.coordinates[0])) -
+              this.padding,
+            Math.min(...markersFeatures.map((x) => x.geometry.coordinates[1])) -
+              this.padding,
+          ],
+        };
+
+        const sourceName = `mapMarkers_source`;
+        const source = this.map.getSource(sourceName) as GeoJSONSource;
+        if (source) {
+          source.setData(markers);
+        } else {
+          this.map.addSource(sourceName, {
+            type: 'geojson',
+            data: markers,
+          });
+        }
+
+        markers.features.forEach((feature) => {
+          const symbol =
+            feature.properties !== null ? feature.properties['symbol'] : '';
+          const id =
+            feature.properties !== null ? feature.properties['value'] : '';
+          const tag =
+            feature.properties !== null ? feature.properties['tag'] : '';
+          const layerID = 'tag-' + symbol + '-' + id;
+
+          if (!this.map.getLayer(layerID)) {
+            this.map.addLayer(
+              {
+                id: layerID,
+                type: 'symbol',
+                source: sourceName,
+                layout: {
+                  // 'text-allow-overlap': true,
+                  // 'text-ignore-placement': true,
+                  // 'icon-allow-overlap': true,
+                  // 'icon-ignore-placement': true,
+                  'icon-image':
+                    tag === 'delivery' ? 'delivery-icon' : 'truck-icon',
+                  'icon-overlap': 'always',
+                  'text-field': symbol,
+                  'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                  'text-size': 11,
+                  'text-transform': 'uppercase',
+                  'text-letter-spacing': 0.05,
+                  'text-offset': [0, 1.5],
+                },
+                paint: {
+                  'text-color': '#202',
+                  'text-halo-color': '#fff',
+                  'text-halo-width': 2,
+                },
+                filter: ['==', 'symbol', symbol],
+              },
+              'z-index-1'
+            );
+            this.currentMarkersLayers.push(layerID);
+          }
+        });
+
+        if (markers.bbox) {
           this.map.fitBounds([
-            [
-              Math.max(...this.markers.map((x) => x.coordinate.longitude)) +
-                this.padding,
-              Math.max(...this.markers.map((x) => x.coordinate.latitude)) +
-                this.padding,
-            ],
-            [
-              Math.min(...this.markers.map((x) => x.coordinate.longitude)) -
-                this.padding,
-              Math.min(...this.markers.map((x) => x.coordinate.latitude)) -
-                this.padding,
-            ],
+            markers.bbox[0],
+            markers.bbox[1],
+            markers.bbox[2],
+            markers.bbox[3],
           ]);
-        }, 0);
+        }
       }
     });
 
@@ -110,7 +190,9 @@ export class MapService {
         this.map.removeSource('isochroneSource');
       }
 
-      let orderedisochrones = JSON.parse(JSON.stringify(isochrones)) as IsochronesResponse;
+      const orderedisochrones = JSON.parse(
+        JSON.stringify(isochrones)
+      ) as FeatureCollection<Polygon, GeoJsonProperties>;
 
       orderedisochrones.features.reverse();
 
@@ -118,8 +200,6 @@ export class MapService {
         type: 'geojson',
         data: orderedisochrones,
       });
-
-      console.log(orderedisochrones);
 
       this.map.addLayer({
         id: 'isochroneLayer',
@@ -129,18 +209,83 @@ export class MapService {
           'fill-color': [
             'match',
             ['get', 'value'],
-            200, this.colors[0],
-            400, this.colors[1],
-            600, this.colors[2],
-            800, this.colors[3],
-            1000, this.colors[4],
-            1200, this.colors[5],
-            "#000000"
+            200,
+            this.colors[0],
+            400,
+            this.colors[1],
+            600,
+            this.colors[2],
+            800,
+            this.colors[3],
+            1000,
+            this.colors[4],
+            1200,
+            this.colors[5],
+            '#000000',
           ],
           'fill-outline-color': 'rgb(255, 255, 255)',
           'fill-opacity': 0.3,
         },
       });
+    });
+
+    this.mapsFacade.routes$.subscribe((routes) => {
+      let attempts = 0;
+      const checkLoaded = setInterval(() => {
+        attempts++;
+        if (this.map.loaded() || attempts >= 3) {
+          clearInterval(checkLoaded);
+          if (!this.map.loaded() || routes.length == 0) {
+            return;
+          }
+
+          if (this.map.getSource('routesSource')) {
+            this.map.removeLayer('routesLayer');
+            this.map.removeSource('routesSource');
+          }
+
+          routes.forEach((r) => {
+            const routesJson = JSON.parse(JSON.stringify(r)) as GeoJSON.GeoJSON;
+
+            this.map.addSource(`routesSource_${this.routesCount}`, {
+              type: 'geojson',
+              data: routesJson,
+            });
+
+            this.map.addLayer(
+              {
+                id: `routesLayer_${this.routesCount}`,
+                type: 'line',
+                source: `routesSource_${this.routesCount}`,
+                layout: {
+                  'line-join': 'round',
+                  'line-cap': 'round',
+                },
+                paint: {
+                  'line-color': this.colors[this.routesCount],
+                  'line-width': 5,
+                },
+              },
+              'z-index-0'
+            );
+
+            this.routesCount++;
+          });
+
+         const padding = this.padding / 3;
+
+          this.map.fitBounds([
+            Math.min(...routes.map((r) => (r.bbox ? r.bbox[0] : 0))) -
+              padding,
+            Math.min(...routes.map((r) => (r.bbox ? r.bbox[1] : 0))) -
+              padding,
+            Math.max(...routes.map((r) => (r.bbox ? r.bbox[2] : 0))) -
+              padding,
+            Math.max(...routes.map((r) => (r.bbox ? r.bbox[3] : 0))) +
+              padding,
+          ]);
+        }
+      }, 1000);
     });
   }
 

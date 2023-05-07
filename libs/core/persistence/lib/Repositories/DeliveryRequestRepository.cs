@@ -4,14 +4,32 @@ using Petrologistic.Core.Persistence.Lib.Models;
 using Petrologistic.Core.Persistence.Lib.Models.Enums;
 using Petrologistic.Core.Persistence.Lib.Models.Location;
 using Petrologistic.Core.Persistence.Lib.Models.Pricing;
-using System.Linq;
+using Petrologistic.Core.Routing.Models;
+using Petrologistic.Core.Routing.Services;
 
 namespace Petrologistic.Core.Persistence.Lib.Repositories;
 
 public class DeliveryRequestRepository : IDeliveryRequestRepository
 {
+  private IEnumerable<GeoCoordinates>? _geoCoordinates;
+  private IList<GeoCoordinates>? _coordinatesToPick;
+
   public Task<IEnumerable<DeliveryRequest>> GetAll()
   {
+    if (_geoCoordinates == null)
+    {
+      var routingConfig = new RoutingConfig("C:\\Repositories\\petrollogistic\\docker\\volumes\\data\\quebec-latest.osm.pbf");
+      var routingService = new RandomizerService(routingConfig);
+      var bbox = new Bbox(-73.38, 45.70, -73.97, 45.40);
+      _geoCoordinates = routingService.RandomCoordinatesSet(bbox, 100)?.Select(c => new GeoCoordinates
+      {
+        Longitude = c.Longitude,
+        Latitude = c.Latitude
+      }).ToList() ?? new List<GeoCoordinates>();
+    }
+
+    _coordinatesToPick = _geoCoordinates.ToList();
+
     string[] canadianProvincesAndTerritories = { "Ontario", "Nova Scotia", "New Brunswick", "Manitoba", "British Columbia", "Prince Edward Island", "Saskatchewan",
     "Alberta", "Quebec", "Newfoundland and Labrador"};
     var products = new Dictionary<int, string>()
@@ -43,11 +61,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       u.IsNotifyOnDelivery = f.Random.Bool();
       u.IsNotifyOnDispatch = f.Random.Bool();
       u.Address = fakeAddress.Generate();
-      u.Coordinates = new GeoCoordinates
-      {
-        Longitude = f.Address.Longitude(-73.97, -73.38),
-        Latitude = f.Address.Latitude(45.40, 45.70)
-      };
+      u.Coordinates = PickRandomCoordinate(f);
     };
 
     var fakeAccounts = new Faker<Account>()
@@ -134,7 +148,7 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.DeliveryTicketFooterNotes, (f, u) => f.Lorem.Words(6))
       .RuleFor(d => d.BillToAccount, (f, u) => fakeAccounts.Generate("BillingAccount"))
       .RuleFor(d => d.ShipToAccount, (f, u) => fakeAccounts.Generate("ShippingAccount"))
-      .RuleFor(d => d.DispatchStatus, (f, u) => f.PickRandomWithout(DispatchStatus.Default, DispatchStatus.Assigned, DispatchStatus.OnTruck, DispatchStatus.InProgress))
+      .RuleFor(d => d.DispatchStatus, (f, u) => DispatchStatus.Pending)
       .RuleFor(d => d.DestinationContainers, (f, u) => fakeContainers.GenerateBetween(1, 3))
       .RuleFor(d => d.DispatchedToTruck, (f, u) =>
       (u.DispatchStatus > DispatchStatus.Assigned && u.DispatchStatus != DispatchStatus.Canceled) ? new Truck()
@@ -145,6 +159,14 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
     var deliveryRequests = fakeDeliveries.Generate(35).AsEnumerable();
 
     return Task.FromResult(deliveryRequests);
+  }
+
+  private GeoCoordinates PickRandomCoordinate(Faker faker)
+  {
+    var coordinate = faker.PickRandom(_coordinatesToPick);
+    _coordinatesToPick.Remove(coordinate);
+
+    return coordinate;
   }
 
   Task<DeliveryRequest> IDeliveryRequestRepository.GetById(Guid id)

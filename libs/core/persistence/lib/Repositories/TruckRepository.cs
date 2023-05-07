@@ -3,13 +3,32 @@ using Petrologistic.Core.Persistence.Lib.Interfaces;
 using Petrologistic.Core.Persistence.Lib.Models;
 using Petrologistic.Core.Persistence.Lib.Models.Enums;
 using Petrologistic.Core.Persistence.Lib.Models.Location;
+using Petrologistic.Core.Routing.Models;
+using Petrologistic.Core.Routing.Services;
 
 namespace Petrologistic.Core.Persistence.Lib.Repositories
 {
-  internal class TruckRepository : ITruckRepository
+  public class TruckRepository : ITruckRepository
   {
+    private IList<GeoCoordinates>? _geoCoordinates;
+    private IList<GeoCoordinates>? _coordinatesToPick;
+
     public Task<IEnumerable<Truck>> GetAll()
     {
+      if (_geoCoordinates == null)
+      {
+        var routingConfig = new RoutingConfig("C:\\Repositories\\petrollogistic\\docker\\volumes\\data\\quebec-latest.osm.pbf");
+        var routingService = new RandomizerService(routingConfig);
+        var bbox = new Bbox(-73.38, 45.70, -73.97, 45.40);
+        _geoCoordinates = routingService.RandomCoordinatesSet(bbox, 3)?.Select(c => new GeoCoordinates
+        {
+          Longitude = c.Longitude,
+          Latitude = c.Latitude
+        }).ToList() ?? new List<GeoCoordinates>();
+      }
+
+      _coordinatesToPick = _geoCoordinates.ToList();
+
       var fakeTruck = new Faker<Truck>()
         .RuleFor(d => d.Id, (f, u) => Guid.NewGuid())
         .RuleFor(d => d.Status, (f, u) => DocumentStatus.Active)
@@ -20,10 +39,12 @@ namespace Petrologistic.Core.Persistence.Lib.Repositories
         .RuleFor(d => d.TrailersLicense, (f, u) => f.Random.Hash(20))
         .RuleFor(d => d.TrucksLicense, (f, u) => f.Random.Hash(20))
         .RuleFor(d => d.System, (f, u) => f.Random.Word())
-        .RuleFor(d => d.Position, (f, u) => new GeoCoordinates
+        .RuleFor(d => d.Position, (f, u) =>
         {
-          Longitude = f.Address.Longitude(-73.97, -73.38),
-          Latitude = f.Address.Latitude(45.40, 45.70)
+          var coordinate = f.PickRandom(_coordinatesToPick);
+          _coordinatesToPick.Remove(coordinate);
+
+          return coordinate;
         });
 
       var trucks = fakeTruck.Generate(3).AsEnumerable();

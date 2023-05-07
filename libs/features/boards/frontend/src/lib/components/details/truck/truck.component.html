@@ -6,7 +6,7 @@
       <div class="vertical-divider"></div>
       <p>{{ truck.name | truncate:8 }} #{{ truck.number }}</p>
       <div class="vertical-divider"></div>
-      <p>3/11</p>
+      <p>{{ '3/11' }}</p>
       <div class="vertical-divider"></div>
       <p-button icon="pi pi-map-marker" styleClass="p-button-text panel-button" (click)="locate(truck)"></p-button>
       <p-button icon="pi pi-sitemap" styleClass="p-button-text panel-button" (click)="isochrone(truck)"></p-button>
@@ -55,7 +55,7 @@
         </div>
       </div>
     </petrologistic-p-panel-child>
-    <petrologistic-p-panel-child title="Products" [collapsed]="true">
+    <petrologistic-p-panel-child title="Products">
       <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
     </petrologistic-p-panel-child>
     <petrologistic-p-panel-child title="Tickets">

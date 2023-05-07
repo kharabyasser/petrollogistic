@@ -24,6 +24,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\core\persistence\lib\Petrologistic.Core.Persistence.Lib.csproj" />
+    <ProjectReference Include="..\..\..\..\core\persistence\lib\Petrologistic.Core.Persistence.csproj" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,29 @@
+<div>
+    <div *ngIf="optimizationStep === 'configuration'" class="constraints-container">
+        <petrologistic-quick-dispatch-truck class="__trucks" style="margin-left: 0.5rem; --height: 70vh">
+        </petrologistic-quick-dispatch-truck>
+        <petrologistic-quick-dispatch-table class="__tickets"></petrologistic-quick-dispatch-table>
+    </div>
+    <div *ngIf="optimizationStep === 'result'" class="results-container">
+        <div *ngIf="vrpResults !== null" class="__timeline">
+            <div *ngFor="let route of vrpResults.routes">
+                <p-panel [toggleable]="true" [collapsed]="true">
+                    <ng-template pTemplate="header">
+                        {{ route.vehicle }} ({{ route.cost }} DC)
+                    </ng-template>
+                    <p-timeline [value]="route.steps">
+                        <ng-template pTemplate="content" let-step>
+                            <small class="p-text-secondary">{{ step.arrival }} DC</small>
+                        </ng-template>
+                        <ng-template pTemplate="opposite" let-step>
+                            {{ step.id ? step.id : step.type }}
+                        </ng-template>
+                    </p-timeline>
+                </p-panel>
+            </div>
+        </div>
+        <petrologistic-maps style="--height: 70vh" class="__map"></petrologistic-maps>
+    </div>
+    <button pButton pRipple type="button" label="Optimise" class="p-button-success" (click)="optimizeVrp()"></button>
+    <button pButton pRipple type="button" label="Default" class="p-button-secondary"></button>
+</div>

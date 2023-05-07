@@ -23,13 +23,19 @@ import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { DialogService } from 'primeng/dynamicdialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ChipModule } from 'primeng/chip';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CalendarModule } from 'primeng/calendar';
+import { TimelineModule } from 'primeng/timeline';
 
 import { StoreModule } from '@ngrx/store';
 
 import { DeliveryRequestService } from './services/deliveryrequest-service';
 import { CoreFrontendApolloModule } from '@petrologistic/core/frontend/apollo';
-import { CoreFrontendPPanelChildModule } from '@petrologistic/core/frontend/p-panel-child'
-import { CoreFrontendOsirisPipesModule } from '@petrologistic/core/frontend/osiris-pipes'
+import { CoreFrontendPPanelChildModule } from '@petrologistic/core/frontend/p-panel-child';
+import { CoreFrontendOsirisPipesModule } from '@petrologistic/core/frontend/osiris-pipes';
 import { EffectsModule } from '@ngrx/effects';
 import { BoardsContainerComponent } from './containers/boards-container.component';
 import { DetailsComponent } from './components/details/delivery/delivery-detail.component';
@@ -46,6 +52,11 @@ import { trucksReducer } from './+state/trucks/trucks-reducer';
 import { MapsFacade } from './+state/maps/maps-facade';
 import { mapsReducer } from './+state/maps/maps-reducer';
 import { MapService } from './services/maps-service';
+import { QuickDispatchComponent } from './components/dialogs/quick-dispatch/quick-dispatch.component';
+import { QuickDispatchTruckComponent } from './components/dialogs/quick-dispatch/truck/quick-dispatch.truck';
+import { QuickDispatchTableComponent } from './components/dialogs/quick-dispatch/table/quick-dispatch.table';
+import { DeliverySettingsComponent } from './components/dialogs/quick-dispatch/dispatch-delivery-settings/delivery-settings.component';
+import { VrpService } from './services/vrp-service';
 
 @NgModule({
   imports: [
@@ -74,6 +85,11 @@ import { MapService } from './services/maps-service';
     AvatarModule,
     InputSwitchModule,
     ToggleButtonModule,
+    ChipModule,
+    CheckboxModule,
+    InputNumberModule,
+    CalendarModule,
+    TimelineModule,
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),
@@ -85,16 +101,23 @@ import { MapService } from './services/maps-service';
     BoardsContainerComponent,
     DetailsComponent,
     TruckComponent,
-    MapsComponent
+    MapsComponent,
+    QuickDispatchComponent,
+    QuickDispatchTruckComponent,
+    QuickDispatchTableComponent,
+    DeliverySettingsComponent
   ],
   exports: [BoardsContainerComponent],
   providers: [
-    DeliveryRequestService, 
-    TrucksService, 
-    DeliveryRequestsFacade, 
+    DeliveryRequestService,
+    TrucksService,
+    VrpService,
+    DeliveryRequestsFacade,
     TrucksFacade,
-    MapsFacade, 
+    MapsFacade,
     MapService,
-    RoutingService],
+    RoutingService,
+    DialogService
+  ],
 })
 export class BoardsModule {}

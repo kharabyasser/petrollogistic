@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FilterService, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Account } from '../../domain/account';
@@ -14,7 +14,9 @@ import { DeliveryRequestsFacade } from '../../+state/delivery-requests/delivery-
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
-  deliveryRequests$: Observable<DeliveryRequest[]> = new Observable<DeliveryRequest[]>();
+  deliveryRequests$: Observable<DeliveryRequest[]> = new Observable<
+    DeliveryRequest[]
+  >();
   selectedRequests: DeliveryRequest[] = [];
 
   cols: any[] = [];
@@ -81,7 +83,7 @@ export class TableComponent implements OnInit {
   // fix for paginator auto focus.
   @HostListener('window:scroll') onScroll(): void {
     window.scrollTo(0, window.scrollY);
- }
+  }
   ngOnInit() {
     this.deliveriesFacade.loadDeliveryRequests();
 
@@ -297,11 +299,7 @@ export class TableComponent implements OnInit {
   }
 
   onHeaderSelectionToggle(event: any) {
-    if (event.checked) {
-      this.deliveriesFacade.addAllRequestsToSelection();
-    } else {
-      this.deliveriesFacade.removeAllRequestsFromSelection();
-    }
+    this.deliveriesFacade.addAllRequestsToSelection();
   }
 
   onRowUnselect(event: any) {

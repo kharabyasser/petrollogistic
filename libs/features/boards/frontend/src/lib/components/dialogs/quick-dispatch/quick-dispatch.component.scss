@@ -1,0 +1,77 @@
+.constraints-container {
+  display: flex;
+  justify-content: space-between;
+  overflow-y: hidden;
+  height: 70vh;
+  & .__tickets {
+    width: 50vw;
+  }
+  & .__trucks {
+    width: 15vw;
+    margin-right: 0;
+  }
+}
+
+.results-container {
+  display: flex;
+  justify-content: space-between;
+  overflow-y: hidden;
+  height: 70vh;
+  & .__timeline {
+    width: 15vw;
+    overflow-y: auto;
+  }
+  & .__map {
+    width: 60vw;
+    margin-right: 0;
+  }
+}
+
+.p-button-success {
+  float: right;
+  margin-top: 30px;
+}
+
+.p-button-secondary {
+  margin-top: 30px;
+}
+
+:host ::ng-deep {
+  .custom-marker {
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    border-radius: 50%;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .p-timeline-horizontal {
+    .p-timeline-event:last-child {
+      .p-timeline-event-content {
+        position: relative;
+
+        .status {
+          $bigValue: 999999px;
+
+          display: block;
+          overflow: hidden;
+          text-indent: -$bigValue;
+
+          &::after {
+            content: attr(data-status);
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 1rem 0;
+            text-indent: $bigValue;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+}
