@@ -6,7 +6,7 @@ export interface Truck {
     trucksLicense: string,
     trailersLicense: string,
     permit: string,
-    longtitude: number,
+    longitude: number,
     latitude: number
     system: string,
     selected: boolean,

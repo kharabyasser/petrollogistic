@@ -4,8 +4,8 @@ using Petrologistic.Core.Persistence.Lib.Models;
 using Petrologistic.Core.Persistence.Lib.Models.Enums;
 using Petrologistic.Core.Persistence.Lib.Models.Location;
 using Petrologistic.Core.Persistence.Lib.Models.Pricing;
-using Petrologistic.Core.Routing.Models;
-using Petrologistic.Core.Routing.Services;
+using Petrologistic.Services.Routing.Models;
+using Petrologistic.Services.Routing.Services;
 
 namespace Petrologistic.Core.Persistence.Lib.Repositories;
 
@@ -18,8 +18,12 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
   {
     if (_geoCoordinates == null)
     {
-      var routingConfig = new RoutingConfig("C:\\Repositories\\petrollogistic\\docker\\volumes\\data\\quebec-latest.osm.pbf");
-      var routingService = new RandomizerService(routingConfig);
+      var routingConfig = new RoutingConfig
+      {
+        OsmPbfFilePath =
+            "C:\\Repositories\\petrollogistic\\docker\\volumes\\data\\quebec-latest.osm.pbf"
+      };
+      var routingService = new GeneratorService(routingConfig);
       var bbox = new Bbox(-73.38, 45.70, -73.97, 45.40);
       _geoCoordinates = routingService.RandomCoordinatesSet(bbox, 100)?.Select(c => new GeoCoordinates
       {

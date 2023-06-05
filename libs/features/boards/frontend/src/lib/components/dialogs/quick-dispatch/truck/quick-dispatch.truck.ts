@@ -5,6 +5,7 @@ import { MapsFacade } from '../../../../+state/maps/maps-facade';
 import { map } from 'rxjs';
 import { MapMarker } from '../../../../models/maps/map-marker';
 import { Coordinate } from '../../../../models/maps/coordinate';
+import { TrackMode } from '../../../../models/routing/vrp-request';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-truck',
@@ -121,8 +122,11 @@ export class QuickDispatchTruckComponent implements OnInit {
   addToOptimizationVehicules(truck: Truck) {
     this.mapsFacade.addOptimizationVehicule({
       id: truck.number,
-      profile: 'driving-car',
-      start: [truck.longtitude, truck.latitude],
+      start: { 
+        latitude: truck.latitude,
+        longitude: truck.longitude
+      },
+      trackMode: TrackMode.LastVisit
     });
   }
 }

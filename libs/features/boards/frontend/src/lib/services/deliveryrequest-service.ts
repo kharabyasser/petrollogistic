@@ -22,7 +22,7 @@ const GET_DELIVERY_REQUESTS = gql`
         country
       },
       latitude,
-      longtitude
+      longitude
     },
     destinationContainers {
       id,

@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   dispatchapi: "http://localhost:5188/graphql/",
   openroutingserviceapi: "http://localhost:8080/ors/v2/",
-  vroomserviceapi: "http://localhost:3000/",
+  vrpserviceapi: "http://localhost:3000/",
 };
 
 /*

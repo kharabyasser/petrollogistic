@@ -68,7 +68,7 @@ export class QuickDispatchTableComponent implements OnInit {
           trucks.map(
             (d) =>
               new MapMarker(
-                new Coordinate(d.longtitude, d.latitude),
+                new Coordinate(d.longitude, d.latitude),
                 '../assets/truck.png',
                 '#000000'
               )
@@ -240,10 +240,11 @@ export class QuickDispatchTableComponent implements OnInit {
   addToOptimizationJobs(request: DeliveryRequest) {
     this.mapsFacade.addOptimizationJob({
       id: request.purchaseOrder,
-      location: [
-        request.shipToAccount.longtitude,
-        request.shipToAccount.latitude,
-      ],
+      location: {
+        longitude: request.shipToAccount.longitude,
+        latitude: request.shipToAccount.latitude,
+      },
+      demands: []
     });
   }
 
@@ -258,7 +259,7 @@ export class QuickDispatchTableComponent implements OnInit {
           },
           geometry: {
             type: 'Point',
-            coordinates: [d.shipToAccount.longtitude, d.shipToAccount.latitude],
+            coordinates: [d.shipToAccount.longitude, d.shipToAccount.latitude],
           },
         };
 

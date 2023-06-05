@@ -25,14 +25,14 @@ services:
     networks:
       - routing-net
 
- vroom: 
-  image: vroomvrp/vroom-docker:v1.10.0
-  container_name: vroom
-  volumes: 
-   - ./volumes/vroom-conf/:/conf
-  environment: 
-   - VROOM_ROUTER=ors
-  ports:
-   - 3000:3000
-  networks:
+ routing-service: 
+  build: 
+    dockerfile: ./apps/routing-service/Dockerfile
+    context: ../
+  container_name: routing-service
+  ports: ['3000:80']
+  networks: 
     - routing-net
+  environment: 
+   ASPNETCORE_ENVIRONMENT: Development
+   RoutingConfig__DistanceMatrixService: 'http://ors-app:8080/ors/v2/matrix/driving-car'

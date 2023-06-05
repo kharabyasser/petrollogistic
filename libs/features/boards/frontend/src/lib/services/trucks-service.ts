@@ -13,7 +13,7 @@ const GET_TRUCKS = gql`{
     trailersLicense,
     permit,
     latitude,
-    longtitude,
+    longitude,
     system
   }
 }

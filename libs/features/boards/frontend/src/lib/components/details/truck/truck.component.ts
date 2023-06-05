@@ -84,7 +84,7 @@ export class TruckComponent implements OnInit {
   }
 
   locate(truck: Truck) {
-    this.mapsFacade.centerOn(new Coordinate(truck.longtitude, truck.latitude));
+    this.mapsFacade.centerOn(new Coordinate(truck.longitude, truck.latitude));
   }
 
   isochrone(truck: Truck) {
@@ -95,7 +95,7 @@ export class TruckComponent implements OnInit {
 
     this.routingService
       .getIsochrone({
-        locations: [[truck.longtitude, truck.latitude]],
+        locations: [[truck.longitude, truck.latitude]],
         range: ranges,
       })
       .subscribe((x) => {

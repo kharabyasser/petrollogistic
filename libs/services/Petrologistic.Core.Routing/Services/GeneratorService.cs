@@ -1,19 +1,20 @@
 using OsmSharp.Streams;
-using Petrologistic.Core.Routing.Interfaces;
-using Petrologistic.Core.Routing.Models;
+using Petrologistic.Service.Routing.Interfaces;
+using Petrologistic.Services.Routing.Interfaces;
+using Petrologistic.Services.Routing.Models;
 
-namespace Petrologistic.Core.Routing.Services
+namespace Petrologistic.Services.Routing.Services
 {
-  public class RandomizerService
+  public class GeneratorService : IGeneratorService
   {
     private readonly IRoutingConfig _routingConfig;
 
-    public RandomizerService(IRoutingConfig routingConfig)
+    public GeneratorService(IRoutingConfig routingConfig)
     {
       _routingConfig = routingConfig;
     }
 
-    public Coordinate[]? RandomCoordinatesSet(Bbox boundary, int count)
+    public Coordinate[] RandomCoordinatesSet(Bbox boundary, int count)
     {
       var result = new Coordinate[count];
 
@@ -22,7 +23,6 @@ namespace Petrologistic.Core.Routing.Services
         var source = new PBFOsmStreamSource(fileStream);
 
         var sourceWays = source.Where(e => e.Tags.ContainsKey("highway"));
-        //sourceWays = sourceWays.FilterNodes(n => IsNodeInBoundary(boundary, n.Longitude, n.Latitude));
 
         var boundaryWidth = boundary.NorthEast.Longitude - boundary.SouthWest.Longitude;
         var boundaryHeight = boundary.NorthEast.Latitude - boundary.SouthWest.Latitude;
@@ -71,19 +71,19 @@ namespace Petrologistic.Core.Routing.Services
       return result;
     }
 
-    private bool IsNodeInBoundary(Bbox boundary, double? longitude, double? latitude)
+    public bool IsNodeInBoundary(Bbox boundary, double? Longitude, double? latitude)
     {
       var isInBound = IsNodeInBoundary(boundary.SouthWest.Longitude, boundary.SouthWest.Latitude,
-        boundary.NorthEast.Longitude, boundary.NorthEast.Latitude, longitude, latitude);
+        boundary.NorthEast.Longitude, boundary.NorthEast.Latitude, Longitude, latitude);
 
       return isInBound;
     }
 
-    private bool IsNodeInBoundary(double swlong, double swlat, double nelong, double nelat, double? longitude, double? latitude)
+    public bool IsNodeInBoundary(double swlong, double swlat, double nelong, double nelat, double? Longitude, double? latitude)
     {
-      var isInBound = swlong < longitude &&
+      var isInBound = swlong < Longitude &&
         swlat < latitude &&
-        nelong > longitude &&
+        nelong > Longitude &&
         nelat > latitude;
 
       return isInBound;

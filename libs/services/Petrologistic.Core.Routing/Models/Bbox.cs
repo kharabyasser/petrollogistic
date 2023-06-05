@@ -1,4 +1,4 @@
-namespace Petrologistic.Core.Routing.Models
+namespace Petrologistic.Services.Routing.Models
 {
   public class Bbox
   {

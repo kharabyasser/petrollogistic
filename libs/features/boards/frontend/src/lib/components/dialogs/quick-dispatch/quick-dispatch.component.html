@@ -6,12 +6,12 @@
     </div>
     <div *ngIf="optimizationStep === 'result'" class="results-container">
         <div *ngIf="vrpResults !== null" class="__timeline">
-            <div *ngFor="let route of vrpResults.routes">
+            <div *ngFor="let route of vrpResults.vehicleRoutes">
                 <p-panel [toggleable]="true" [collapsed]="true">
                     <ng-template pTemplate="header">
-                        {{ route.vehicle }} ({{ route.cost }} DC)
+                        {{ route.vehicleId }} ({{ route.totalRouteDistance }} DC)
                     </ng-template>
-                    <p-timeline [value]="route.steps">
+                    <p-timeline [value]="route.visits">
                         <ng-template pTemplate="content" let-step>
                             <small class="p-text-secondary">{{ step.arrival }} DC</small>
                         </ng-template>

@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GeoJSONSource, Map } from 'maplibre-gl';
 import { MapsFacade } from '../+state/maps/maps-facade';
-import { MapMarker } from '../models/maps/map-marker';
-import { RoutingMetric } from '../models/routing/enums/routing-metric';
-import { RoutingUnit } from '../models/routing/enums/routing-unit';
-import { MatrixResponse } from '../models/routing/matrix-response';
-import { MatrixResult } from '../models/routing/matrix-result';
 import { RoutingService } from './routing-service';
 import { FeatureCollection, GeoJsonProperties, Polygon } from 'geojson';
 
@@ -287,39 +282,5 @@ export class MapService {
         }
       }, 1000);
     });
-  }
-
-  public getMetrix(markers: MapMarker[]): MatrixResult {
-    const matrixResults = new MatrixResult();
-
-    if (markers.length > 1) {
-      this.routingService
-        .getMatrix({
-          locations: markers.map((x) => [
-            x.coordinate.longitude,
-            x.coordinate.latitude,
-          ]),
-          metrics: [RoutingMetric.distance, RoutingMetric.duration],
-          units: RoutingUnit.km,
-        })
-        .subscribe((x: MatrixResponse) => {
-          matrixResults.distance = Math.max(
-            ...x.distances.map((a) =>
-              a.reduce((partialsum, d) => partialsum + d, 0)
-            )
-          );
-
-          matrixResults.duration = Math.max(
-            ...x.durations.map((a) =>
-              a.reduce((partialsum, d) => partialsum + d, 0)
-            )
-          );
-        });
-    } else {
-      matrixResults.distance = 0.0;
-      matrixResults.duration = 0.0;
-    }
-
-    return matrixResults;
   }
 }
