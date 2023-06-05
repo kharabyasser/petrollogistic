@@ -2,9 +2,9 @@ namespace Petrologistic.Services.Routing.Models
 {
   public class Coordinate
   {
-    public Coordinate(double Longitude, double latitude)
+    public Coordinate(double longitude, double latitude)
     {
-      Longitude = Longitude;
+      Longitude = longitude;
       Latitude = latitude;
     }
 

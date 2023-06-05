@@ -11,6 +11,6 @@ export class VrpService {
     constructor(private http: HttpClient) { }
 
     optimize(body: VrpRequest) {
-        return this.http.post<VrpAssignment>(`${environment.vrpserviceapi}`, body);
+        return this.http.post<VrpAssignment>(`${environment.vrpserviceapi}routing/solve`, body);
     }
 }

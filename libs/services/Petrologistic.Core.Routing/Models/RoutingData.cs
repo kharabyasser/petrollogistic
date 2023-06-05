@@ -14,9 +14,9 @@ namespace Petrologistic.Service.Routing.Models
   public class RoutingData
   {
     public Job[] Jobs { get; set; } = default!;
-    public Reload[] Reloads { get; set; } = default!;
+    public Reload[]? Reloads { get; set; } = default!;
     public Vehicle[] Vehicles { get; set; } = default!;
-    public Coordinate Depot { get; set; } = default!;
+    public Coordinate? Depot { get; set; } = default!;
   }
 }
 
@@ -63,7 +63,7 @@ public class Reload
 public class Vehicle
 {
   public int Id { get; set; }
-  public long[] Capacity { get; set; } = default!;
+  public long[]? Capacity { get; set; } = default!;
   public long[]? InitialLoad { get; set; } = default!;
   public Coordinate? Start { get; set; }
   public Coordinate? End { get; set; }
