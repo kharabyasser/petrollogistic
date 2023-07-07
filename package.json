@@ -61,6 +61,8 @@
     "@ngrx/entity": "~14.0.0",
     "@ngrx/router-store": "~14.0.0",
     "@ngrx/store": "~14.0.0",
+    "@ngx-formly/bootstrap": "^6.1.8",
+    "@ngx-formly/core": "^6.1.8",
     "@types/geojson": "^7946.0.10",
     "@types/maplibre-gl": "^1.14.0",
     "apollo-angular": "^4.1.0",

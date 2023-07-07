@@ -1,5 +1,5 @@
 <div class="truck__panel">
-  <p-panel *ngFor="let truck of trucks; let i = index" [toggleable]="true" [collapsed]="i !== 0">
+  <p-panel *ngFor="let truck of trucks$ | async; let i = index" [toggleable]="true" [collapsed]="i !== 0">
     <ng-template pTemplate="header">
       <i class="pi pi-circle-on" style="margin-right: 0.5rem; color: rgb(21, 186, 21)"></i>
       <i class="pi pi-tags"></i>
@@ -56,7 +56,7 @@
       </div>
     </petrologistic-p-panel-child>
     <petrologistic-p-panel-child title="Products">
-      <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
+      <p-chart type="bar" [data]="productsData[i]" [options]="horizontalOptions"></p-chart>
     </petrologistic-p-panel-child>
     <petrologistic-p-panel-child title="Tickets">
       <p>Minimalistic view</p>

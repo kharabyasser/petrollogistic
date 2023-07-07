@@ -4,8 +4,8 @@ using Newtonsoft.Json;
 using Petrologistic.Service.Routing.Interfaces;
 using Petrologistic.Service.Routing.Models;
 using Petrologistic.Services.Routing.Interfaces;
+using Petrologistic.Services.Routing.Models;
 using System.Text;
-using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
 
 namespace Petrologistic.Service.Routing.Services
 {
@@ -70,9 +70,11 @@ namespace Petrologistic.Service.Routing.Services
 
       List<Node> nodes = new();
 
-      var compartments_count = data.Vehicles[0].Capacity.Length;
-      long[] emptyDemands = new long[compartments_count];
+      bool capacity_mode = data.Vehicles[0].Capacity != null;
 
+      var compartments_count = capacity_mode ? data.Vehicles[0].Capacity!.Length : 0;
+
+      long[] emptyDemands = new long[compartments_count];
       for (int i = 0; i < compartments_count; i++)
       {
         emptyDemands[i] = 0;
@@ -84,7 +86,7 @@ namespace Petrologistic.Service.Routing.Services
         nodes.Add(new Node
         {
           RefId = 0,
-          Demands = emptyDemands,
+          Demands = capacity_mode ? emptyDemands : null,
           Location = data.Depot,
           NodeType = NodeType.Depot,
           NodeIndex = nodes_last_index++,
@@ -105,7 +107,7 @@ namespace Petrologistic.Service.Routing.Services
 
           nodes.Add(new Node
           {
-            Demands = startNodeDemands,
+            Demands = capacity_mode ? startNodeDemands : null,
             Location = vehicle.Start,
             NodeType = NodeType.Start,
             NodeIndex = nodes_last_index
@@ -116,51 +118,60 @@ namespace Petrologistic.Service.Routing.Services
       }
 
       // Add Reloads nodes.
-      long[] reloadsDemands = new long[compartments_count];
-
-      for (int i = 0; i < compartments_count; i++)
+      if (capacity_mode && data.Reloads != null)
       {
-        reloadsDemands[i] = -data.Vehicles.Max(v => v.Capacity[i]);
+        long[] reloadsDemands = new long[compartments_count];
+        for (int i = 0; i < compartments_count; i++)
+        {
+          reloadsDemands[i] = -data.Vehicles.Max(v => v.Capacity![i]);
+        }
+
+        nodes.AddRange(data.Reloads.Select(r => new Node
+        {
+          RefId = r.Id,
+          Demands = reloadsDemands,
+          Location = r.Location,
+          NodeType = NodeType.Reload,
+          NodeIndex = nodes_last_index++
+        }));
       }
-
-      nodes.AddRange(data.Reloads.Select(r => new Node
-      {
-        RefId = r.Id,
-        Demands = reloadsDemands,
-        Location = r.Location,
-        NodeType = NodeType.Reload,
-        NodeIndex = nodes_last_index++
-      }));
 
       // Add Jobs nodes.
       nodes.AddRange(data.Jobs.Select(j => new Node
       {
         RefId = j.Id,
-        Demands = j.Demands,
+        Demands = capacity_mode ? j.Demands : null,
         Location = j.Location,
         NodeType = NodeType.Job,
         NodeIndex = nodes_last_index++
       }));
 
       // Add End nodes
-      int[]? ends = data.Vehicles.Any(v => v.End != null) ? new int[num_vehicle] : null;
+      int[]? ends = new int[num_vehicle];
 
-      for (int i = 0; i < num_vehicle && ends != null; i++)
+      for (int i = 0; i < num_vehicle; i++)
       {
         var vehicle = data.Vehicles[i];
 
         if (vehicle.End == null && vehicle.TrackMode == TrackMode.LastVisit)
         {
           // Create arbitrary node that distance from/to = 0.
-          nodes.Add(new Node
-          {
-            Demands = emptyDemands,
-            Location = null,
-            NodeType = NodeType.ArbitraryEnd,
-            NodeIndex = nodes_last_index++
-          });
+          var arbitraryEndNode = nodes.SingleOrDefault(n => n.NodeType == NodeType.ArbitraryEnd);
 
-          ends[i] = nodes.Count - 1;
+          if (arbitraryEndNode == null)
+          {
+            arbitraryEndNode = new Node
+            {
+              Demands = emptyDemands,
+              Location = new Coordinate(0, 0),
+              NodeType = NodeType.ArbitraryEnd,
+              NodeIndex = nodes_last_index++
+            };
+
+            nodes.Add(arbitraryEndNode);
+          }
+
+          ends[i] = arbitraryEndNode.NodeIndex;
         }
         else if (vehicle.End != null && vehicle.TrackMode == TrackMode.Custom)
         {
@@ -176,7 +187,7 @@ namespace Petrologistic.Service.Routing.Services
         }
         else if (vehicle.End == null && vehicle.TrackMode == TrackMode.RoundTrip)
         {
-          ends[i] = starts[i];
+          ends[i] = starts![i];
         }
       }
 
@@ -184,16 +195,22 @@ namespace Petrologistic.Service.Routing.Services
       // 1. Get matrix from ORS.
       // 2. Adjust it.
       // 2.1. Arbitrary nodes from/to = 0.
-      long[][] distance_matrix = await
+      long[,] distance_matrix = await
         GetDistanceMatrix(nodes
-        .Select(n => new[] { n.Location.Longitude, n.Location.Latitude })
+        .Where(n => n.NodeType != NodeType.ArbitraryEnd)
+        .Select(n => new[] { n.Location!.Longitude, n.Location!.Latitude })
         .ToArray());
+
+      if (nodes.Any(n => n.NodeType == NodeType.ArbitraryEnd))
+      {
+        distance_matrix = GetDistanceMatrixWithArbitaryEnd(distance_matrix);
+      }
 
       int num_nodes = nodes.Count;
       int depot = 0;
       long[] max_distances = data.Vehicles.Select(v => v.MaxDrivingDistance ?? long.MaxValue).ToArray();
 
-      RoutingIndexManager manager = null;
+      RoutingIndexManager manager;
 
       // Create Routing Index Manager
       manager = starts != null && ends != null ?
@@ -208,7 +225,7 @@ namespace Petrologistic.Service.Routing.Services
       {
         var fromNode = manager.IndexToNode(fromIndex);
         var toNode = manager.IndexToNode(toIndex);
-        return distance_matrix[fromNode][toNode];
+        return distance_matrix[fromNode, toNode];
       });
 
       // Define cost of each arc.
@@ -225,52 +242,56 @@ namespace Petrologistic.Service.Routing.Services
 
       // Add Capacity constraint per product.
       List<RoutingDimension> capacity_dimensions = new();
-      for (int i = 0; i < compartments_count; i++)
-      {
-        int callback_index = i;
 
-        var demandCallBackIndex = routing.RegisterUnaryTransitCallback((long fromIndex) =>
+      if (capacity_mode)
+      {
+        for (int i = 0; i < compartments_count; i++)
         {
-          var fromNode = manager.IndexToNode(fromIndex);
-          return nodes[fromNode].Demands[callback_index];
-        });
+          int callback_index = i;
 
-        var max_slack = data.Vehicles.Max(v => v.Capacity[i]);
-        var capacities = data.Vehicles.Select(v => v.Capacity[i]).ToArray();
+          var demandCallBackIndex = routing.RegisterUnaryTransitCallback((long fromIndex) =>
+          {
+            var fromNode = manager.IndexToNode(fromIndex);
+            return nodes[fromNode].Demands[callback_index];
+          });
 
-        routing.AddDimensionWithVehicleCapacity(demandCallBackIndex,
-                                      max_slack,
-                                      capacities, // vehicle maximum capacities
-                                      true, // start cumul to zero
-                                      $"capacity_prod_{i}");
+          var max_slack = data.Vehicles.Max(v => v.Capacity[i]);
+          var capacities = data.Vehicles.Select(v => v.Capacity[i]).ToArray();
 
-        capacity_dimensions.Add(routing.GetDimensionOrDie($"capacity_prod_{i}"));
-      }
-      // Allow to drop reloading nodes with zero cost.
-      var reload_nodes = nodes.Where(n => n.NodeType == NodeType.Reload);
+          routing.AddDimensionWithVehicleCapacity(demandCallBackIndex,
+                                        max_slack,
+                                        capacities, // vehicle maximum capacities
+                                        true, // start cumul to zero
+                                        $"capacity_prod_{i}");
 
-      foreach (var node in reload_nodes)
-      {
-        routing.AddDisjunction(new long[] { manager.NodeToIndex(node.NodeIndex) }, 0);
-      }
+          capacity_dimensions.Add(routing.GetDimensionOrDie($"capacity_prod_{i}"));
+        }
+        // Allow to drop reloading nodes with zero cost.
+        var reload_nodes = nodes.Where(n => n.NodeType == NodeType.Reload);
 
-      // Allow to drop regular nodes with a cost.
-      // https://developers.google.com/optimization/routing/penalties
-      // Set skills and nodes visit enforcment.
+        foreach (var node in reload_nodes)
+        {
+          routing.AddDisjunction(new long[] { manager.NodeToIndex(node.NodeIndex) }, 0);
+        }
 
-      var jobNodes = nodes.Where(n => n.NodeType == NodeType.Job);
+        // Allow to drop regular nodes with a cost.
+        // https://developers.google.com/optimization/routing/penalties
+        // Set skills and nodes visit enforcment.
 
-      foreach (var job in jobNodes)
-      {
-        // Set skills and/or exlusivity.
-        //routing.VehicleVar(manager.NodeToIndex(2)).SetValues(new long[] { -1, 0 });
-        //routing.VehicleVar(manager.NodeToIndex(3)).SetValues(new long[] { -1, 1 });
+        var jobNodes = nodes.Where(n => n.NodeType == NodeType.Job);
 
-        var index = manager.NodeToIndex(job.NodeIndex);
-        capacity_dimensions.ForEach(d => d.SlackVar(index).SetValue(0));
+        foreach (var job in jobNodes)
+        {
+          // Set skills and/or exlusivity.
+          //routing.VehicleVar(manager.NodeToIndex(2)).SetValues(new long[] { -1, 0 });
+          //routing.VehicleVar(manager.NodeToIndex(3)).SetValues(new long[] { -1, 1 });
 
-        // TO.DO: Calculate penalty per node.
-        routing.AddDisjunction(new long[] { index }, BASE_PENALTY);
+          var index = manager.NodeToIndex(job.NodeIndex);
+          capacity_dimensions.ForEach(d => d.SlackVar(index).SetValue(0));
+
+          // TO.DO: Calculate penalty per node.
+          routing.AddDisjunction(new long[] { index }, BASE_PENALTY);
+        }
       }
 
       // Setting first solution heuristic.
@@ -286,20 +307,16 @@ namespace Petrologistic.Service.Routing.Services
       {
         var vehicleIndexes = data.Vehicles.Select(v => v.Id).ToArray();
 
-        var allNodes = nodes
-                      .Where(n => n.NodeType == NodeType.Job ||
-                                  n.NodeType == NodeType.Reload ||
-                                  n.NodeType == NodeType.Depot)
-                      .ToList();
-
-        return GetAssignmentOutput(
+        var assignmentOutPut = GetAssignmentOutput(
           data,
           routing,
           manager,
           solution,
-          allNodes,
+          nodes,
           vehicleIndexes,
           capacity_dimensions);
+
+        return assignmentOutPut;
       }
 
       return null;
@@ -375,29 +392,33 @@ namespace Petrologistic.Service.Routing.Services
           node_index = manager.IndexToNode(index);
 
           var currentNode = nodes.Single(n => n.NodeIndex == node_index);
-          var node_id = currentNode != null ? currentNode.RefId!.Value : -1;
+          var node_id = currentNode.RefId ?? node_index;
 
-          var visit = new Visit();
-          visit.NodeId = node_id;
-          visit.NodeIndex = node_index;
-          visit.Order = order++;
-
-          var loads = new List<long>();
-
-          foreach (var capacityDimension in capacity_dimensions)
+          if (currentNode.NodeType != NodeType.ArbitraryEnd)
           {
-            loads.Add(solution.Value(capacityDimension.CumulVar(index)));
-          }
-          visit.LoadsOnVisit = loads.ToArray();
+            var visit = new Visit();
+            visit.NodeId = node_id;
+            visit.NodeIndex = node_index;
+            visit.Order = order++;
+            visit.NodeLocation = currentNode.Location;
 
-          var previous_index = index;
+            var loads = new List<long>();
 
-          vehicle_route.Visits.Add(visit);
+            foreach (var capacityDimension in capacity_dimensions)
+            {
+              loads.Add(solution.Value(capacityDimension.CumulVar(index)));
+            }
+            visit.LoadsOnVisit = loads.ToArray();
 
-          if (!last_visit)
-          {
-            index = last_visit ? index : solution.Value(routing.NextVar(index));
-            route_distance += routing.GetArcCostForVehicle(previous_index, index, i);
+            var previous_index = index;
+
+            vehicle_route.Visits.Add(visit);
+
+            if (!last_visit)
+            {
+              index = last_visit ? index : solution.Value(routing.NextVar(index));
+              route_distance += routing.GetArcCostForVehicle(previous_index, index, i);
+            }
           }
         }
 
@@ -446,22 +467,20 @@ namespace Petrologistic.Service.Routing.Services
         throw new ArgumentException("Vehicle ending point and tracking mode missmatch.");
       }
 
-      var demandsCount = routing.Jobs.First().Demands.Count();
-
-      if (routing.Jobs.Any(job => job.Demands.Count() != demandsCount) ||
-          routing.Vehicles.Any(vehicle => vehicle.Capacity.Count() != demandsCount))
+      if (routing.Jobs.Where(job => job.Demands == null)?.Count() ==
+              routing.Vehicles.Where(vehicle => vehicle.Capacity == null)?.Count())
       {
-        throw new ArgumentException("Demands and capacities missmatch.");
+        throw new ArgumentException("Number of demands and jobs should be the same.");
       }
     }
 
-    private async Task<long[][]> GetDistanceMatrix(double[][] locations)
+    private async Task<long[,]> GetDistanceMatrix(double[][] locations)
     {
-      long[][] distance_matrix;
+      long[,] distance_matrix;
 
       var locations_json = JsonConvert.SerializeObject(new
       {
-        locations = locations,
+        locations,
         metrics = new[] { "distance" }
       });
 
@@ -473,9 +492,41 @@ namespace Petrologistic.Service.Routing.Services
 
       var result = JsonConvert.DeserializeObject<dynamic>(result_json);
 
-      distance_matrix = result.distances.ToObject<long[][]>();
+      distance_matrix = result.distances.ToObject<long[,]>();
 
       return distance_matrix;
+    }
+
+    private long[,] GetDistanceMatrixWithArbitaryEnd(long[,] matrix)
+    {
+      int rows = matrix.GetLength(0);
+      int cols = matrix.GetLength(1);
+
+      // Create a new matrix with additional rows and an additional column
+      long[,] newMatrix = new long[rows + 1, cols + 1];
+
+      // Copy the original matrix to the new matrix
+      for (int i = 0; i < rows; i++)
+      {
+        for (int j = 0; j < cols; j++)
+        {
+          newMatrix[i, j] = matrix[i, j];
+        }
+      }
+
+      // Add a 0 at the end of each row
+      for (int i = 0; i < rows; i++)
+      {
+        newMatrix[i, cols] = 0;
+      }
+
+      // Add a new row of 0s
+      for (int j = 0; j < cols + 1; j++)
+      {
+        newMatrix[rows, j] = 0;
+      }
+
+      return newMatrix;
     }
   }
 }

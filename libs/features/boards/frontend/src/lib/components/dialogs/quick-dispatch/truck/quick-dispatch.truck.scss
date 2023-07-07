@@ -90,6 +90,11 @@
   grid-template-rows: auto auto auto;
 }
 
+.products-form {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
 .return-to {
   grid-column-start: 1;
   grid-column-end: 1;

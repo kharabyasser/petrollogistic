@@ -1,3 +1,5 @@
+import { Compartment } from "./compartment"
+
 export interface Truck {
     id: string,
     name: string,
@@ -10,4 +12,5 @@ export interface Truck {
     latitude: number
     system: string,
     selected: boolean,
+    compartments: Compartment[]
 }

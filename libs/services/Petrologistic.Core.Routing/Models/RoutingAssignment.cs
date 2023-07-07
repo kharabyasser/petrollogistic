@@ -1,3 +1,5 @@
+using Petrologistic.Services.Routing.Models;
+
 namespace Petrologistic.Service.Routing.Models
 {
   public class RoutingAssignment
@@ -23,6 +25,7 @@ namespace Petrologistic.Service.Routing.Models
     public int Order { get; set; }
     public int NodeIndex { get; set; }
     public int NodeId { get; set; }
+    public Coordinate NodeLocation { get; set; }
     public long[] LoadsOnVisit { get; set; } = new long[0];
   }
 }

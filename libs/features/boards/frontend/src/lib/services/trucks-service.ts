@@ -14,7 +14,17 @@ const GET_TRUCKS = gql`{
     permit,
     latitude,
     longitude,
-    system
+    system,
+    compartments {
+      id,
+      number,
+      capacity,
+      load,
+      product {
+        number,
+        name
+      }
+    }
   }
 }
 `

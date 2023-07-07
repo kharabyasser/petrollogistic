@@ -3,6 +3,7 @@ using Petrologistic.Core.Persistence.Lib.Interfaces;
 using Petrologistic.Core.Persistence.Lib.Models;
 using Petrologistic.Core.Persistence.Lib.Models.Enums;
 using Petrologistic.Core.Persistence.Lib.Models.Location;
+using Petrologistic.Service.Seeder;
 using Petrologistic.Services.Routing.Models;
 using Petrologistic.Services.Routing.Services;
 
@@ -12,6 +13,8 @@ namespace Petrologistic.Core.Persistence.Lib.Repositories
   {
     private IList<GeoCoordinates>? _geoCoordinates;
     private IList<GeoCoordinates>? _coordinatesToPick;
+
+    private IEnumerable<Truck> _inMemoryTrucks;
 
     public Task<IEnumerable<Truck>> GetAll()
     {
@@ -33,6 +36,23 @@ namespace Petrologistic.Core.Persistence.Lib.Repositories
 
       _coordinatesToPick = _geoCoordinates.ToList();
 
+      if (_inMemoryTrucks != null)
+      {
+        return Task.FromResult(_inMemoryTrucks);
+      }
+
+      var fakeCompartments = new Faker<Compartment>()
+        .RuleFor(c => c.Id, (f, u) => Guid.NewGuid())
+        .RuleFor(c => c.Number, (f, u) => f.Random.Number(1, 100))
+        .RuleFor(c => c.Capacity, (f, u) => 2000)
+        .RuleFor(c => c.Load, (f, u) => f.Random.Number(100, 2000))
+        .RuleFor(c => c.Product, (f, u) => new Product
+        {
+          Number = f.PickRandom(PickingLists.Products.Keys.ToArray()),
+          Name =  f.PickRandom(PickingLists.Products.Values.ToArray()),
+          Description = ""
+        });
+
       var fakeTruck = new Faker<Truck>()
         .RuleFor(d => d.Id, (f, u) => Guid.NewGuid())
         .RuleFor(d => d.Status, (f, u) => DocumentStatus.Active)
@@ -43,6 +63,7 @@ namespace Petrologistic.Core.Persistence.Lib.Repositories
         .RuleFor(d => d.TrailersLicense, (f, u) => f.Random.Hash(20))
         .RuleFor(d => d.TrucksLicense, (f, u) => f.Random.Hash(20))
         .RuleFor(d => d.System, (f, u) => f.Random.Word())
+        .RuleFor(d => d.Compartments, (f, u) => fakeCompartments.GenerateBetween(2, 2))
         .RuleFor(d => d.Position, (f, u) =>
         {
           var coordinate = f.PickRandom(_coordinatesToPick);
@@ -51,9 +72,9 @@ namespace Petrologistic.Core.Persistence.Lib.Repositories
           return coordinate;
         });
 
-      var trucks = fakeTruck.Generate(3).AsEnumerable();
+      _inMemoryTrucks = fakeTruck.Generate(3).AsEnumerable();
 
-      return Task.FromResult(trucks);
+      return Task.FromResult(_inMemoryTrucks);
     }
   }
 }

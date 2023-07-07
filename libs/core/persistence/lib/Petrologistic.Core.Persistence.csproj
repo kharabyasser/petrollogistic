@@ -28,5 +28,6 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\..\services\Petrologistic.Core.Routing\Petrologistic.Service.Routing.csproj" />
+    <ProjectReference Include="..\..\..\services\Petrologistic.Service.Seeder\Petrologistic.Service.Seeder.csproj" />
   </ItemGroup>
 </Project>

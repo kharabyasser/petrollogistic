@@ -2,6 +2,7 @@
 
 public class Product : BaseModel
 {
-  public int Number { get; set; }
-  public string Description { get; set; } = default!;
+  public int Number { get; set; } = 0;
+  public string Name { get; set; }
+  public string Description { get; set; } = string.Empty;
 }

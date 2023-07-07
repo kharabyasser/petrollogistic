@@ -24,7 +24,7 @@ public class Job
 {
   public int Id { get; set; }
   public Coordinate Location { get; set; } = default!;
-  public long[] Demands { get; set; } = default!;
+  public long[]? Demands { get; set; } = default!;
   public int[]? RequiredSkills { get; set; }
 }
 

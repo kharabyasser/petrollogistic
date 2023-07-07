@@ -4,6 +4,7 @@ using Petrologistic.Core.Persistence.Lib.Models;
 using Petrologistic.Core.Persistence.Lib.Models.Enums;
 using Petrologistic.Core.Persistence.Lib.Models.Location;
 using Petrologistic.Core.Persistence.Lib.Models.Pricing;
+using Petrologistic.Service.Seeder;
 using Petrologistic.Services.Routing.Models;
 using Petrologistic.Services.Routing.Services;
 
@@ -34,25 +35,13 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
 
     _coordinatesToPick = _geoCoordinates.ToList();
 
-    string[] canadianProvincesAndTerritories = { "Ontario", "Nova Scotia", "New Brunswick", "Manitoba", "British Columbia", "Prince Edward Island", "Saskatchewan",
-    "Alberta", "Quebec", "Newfoundland and Labrador"};
-    var products = new Dictionary<int, string>()
-    {
-      { 1, "Regular Gas"},
-      { 2, "Premium Gas"},
-      { 3, "Clear Diesel"},
-      { 4, "Dyed Diesel"},
-      { 5, "Furnace Oil"}
-    };
-
-
     var fakeAddress = new Faker<Address>()
       .RuleFor(d => d.AddressLine1, (f, u) => f.Address.StreetAddress())
       .RuleFor(d => d.AddressLine2, (f, u) => f.Address.StreetName())
       .RuleFor(d => d.City, (f, u) => f.Address.City())
       .RuleFor(d => d.Country, (f, u) => f.Address.Country())
       .RuleFor(d => d.PostalCode, (f, u) => f.Address.ZipCode("?#? #?#"))
-      .RuleFor(d => d.Province, (f, u) => f.PickRandom(canadianProvincesAndTerritories));
+      .RuleFor(d => d.Province, (f, u) => f.PickRandom(PickingLists.CanadianProvincesAndTerritories));
 
     Action<Faker, Account> fakeAccountDelegate = (f, u) =>
     {
@@ -126,8 +115,8 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
       .RuleFor(d => d.AlternativeTag, (f, u) => f.Commerce.Ean8())
       .RuleFor(d => d.Product, (f, u) => new Product
       {
-        Number = f.PickRandom(products.Keys.ToArray()),
-        Description = f.PickRandom(products.Values.ToArray())
+        Number = f.PickRandom(PickingLists.Products.Keys.ToArray()),
+        Description = f.PickRandom(PickingLists.Products.Values.ToArray())
       })
       .RuleFor(d => d.RequestedAmount, (f, u) => f.Random.Number(450, 2250))
       .RuleFor(d => d.RequestedAmountUnit, (f, u) => f.PickRandomWithout(UnitOfMeasurement.Default))

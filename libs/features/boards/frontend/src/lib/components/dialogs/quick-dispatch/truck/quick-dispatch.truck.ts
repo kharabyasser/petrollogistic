@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TrucksFacade } from '../../../../+state/trucks/trucks-facade';
 import { Truck } from '../../../../domain/truck';
 import { MapsFacade } from '../../../../+state/maps/maps-facade';
-import { map } from 'rxjs';
-import { MapMarker } from '../../../../models/maps/map-marker';
-import { Coordinate } from '../../../../models/maps/coordinate';
 import { TrackMode } from '../../../../models/routing/vrp-request';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-truck',
@@ -14,53 +12,16 @@ import { TrackMode } from '../../../../models/routing/vrp-request';
 })
 export class QuickDispatchTruckComponent implements OnInit {
   trucks: Truck[] = [];
-  returnSites = ['NAN', 'Deopt #1', 'Depot #2', 'Depot #3'];
+  returnSites = ['Round Trip', 'Same as Last', 'Return to Depot'];
+  depots = ['Depot #1', 'Depot #2', 'Depot #3'];
   atoModes = ['Optimize', 'Forced', 'Custom'];
+  capacityModes = ['Truck Load', 'Full', 'Empty', 'Custom'];
 
-  productsData: any;
+  productsData: any[] = [];
 
   miniTicketsView = true;
   chartsCollapsed = false;
   hideCharts = false;
-
-  horizontalOptions = {
-    indexAxis: 'y',
-    maintainAspectRatio: false,
-    aspectRatio: 0.8,
-    plugins: {
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-      },
-      legend: {
-        labels: {
-          color: '#000',
-        },
-      },
-    },
-    scales: {
-      x: {
-        stacked: true,
-        ticks: {
-          color: '#495057',
-        },
-        grid: {
-          color: '#ebedef',
-          drawBorder: false,
-        },
-      },
-      y: {
-        stacked: true,
-        ticks: {
-          color: '#495057',
-        },
-        grid: {
-          color: '#ebedef',
-          drawBorder: false,
-        },
-      },
-    },
-  };
 
   constructor(
     private trucksFacade: TrucksFacade,
@@ -69,34 +30,26 @@ export class QuickDispatchTruckComponent implements OnInit {
     this.trucksFacade.trucks$.subscribe((trucks) => {
       this.trucks = trucks;
       this.trucks.forEach((t) => this.addToOptimizationVehicules(t));
-    });
 
-    this.productsData = {
-      labels: ['In truck'],
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Product 1',
-          backgroundColor: '#eba834',
-          borderColor: 'blue',
-          data: [1000, 900, 1050],
-        },
-        {
-          type: 'bar',
-          label: 'Product 2',
-          backgroundColor: '#3440eb',
-          borderColor: 'blue',
-          data: [900, 1050],
-        },
-        {
-          type: 'bar',
-          label: 'Product 3',
-          backgroundColor: '#FF0d80',
-          borderColor: 'blue',
-          data: [1050],
-        },
-      ],
-    };
+      this.trucksFacade.trucks$
+      .pipe(
+        tap((trucks) => {
+          trucks.forEach((t) => {
+            const productsLoads = t.compartments.map((c) => {
+              return {
+                label: c.product.name,
+                load: c.load,
+              };
+            });
+
+            if (productsLoads.length > 0) {
+              this.productsData.push(productsLoads);
+            }
+          });
+        })
+      )
+      .subscribe();
+    });
   }
 
   ngOnInit(): void {

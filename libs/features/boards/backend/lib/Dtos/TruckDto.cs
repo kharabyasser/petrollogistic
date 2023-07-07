@@ -12,5 +12,6 @@ namespace Petrologistic.Features.Boards.Backend.Lib.Dtos
     public string System { get; set; } = string.Empty;
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public ICollection<CompartmentDto> Compartments { get; set; } = default!;
   }
 }
