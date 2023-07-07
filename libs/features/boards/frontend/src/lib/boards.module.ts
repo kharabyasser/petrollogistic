@@ -57,6 +57,7 @@ import { QuickDispatchTruckComponent } from './components/dialogs/quick-dispatch
 import { QuickDispatchTableComponent } from './components/dialogs/quick-dispatch/table/quick-dispatch.table';
 import { DeliverySettingsComponent } from './components/dialogs/quick-dispatch/dispatch-delivery-settings/delivery-settings.component';
 import { VrpService } from './services/vrp-service';
+import { FormlyModule } from '@ngx-formly/core';
 
 @NgModule({
   imports: [
@@ -90,6 +91,7 @@ import { VrpService } from './services/vrp-service';
     InputNumberModule,
     CalendarModule,
     TimelineModule,
+    FormlyModule.forRoot(),
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),

@@ -9,7 +9,6 @@
     "dispatcher-api": "apps/dispatcher-api",
     "dispatcher-ui": "apps/dispatcher-ui",
     "features-boards-backend-lib": "libs/features/boards/backend/lib",
-    "features-boards-backend-lib-test": "libs/features/boards/backend/lib-test",
     "features-boards-frontend": "libs/features/boards/frontend"
   }
 }
