@@ -6,11 +6,7 @@ import { Coordinate } from '../../../models/maps/coordinate';
 import { RoutingService } from '../../../services/routing-service';
 import {
   Observable,
-  exhaustMap,
-  map,
-  mergeMap,
-  tap,
-  withLatestFrom,
+  tap
 } from 'rxjs';
 import { DeliveryRequestsFacade } from '../../../+state/delivery-requests/delivery-requests-facade';
 
