@@ -1,0 +1,42 @@
+name: Build Validation - NRWL/NX
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: "npm"
+
+      - run: npm install
+      - run: npx nx run-many --target=lint
+
+ build:
+   name: Build
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v3
+       with:
+         fetch-depth: 0
+
+     - uses: actions/setup-node@v3
+       with:
+         node-version: '18'
+         cache: "npm"
+
+     - run: npm install
+     - run: npx nx run-many --target=build
