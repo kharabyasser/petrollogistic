@@ -2,14 +2,14 @@ import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { VrpRequest } from "../models/routing/vrp-request";
 import { VrpAssignment } from "../models/routing/vrp-assignment";
-import { ApiConfig, PETROLOGISTIC_API_CONFIG } from "../tokens/api-config.token";
+import { PETROLOGISTIC_DISPATCHER_CONFIG, PetrologisticDispatcherConfig } from "@petrologistic/core/frontend/dispatcher-data-access";
 
 
 @Injectable()
 export class VrpService {
 
     constructor(private http: HttpClient,
-        @Inject(PETROLOGISTIC_API_CONFIG) private apiConfig: ApiConfig) { }
+        @Inject(PETROLOGISTIC_DISPATCHER_CONFIG) private apiConfig: PetrologisticDispatcherConfig) { }
 
     optimize(body: VrpRequest) {
         return this.http.post<VrpAssignment>(`${this.apiConfig.vrpServiceApiUrl}routing/solve`, body);

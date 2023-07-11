@@ -18,6 +18,12 @@
       "@petrologistic/core/frontend/apollo": [
         "libs/core/frontend/apollo/src/index.ts"
       ],
+      "@petrologistic/core/frontend/config": [
+        "libs/core/frontend/config/src/index.ts"
+      ],
+      "@petrologistic/core/frontend/dispatcher-data-access": [
+        "libs/core/frontend/dispatcher-data-access/src/index.ts"
+      ],
       "@petrologistic/core/frontend/osiris-pipes": [
         "libs/core/frontend/osiris-pipes/src/index.ts"
       ],

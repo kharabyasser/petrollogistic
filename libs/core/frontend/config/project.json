@@ -1,0 +1,27 @@
+{
+  "name": "core-frontend-config",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/core/frontend/config/src",
+  "prefix": "petrologistic",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/core/frontend/config"],
+      "options": {
+        "jestConfig": "libs/core/frontend/config/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/core/frontend/config/**/*.ts",
+          "libs/core/frontend/config/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
