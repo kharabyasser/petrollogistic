@@ -36,6 +36,7 @@ const getApiUrl = (appConfig: AppConfigService): PetrologisticDispatcherConfig =
     }),
   ],
   providers: [
+    AppConfigService,
     {
       provide: PETROLOGISTIC_DISPATCHER_CONFIG,
       useFactory: getApiUrl,
