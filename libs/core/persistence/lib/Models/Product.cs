@@ -1,4 +1,4 @@
-﻿namespace Petrologistic.Core.Persistence.Lib.Models;
+namespace Petrologistic.Core.Persistence.Lib.Models;
 
 public class Product : BaseModel
 {

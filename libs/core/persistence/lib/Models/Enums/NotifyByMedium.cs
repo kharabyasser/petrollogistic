@@ -1,4 +1,4 @@
-﻿namespace Petrologistic.Core.Persistence.Lib.Models.Enums;
+namespace Petrologistic.Core.Persistence.Lib.Models.Enums;
 
 public enum NotifyByMedium
 {

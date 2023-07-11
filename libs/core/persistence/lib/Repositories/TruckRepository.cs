@@ -49,7 +49,7 @@ namespace Petrologistic.Core.Persistence.Lib.Repositories
         .RuleFor(c => c.Product, (f, u) => new Product
         {
           Number = f.PickRandom(PickingLists.Products.Keys.ToArray()),
-          Name =  f.PickRandom(PickingLists.Products.Values.ToArray()),
+          Name = f.PickRandom(PickingLists.Products.Values.ToArray()),
           Description = ""
         });
 
