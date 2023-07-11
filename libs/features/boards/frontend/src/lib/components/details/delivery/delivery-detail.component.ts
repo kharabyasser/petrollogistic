@@ -68,7 +68,7 @@ export class DetailsComponent implements OnInit {
           },
           geometry: {
             type: 'Point',
-            coordinates: [d.shipToAccount.longtitude, d.shipToAccount.latitude],
+            coordinates: [d.shipToAccount.longitude, d.shipToAccount.latitude],
           },
         };
 

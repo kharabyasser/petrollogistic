@@ -4,6 +4,11 @@ import { TrucksFacade } from '../../../+state/trucks/trucks-facade';
 import { Truck } from '../../../domain/truck';
 import { Coordinate } from '../../../models/maps/coordinate';
 import { RoutingService } from '../../../services/routing-service';
+import {
+  Observable,
+  tap
+} from 'rxjs';
+import { DeliveryRequestsFacade } from '../../../+state/delivery-requests/delivery-requests-facade';
 
 @Component({
   selector: 'petrologistic-truck-detail',
@@ -11,9 +16,9 @@ import { RoutingService } from '../../../services/routing-service';
   styleUrls: ['./truck.component.scss'],
 })
 export class TruckComponent implements OnInit {
-  trucks: Truck[] = [];
+  trucks$: Observable<Truck[]>;
 
-  productsData: any;
+  productsData: any[] = [];
 
   miniTicketsView = true;
   chartsCollapsed = false;
@@ -43,32 +48,44 @@ export class TruckComponent implements OnInit {
 
   constructor(
     private trucksFacade: TrucksFacade,
+    private deliveriesFacade: DeliveryRequestsFacade,
     private mapsFacade: MapsFacade,
     private routingService: RoutingService
   ) {
-    this.trucksFacade.trucks$.subscribe((trucks) => (this.trucks = trucks));
+    this.trucks$ = this.trucksFacade.trucks$;
 
-    this.productsData = {
-      labels: ['product1', 'product2', 'product3'],
-      datasets: [
-        {
-          label: 'In truck',
-          data: [1000, 900, 1050],
-          backgroundColor: '#33C4FF',
-          borderColor: 'blue',
-          maxBarThickness: 30,
-          borderWidth: 1,
-        },
-        {
-          label: 'Total to deliver',
-          data: [1500, 600, 950],
-          backgroundColor: '#FF0049',
-          borderColor: 'blue',
-          maxBarThickness: 30,
-          borderWidth: 1,
-        },
-      ],
-    };
+    this.trucksFacade.trucks$
+      .pipe(
+        tap((trucks) => {
+          trucks.forEach((t) => {
+            const productsLoads = t.compartments.map((c) => {
+              return {
+                labels: c.product.name,
+                loads: c.load,
+              };
+            });
+
+            if (productsLoads.length > 0) {
+              const truckDataSet = {
+                labels: productsLoads.map((x: any) => x.labels),
+                datasets: [
+                  {
+                    label: 'In truck',
+                    data: productsLoads.map((x: any) => x.loads),
+                    backgroundColor: '#33C4FF',
+                    borderColor: 'blue',
+                    maxBarThickness: 30,
+                    borderWidth: 1,
+                  },
+                ],
+              };
+
+              this.productsData.push(truckDataSet);
+            }
+          });
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -84,7 +101,7 @@ export class TruckComponent implements OnInit {
   }
 
   locate(truck: Truck) {
-    this.mapsFacade.centerOn(new Coordinate(truck.longtitude, truck.latitude));
+    this.mapsFacade.centerOn(new Coordinate(truck.longitude, truck.latitude));
   }
 
   isochrone(truck: Truck) {
@@ -95,7 +112,7 @@ export class TruckComponent implements OnInit {
 
     this.routingService
       .getIsochrone({
-        locations: [[truck.longtitude, truck.latitude]],
+        locations: [[truck.longitude, truck.latitude]],
         range: ranges,
       })
       .subscribe((x) => {

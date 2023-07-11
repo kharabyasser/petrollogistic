@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
 import { KnobModule } from 'primeng/knob';
@@ -57,6 +57,10 @@ import { QuickDispatchTruckComponent } from './components/dialogs/quick-dispatch
 import { QuickDispatchTableComponent } from './components/dialogs/quick-dispatch/table/quick-dispatch.table';
 import { DeliverySettingsComponent } from './components/dialogs/quick-dispatch/dispatch-delivery-settings/delivery-settings.component';
 import { VrpService } from './services/vrp-service';
+import { FormlyModule } from '@ngx-formly/core';
+import { TruckConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/truck-constraints/truck-constraint-form.component';
+import { ProductConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/product-constraints/product-constraint-form.component';
+import { TicketConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/ticket-contraints/ticket-constraint-form.component';
 
 @NgModule({
   imports: [
@@ -90,6 +94,7 @@ import { VrpService } from './services/vrp-service';
     InputNumberModule,
     CalendarModule,
     TimelineModule,
+    FormlyModule.forRoot(),
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),
@@ -105,7 +110,11 @@ import { VrpService } from './services/vrp-service';
     QuickDispatchComponent,
     QuickDispatchTruckComponent,
     QuickDispatchTableComponent,
-    DeliverySettingsComponent
+    DeliverySettingsComponent,
+    TruckConstraintFormComponent,
+    ProductConstraintFormComponent,
+    TicketConstraintFormComponent,
+    ReactiveFormsModule,
   ],
   exports: [BoardsContainerComponent],
   providers: [

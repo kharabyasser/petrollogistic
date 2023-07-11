@@ -1,25 +1,20 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { environment } from '@env/*';
+import { Inject, Injectable } from "@angular/core";
 import { DirectionsRequest } from "../models/routing/directions-request";
 import { IsochronesRequest } from "../models/routing/isochrones-request";
-import { MatrixRequest } from "../models/routing/matrix-request";
-import { MatrixResponse } from "../models/routing/matrix-response";
+import { PETROLOGISTIC_DISPATCHER_CONFIG, PetrologisticDispatcherConfig } from "@petrologistic/core/frontend/dispatcher-data-access";
 
 @Injectable()
 export class RoutingService {
 
-    constructor(private http: HttpClient) { }
-
-    getMatrix(body: MatrixRequest) {
-        return this.http.post<MatrixResponse>(`${environment.openroutingserviceapi}/matrix/driving-car`, body);
-    }
+    constructor(private http: HttpClient,
+        @Inject(PETROLOGISTIC_DISPATCHER_CONFIG) private apiConfig: PetrologisticDispatcherConfig) { }
 
     getDirections(body: DirectionsRequest) {
-        return this.http.post<GeoJSON.GeoJSON>(`${environment.openroutingserviceapi}/directions/driving-car/geojson`, body);
+        return this.http.post<GeoJSON.GeoJSON>(`${this.apiConfig.openRoutingServiceApiUrl}/directions/driving-car/geojson`, body);
     }
 
     getIsochrone(body: IsochronesRequest) {
-        return this.http.post<GeoJSON.GeoJSON>(`${environment.openroutingserviceapi}/isochrones/driving-car`, body);
+        return this.http.post<GeoJSON.GeoJSON>(`${this.apiConfig.openRoutingServiceApiUrl}/isochrones/driving-car`, body);
     }
 }

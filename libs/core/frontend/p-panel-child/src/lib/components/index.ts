@@ -1,0 +1,1 @@
+export * from './p-panel-child.component';

@@ -9,5 +9,5 @@ export interface Container {
     requestedAmount: number,
     requestedAmountUnit: UnitOfMeasurement,
     latitude: number,
-    longtitude: number,
+    longitude: number,
 }

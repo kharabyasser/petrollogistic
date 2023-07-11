@@ -10,5 +10,5 @@ public class AccountDto
   public string PhoneNumber { get; set; } = default!;
   public Address Address { get; set; } = default!;
   public double Latitude { get; set; }
-  public double Longtitude { get; set; }
+  public double Longitude { get; set; }
 }

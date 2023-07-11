@@ -89,7 +89,7 @@ export class BoardsContainerComponent {
               geometry: {
                 type: 'Point',
                 coordinates: [
-                  d.shipToAccount.longtitude,
+                  d.shipToAccount.longitude,
                   d.shipToAccount.latitude,
                 ],
               },
@@ -115,7 +115,7 @@ export class BoardsContainerComponent {
               },
               geometry: {
                 type: 'Point',
-                coordinates: [d.longtitude, d.latitude],
+                coordinates: [d.longitude, d.latitude],
               },
             };
 

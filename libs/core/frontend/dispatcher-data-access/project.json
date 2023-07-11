@@ -1,0 +1,27 @@
+{
+  "name": "core-frontend-dispatcher-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/core/frontend/data-access/src",
+  "prefix": "petrologistic",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/core/frontend/data-access"],
+      "options": {
+        "jestConfig": "libs/core/frontend/data-access/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/core/frontend/data-access/**/*.ts",
+          "libs/core/frontend/data-access/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

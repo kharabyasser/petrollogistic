@@ -9,5 +9,5 @@ export interface Account {
     address: Address,
     accountType: AccountType,
     latitude: number,
-    longtitude: number
+    longitude: number
 }

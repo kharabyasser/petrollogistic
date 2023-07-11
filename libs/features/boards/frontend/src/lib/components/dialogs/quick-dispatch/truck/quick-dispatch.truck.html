@@ -1,75 +1,80 @@
-<div class="truck__panel">
-    <p-panel *ngFor="let truck of trucks" [toggleable]="true" [collapsed]="true">
-        <ng-template pTemplate="header">
-            <div class="flex flex-column card-container header__content">
-                <div class="__title">
-                    <p-checkbox [value]="truck" [ngModel]="true" [binary]="true"
-                        (ngModelChange)="selectTruck($event, truck)"></p-checkbox>
-                    <b>{{ truck.name }} #{{ truck.number }} ({{ '3' }})</b>
-                </div>
-                <div>
-                    <p-tag class="__chip">RTO</p-tag>
-                    <p-tag class="__chip">CA</p-tag>
-                    <p-tag class="__chip">OA</p-tag>
-                </div>
-            </div>
-        </ng-template>
-        <petrologistic-p-panel-child title="Constraints">
-            <div class="constraints-form">
-                <p>Return to</p>
-                <p-dropdown [options]="returnSites"></p-dropdown>
-                <p>ATO Mode</p>
-                <p-dropdown [options]="atoModes"></p-dropdown>
-                <p>Capacitated</p>
-                <p-inputSwitch></p-inputSwitch>
-            </div>
-        </petrologistic-p-panel-child>
-        <petrologistic-p-panel-child title="Container's Products">
-            <p-chart type="bar" [data]="productsData" [options]="horizontalOptions"></p-chart>
-        </petrologistic-p-panel-child>
-        <petrologistic-p-panel-child title="Assigned Tickets">
-            <div class="flex align-items-stretch card">
-                <div class="card__statusBar"></div>
-                <div class="card__body">
-                    <div class="card__header">
-                        <p-checkbox></p-checkbox>
-                        <p>Ticket 1125,</p>
-                        <p>1500L of Clear Diseal.</p>
-                        <div class="__status">
-                            <div class="__icon"></div>
-                            <p>ON TRUCK</p>
+<form [formGroup]="form">
+    <formly-form [fields]="fields" [form]="form" [model]="model">
+        <div class="truck__panel">
+            <p-panel *ngFor="let truck of trucks$ | async; let i = index" [toggleable]="true" [collapsed]="true">
+                <ng-template pTemplate="header">
+                    <div class="flex flex-column card-container header__content">
+                        <div class="__title">
+                            <p-checkbox [value]="truck" [ngModel]="true" [binary]="true"
+                                (ngModelChange)="selectTruck($event, truck)"></p-checkbox>
+                            <b>{{ truck.name }} #{{ truck.number }} ({{ '3' }})</b>
+                        </div>
+                        <div>
+                            <p-tag class="__chip">RTO</p-tag>
+                            <p-tag class="__chip">CA</p-tag>
+                            <p-tag class="__chip">OA</p-tag>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="flex align-items-stretch card">
-                <div class="card__statusBar"></div>
-                <div class="card__body">
-                    <div class="card__header">
-                        <p-checkbox></p-checkbox>
-                        <p>Ticket 1125,</p>
-                        <p>1500L of Clear Diseal.</p>
-                        <div class="__status">
-                            <div class="__icon"></div>
-                            <p>ON TRUCK</p>
+                </ng-template>
+                <ng-template formlyTemplate="truckConstraintsFrom">
+                    <petrologistic-truck-constraint-form></petrologistic-truck-constraint-form>
+                </ng-template>
+                <petrologistic-p-panel-child title="Container's Products">
+                    <div class="flex align-items-stretch">
+                        <p>Capacity Mode</p>
+                        <p-dropdown [options]="capacityModes"></p-dropdown>
+                    </div>
+                    <div class="products-form" *ngFor="let product of productsData[i]; let j = index">
+                        <p>{{ product.label }}</p>
+                        <p-inputNumber inputId="integeronly" [(ngModel)]="product.load"
+                            [disabled]="true"></p-inputNumber>
+                    </div>
+                </petrologistic-p-panel-child>
+                <petrologistic-p-panel-child title="Assigned Tickets">
+                    <div class="flex align-items-stretch card">
+                        <div class="card__statusBar"></div>
+                        <div class="card__body">
+                            <div class="card__header">
+                                <p-checkbox></p-checkbox>
+                                <p>Ticket 1125,</p>
+                                <p>1500L of Clear Diseal.</p>
+                                <div class="__status">
+                                    <div class="__icon"></div>
+                                    <p>ON TRUCK</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="flex align-items-stretch card">
-                <div class="card__statusBar"></div>
-                <div class="card__body">
-                    <div class="card__header">
-                        <p-checkbox></p-checkbox>
-                        <p>Ticket 1125,</p>
-                        <p>1500L of Clear Diseal.</p>
-                        <div class="__status">
-                            <div class="__icon"></div>
-                            <p>ON TRUCK</p>
+                    <div class="flex align-items-stretch card">
+                        <div class="card__statusBar"></div>
+                        <div class="card__body">
+                            <div class="card__header">
+                                <p-checkbox></p-checkbox>
+                                <p>Ticket 1125,</p>
+                                <p>1500L of Clear Diseal.</p>
+                                <div class="__status">
+                                    <div class="__icon"></div>
+                                    <p>ON TRUCK</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </petrologistic-p-panel-child>
-    </p-panel>
-</div>
+                    <div class="flex align-items-stretch card">
+                        <div class="card__statusBar"></div>
+                        <div class="card__body">
+                            <div class="card__header">
+                                <p-checkbox></p-checkbox>
+                                <p>Ticket 1125,</p>
+                                <p>1500L of Clear Diseal.</p>
+                                <div class="__status">
+                                    <div class="__icon"></div>
+                                    <p>ON TRUCK</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </petrologistic-p-panel-child>
+            </p-panel>
+        </div>
+    </formly-form>
+</form>

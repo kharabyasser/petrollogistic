@@ -12,5 +12,5 @@ public class ContainerDto
   public double RequestedAmount { get; set; }
   public UnitOfMeasurement RequestedAmountUnit { get; set; }
   public double Latitude { get;set; }
-  public double Longtitude { get;set; }
+  public double longitude { get;set; }
 }
