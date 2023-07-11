@@ -94,6 +94,7 @@ import { TicketConstraintFormComponent } from './components/dialogs/quick-dispat
     InputNumberModule,
     CalendarModule,
     TimelineModule,
+    ReactiveFormsModule,
     FormlyModule.forRoot(),
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
@@ -114,7 +115,6 @@ import { TicketConstraintFormComponent } from './components/dialogs/quick-dispat
     TruckConstraintFormComponent,
     ProductConstraintFormComponent,
     TicketConstraintFormComponent,
-    ReactiveFormsModule,
   ],
   exports: [BoardsContainerComponent],
   providers: [
