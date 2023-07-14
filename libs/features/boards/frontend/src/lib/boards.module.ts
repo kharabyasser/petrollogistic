@@ -34,6 +34,7 @@ import { StoreModule } from '@ngrx/store';
 
 import { DeliveryRequestService } from './services/deliveryrequest-service';
 import { CoreFrontendApolloModule } from '@petrologistic/core/frontend/apollo';
+import { CoreFrontendFormlyModule } from '@petrologistic/core/frontend/formly';
 import { CoreFrontendPPanelChildModule } from '@petrologistic/core/frontend/p-panel-child';
 import { CoreFrontendOsirisPipesModule } from '@petrologistic/core/frontend/osiris-pipes';
 import { EffectsModule } from '@ngrx/effects';
@@ -97,10 +98,11 @@ import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
     CalendarModule,
     TimelineModule,
     CommonModule,
+    CoreFrontendFormlyModule,
     FormsModule,
     ReactiveFormsModule,
     FormlyPrimeNGModule,
-    FormlyModule.forRoot(),
+    FormlyModule,
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),

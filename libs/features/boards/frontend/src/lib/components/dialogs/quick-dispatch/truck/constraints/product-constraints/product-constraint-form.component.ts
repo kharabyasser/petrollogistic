@@ -1,7 +1,8 @@
 
 
 import { Component } from "@angular/core";
-import { FormlyFieldConfig, FormlyFieldProps } from "@ngx-formly/core";
+import { FormlyFieldConfig } from "@ngx-formly/core";
+import { FormlyTypes } from "@petrologistic/core/frontend/formly";
 import { AbstactEventFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
 
 @Component({
@@ -10,16 +11,6 @@ import { AbstactEventFormFieldConfigComponent } from "libs/features/boards/front
     styleUrls: ['./product-constraint-form.component.scss'],
   })
 export class ProductConstraintFormComponent extends AbstactEventFormFieldConfigComponent {
-  productsData: any[] = [
-    {
-      productName: 'Clear Diesel',
-      load: 1200
-    },
-    {
-      productName: 'Dyed Diesel',
-      load: 500
-    }
-  ];
   capacityModes = [
     { label: 'Truck Load', value: 'truckLoad' },
     { label: 'Full', value: 'full' },
@@ -27,7 +18,7 @@ export class ProductConstraintFormComponent extends AbstactEventFormFieldConfigC
     { label: 'Custom', value: 'custom' }
   ];
 
-  protected override getFieldGroupConfig(): FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>[] {
+  protected override getFieldGroupConfig(): FormlyFieldConfig[] {
     return [
       this.setCapacityMode(),
       this.setProductsLoads()
@@ -48,13 +39,22 @@ export class ProductConstraintFormComponent extends AbstactEventFormFieldConfigC
   setProductsLoads(): FormlyFieldConfig {
     return {
       key: 'productsData',
-      type: 'number',
-      defaultValue: this.productsData[0].load,
-      props: {
-        label: this.productsData[0].productName,
-      },
-      expressions: {
-        'props.disabled': "this.model.capacityMode !== 'custom'"
+      type: FormlyTypes.SIMPLE_REPEATING_SECTION,
+      fieldArray: {
+        fieldGroup: [
+          {
+            key: 'load',
+            className: 'col-sm-4',
+            type: 'input',
+            hooks: {
+              onInit: (field: FormlyFieldConfig) => {
+                if (field.props) {
+                  field.props['label'] = field.model.product.name;
+                }
+              }
+            }
+          },
+        ]
       }
     }
   }

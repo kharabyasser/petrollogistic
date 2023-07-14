@@ -57,7 +57,7 @@ export class TruckConstraintFormComponent extends AbstactEventFormFieldConfigCom
       type: 'select',
       props: {
         label: 'End location',
-        options: this.trackModes,
+        options: this.depots,
       }
     };
   }

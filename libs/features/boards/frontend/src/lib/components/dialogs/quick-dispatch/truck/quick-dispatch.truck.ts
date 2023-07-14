@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { TrucksFacade } from '../../../../+state/trucks/trucks-facade';
 import { Truck } from '../../../../domain/truck';
 import { MapsFacade } from '../../../../+state/maps/maps-facade';
-import { TrackMode } from '../../../../models/routing/vrp-request';
-import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { Observable } from 'rxjs';
 import { TruckConstraintFormComponent } from './constraints/truck-constraints/truck-constraint-form.component';
 import { AbstactEventFormFieldConfigComponent } from '../../../../shared/form-field-config.component';
 import { ProductConstraintFormComponent } from './constraints/product-constraints/product-constraint-form.component';
+import { TrackMode } from '../../../../models/routing/enums/track-mode';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-truck',
@@ -18,9 +17,6 @@ import { ProductConstraintFormComponent } from './constraints/product-constraint
 export class QuickDispatchTruckComponent extends AbstactEventFormFieldConfigComponent implements OnInit {
   trucks$: Observable<Truck[]>;
 
-  capacityModes = ['Truck Load', 'Full', 'Empty', 'Custom'];
-
-  productsData: any[] = [];
   miniTicketsView = true;
   chartsCollapsed = false;
   hideCharts = false;
@@ -46,14 +42,21 @@ export class QuickDispatchTruckComponent extends AbstactEventFormFieldConfigComp
 
   setTruckConstraints(): FormlyFieldConfig {
     return {
-      key: 'truck',
+      key: 'truckConstraints',
       type: TruckConstraintFormComponent
     };
   }
 
   setProductsConstraints(): FormlyFieldConfig {
     return {
-      key: 'truck',
+      key: 'productsConstraints',
+      type: ProductConstraintFormComponent
+    };
+  }
+
+  setTicketsConstraints(): FormlyFieldConfig {
+    return {
+      key: 'ticketsConstraints',
       type: ProductConstraintFormComponent
     };
   }
@@ -74,7 +77,7 @@ export class QuickDispatchTruckComponent extends AbstactEventFormFieldConfigComp
         latitude: truck.latitude,
         longitude: truck.longitude,
       },
-      trackMode: TrackMode.LastVisit,
+      trackMode: TrackMode.LAST_VISIT,
     });
   }
 }

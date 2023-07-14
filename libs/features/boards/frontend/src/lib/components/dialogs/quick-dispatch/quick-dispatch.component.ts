@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { VrpService } from '../../../services/vrp-service';
-import { Job, Vehicle, VrpRequestDto } from '../../../models/routing/vrp-request';
+import { Job, Vehicle } from '../../../models/routing/vrp-request';
 import { MapsFacade } from '../../../+state/maps/maps-facade';
 import { tap, switchMap, map } from 'rxjs';
 import { RoutingService } from '../../../services/routing-service';
@@ -9,8 +9,10 @@ import { Feature, GeoJsonProperties, Point } from 'geojson';
 import { VrpAssignment } from '../../../models/routing/vrp-assignment';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { TruckConstraintFormComponent } from './truck/constraints/truck-constraints/truck-constraint-form.component';
 import { QuickDispatchTruckComponent } from './truck/quick-dispatch.truck';
+import { VrpRequestForm } from '../../../models/routing/vrp-request-form';
+import { TrackMode } from '../../../models/routing/enums/track-mode';
+import { CapacityMode } from '../../../models/routing/enums/capacity-mode';
 
 @Component({
   selector: 'petrologistic-quick-dispatch',
@@ -19,7 +21,7 @@ import { QuickDispatchTruckComponent } from './truck/quick-dispatch.truck';
 })
 export class QuickDispatchComponent implements OnInit {
   form = new FormGroup({});
-  model: VrpRequestDto | null = null; // TODO: remove | null
+  model: VrpRequestForm; // TODO: remove | null
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [];
 
@@ -32,7 +34,36 @@ export class QuickDispatchComponent implements OnInit {
     private mapsFacade: MapsFacade,
     private truckFacade: TrucksFacade
   ) {
+    this.model = {
+      truckConstraints: {
+        trackMode: TrackMode.ROUND_TRIP,
+      },
+      productsConstraints: {
+        capacityMode: CapacityMode.TRUCK_LOAD,
+        productsData: [ 
+          {
+            product: {
+              id: "0",
+              description: 'prod1',
+              name: 'prod1',
+              number: 123
+            },
+            load: 1080
+          },
+          {
+            product: {
+              id: "1",
+              description: 'prod2',
+              name: 'prod2',
+              number: 456
+            },
+            load: 720
+          }
+        ]
+      }
+    }
   }
+
   ngOnInit(): void {
     this.setFields();
   }
