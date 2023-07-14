@@ -1,9 +1,9 @@
-  export interface VrpRequest {
-    jobs: Job[];
-    reloads?: Reload[];
-    vehicles: Vehicle[];
-    depot?: Coordinate;
-  }
+export interface VrpRequestDto {
+  jobs: Job[];
+  reloads?: Reload[];
+  vehicles: Vehicle[];
+  depot?: Coordinate;
+}
 
 export interface Job {
   id: number;
@@ -36,7 +36,7 @@ export interface Coordinate {
 }
 
 export enum TrackMode {
-  LastVisit = "LastVisit",
-  RoundTrip = "RoundTrip",
-  Custom = "Custom",
+  LastVisit = 'LastVisit',
+  RoundTrip = 'RoundTrip',
+  Custom = 'Custom',
 }

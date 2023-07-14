@@ -4,19 +4,18 @@ import { Truck } from '../../../../domain/truck';
 import { MapsFacade } from '../../../../+state/maps/maps-facade';
 import { TrackMode } from '../../../../models/routing/vrp-request';
 import { FormGroup } from '@angular/forms';
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { Observable } from 'rxjs';
+import { TruckConstraintFormComponent } from './constraints/truck-constraints/truck-constraint-form.component';
+import { AbstactEventFormFieldConfigComponent } from '../../../../shared/form-field-config.component';
+import { ProductConstraintFormComponent } from './constraints/product-constraints/product-constraint-form.component';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-truck',
   templateUrl: './quick-dispatch.truck.html',
   styleUrls: ['./quick-dispatch.truck.scss'],
 })
-export class QuickDispatchTruckComponent implements OnInit {
-  form = new FormGroup({});
-  model = null;
-  fields: FormlyFieldConfig[] = [];
-
+export class QuickDispatchTruckComponent extends AbstactEventFormFieldConfigComponent implements OnInit {
   trucks$: Observable<Truck[]>;
 
   capacityModes = ['Truck Load', 'Full', 'Empty', 'Custom'];
@@ -30,43 +29,42 @@ export class QuickDispatchTruckComponent implements OnInit {
     private trucksFacade: TrucksFacade,
     private mapsFacade: MapsFacade
   ) {
+    super();
     this.trucks$ = this.trucksFacade.trucks$;
+  }
+
+  protected override getFieldGroupConfig(): FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>[] {
+    return [
+      this.setTruckConstraints(),
+      this.setProductsConstraints()
+    ]
   }
 
   ngOnInit(): void {
     this.trucksFacade.loadTrucks();
-    
-    this.setFields();
-  }
-
-  setFields(): void {
-    this.setTruckConstraintsSection();
-  }
-
-  setTruckConstraintsSection(): void {
-    const truckConstraints: FormlyFieldConfig[] = [
-      this.setTruckConstraints(),
-    ];
-
-    for (const field of truckConstraints) {
-      this.fields[0].fieldGroup?.push(field);
-    }
   }
 
   setTruckConstraints(): FormlyFieldConfig {
     return {
       key: 'truck',
-      type: 'truckConstraintsFrom'
+      type: TruckConstraintFormComponent
+    };
+  }
+
+  setProductsConstraints(): FormlyFieldConfig {
+    return {
+      key: 'truck',
+      type: ProductConstraintFormComponent
     };
   }
 
   // TODO: Move to formly.
-  selectTruck(checked: boolean, truck: Truck) {
-    if (checked) {
-      this.addToOptimizationVehicules(truck);
-    } else {
-      this.mapsFacade.removeOptimizationVehicule(truck.number);
-    }
+  selectTruck(checked: boolean) {
+    // if (checked) {
+    //   this.addToOptimizationVehicules(truck);
+    // } else {
+    //   this.mapsFacade.removeOptimizationVehicule(truck.number);
+    // }
   }
 
   addToOptimizationVehicules(truck: Truck) {

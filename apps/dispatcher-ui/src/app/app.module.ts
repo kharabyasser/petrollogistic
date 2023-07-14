@@ -26,7 +26,7 @@ const getApiUrl = (appConfig: AppConfigService): PetrologisticDispatcherConfig =
   imports: [
     BrowserModule, 
     BrowserAnimationsModule,
-    BoardsModule, 
+    BoardsModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({

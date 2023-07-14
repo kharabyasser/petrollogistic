@@ -1,19 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { VrpService } from '../../../services/vrp-service';
-import { Job, Vehicle } from '../../../models/routing/vrp-request';
+import { Job, Vehicle, VrpRequestDto } from '../../../models/routing/vrp-request';
 import { MapsFacade } from '../../../+state/maps/maps-facade';
 import { tap, switchMap, map } from 'rxjs';
 import { RoutingService } from '../../../services/routing-service';
 import { TrucksFacade } from '../../../+state/trucks/trucks-facade';
 import { Feature, GeoJsonProperties, Point } from 'geojson';
 import { VrpAssignment } from '../../../models/routing/vrp-assignment';
+import { FormGroup } from '@angular/forms';
+import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { TruckConstraintFormComponent } from './truck/constraints/truck-constraints/truck-constraint-form.component';
+import { QuickDispatchTruckComponent } from './truck/quick-dispatch.truck';
 
 @Component({
   selector: 'petrologistic-quick-dispatch',
   templateUrl: './quick-dispatch.component.html',
   styleUrls: ['./quick-dispatch.component.scss'],
 })
-export class QuickDispatchComponent {
+export class QuickDispatchComponent implements OnInit {
+  form = new FormGroup({});
+  model: VrpRequestDto | null = null; // TODO: remove | null
+  options: FormlyFormOptions = {};
+  fields: FormlyFieldConfig[] = [];
+
   optimizationStep: 'configuration' | 'result' | 'validation' = 'configuration';
   vrpResults: VrpAssignment | null = null;
 
@@ -22,7 +31,26 @@ export class QuickDispatchComponent {
     private routingService: RoutingService,
     private mapsFacade: MapsFacade,
     private truckFacade: TrucksFacade
-  ) {}
+  ) {
+  }
+  ngOnInit(): void {
+    this.setFields();
+  }
+
+  private setFields(): void {
+    this.fields = [{
+      fieldGroupClassName: 'quick_dispatch',
+      fieldGroup: [
+        this.setTruckSection(),
+      ]
+    }];
+  }
+
+  private setTruckSection(): FormlyFieldConfig {
+    return {
+      type: QuickDispatchTruckComponent,
+    };
+  }
 
   optimizeVrp() {
     let trucks: Vehicle[];

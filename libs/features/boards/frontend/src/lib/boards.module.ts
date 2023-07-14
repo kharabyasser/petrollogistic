@@ -61,6 +61,8 @@ import { FormlyModule } from '@ngx-formly/core';
 import { TruckConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/truck-constraints/truck-constraint-form.component';
 import { ProductConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/product-constraints/product-constraint-form.component';
 import { TicketConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/ticket-contraints/ticket-constraint-form.component';
+import { CommonModule } from '@angular/common';
+import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 
 @NgModule({
   imports: [
@@ -94,7 +96,10 @@ import { TicketConstraintFormComponent } from './components/dialogs/quick-dispat
     InputNumberModule,
     CalendarModule,
     TimelineModule,
+    CommonModule,
+    FormsModule,
     ReactiveFormsModule,
+    FormlyPrimeNGModule,
     FormlyModule.forRoot(),
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
