@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { FormlyFieldConfig } from "@ngx-formly/core";
-import { FormlyTypes } from "@petrologistic/core/frontend/formly";
 import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
 
 @Component({

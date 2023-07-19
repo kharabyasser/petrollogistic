@@ -1,10 +1,11 @@
 .truck-constraints {
   display: grid;
+  width: 100%;
   grid-template-areas:
-    'track track'
-    'start start'
-    'end end';
-  grid-template-columns: repeat(2, 1fr);
+    'start start start'
+    'track track track'
+    'end end end';
+  grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 1rem;
   grid-template-rows: repeat(3, 60px);
   row-gap: 15px;

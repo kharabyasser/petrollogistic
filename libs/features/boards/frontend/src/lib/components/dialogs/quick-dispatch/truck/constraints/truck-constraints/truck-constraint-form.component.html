@@ -1,5 +1,7 @@
-<petrologistic-p-panel-child title="Constraints" class="truck-constraints">
-  <ng-container *ngFor="let field of field.fieldGroup">
-    <formly-field [field]="field"></formly-field>
-  </ng-container>
+<petrologistic-p-panel-child title="Constraints">
+  <div class="truck-constraints">
+    <ng-container *ngFor="let field of field.fieldGroup">
+      <formly-field [field]="field"></formly-field>
+    </ng-container>
+  </div>
 </petrologistic-p-panel-child>
