@@ -10,9 +10,14 @@ import { VrpAssignment } from '../../../models/routing/vrp-assignment';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { QuickDispatchTruckComponent } from './truck/quick-dispatch.truck';
-import { VrpRequestForm } from '../../../models/routing/vrp-request-form';
+import {
+  TicketSelectionMode,
+  VrpRequestForm,
+} from '../../../models/routing/vrp-request-form';
 import { TrackMode } from '../../../models/routing/enums/track-mode';
 import { CapacityMode } from '../../../models/routing/enums/capacity-mode';
+import { DispatchStatus } from '../../../domain/enums/dispatch-status';
+import { FormlyTypes } from '@petrologistic/core/frontend/formly';
 
 @Component({
   selector: 'petrologistic-quick-dispatch',
@@ -21,7 +26,7 @@ import { CapacityMode } from '../../../models/routing/enums/capacity-mode';
 })
 export class QuickDispatchComponent implements OnInit {
   form = new FormGroup({});
-  model: VrpRequestForm; // TODO: remove | null
+  model: VrpRequestForm[];
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [];
 
@@ -32,36 +37,112 @@ export class QuickDispatchComponent implements OnInit {
     private vrpService: VrpService,
     private routingService: RoutingService,
     private mapsFacade: MapsFacade,
-    private truckFacade: TrucksFacade
+    private truckFacade: TrucksFacade,
   ) {
-    this.model = {
-      truckConstraints: {
-        trackMode: TrackMode.ROUND_TRIP,
+    this.model = [
+      {
+        truckName: 'Frontliner',
+        truckNumber: 1234,
+        ticketsCount: 2,
+        isOptimize: true,
+        truckConstraints: {
+          trackMode: TrackMode.ROUND_TRIP,
+        },
+        productsConstraints: {
+          capacityMode: CapacityMode.TRUCK_LOAD,
+          productsData: [
+            {
+              product: {
+                id: '0',
+                description: 'prod1',
+                name: 'prod1',
+                number: 123,
+              },
+              load: 1080,
+            },
+            {
+              product: {
+                id: '1',
+                description: 'prod2',
+                name: 'prod2',
+                number: 456,
+              },
+              load: 720,
+            },
+          ],
+        },
+        ticketsConstraints: {
+          selectionMode: TicketSelectionMode.All,
+          ticketConstraintInputs: [
+            {
+              isOptimize: false,
+              ticketNumber: 7845,
+              demand: 500,
+              productName: 'Clear Diesel',
+              status: DispatchStatus.onTruck,
+            },
+            {
+              isOptimize: true,
+              ticketNumber: 8848,
+              demand: 782,
+              productName: 'Dyed Diesel',
+              status: DispatchStatus.onTruck,
+            },
+          ],
+        },
       },
-      productsConstraints: {
-        capacityMode: CapacityMode.TRUCK_LOAD,
-        productsData: [ 
-          {
-            product: {
-              id: "0",
-              description: 'prod1',
-              name: 'prod1',
-              number: 123
+      {
+        truckName: 'Orange',
+        truckNumber: 7784,
+        ticketsCount: 14,
+        isOptimize: false,
+        truckConstraints: {
+          trackMode: TrackMode.LAST_VISIT,
+        },
+        productsConstraints: {
+          capacityMode: CapacityMode.CUSTOM,
+          productsData: [
+            {
+              product: {
+                id: '0',
+                description: 'prod5',
+                name: 'prod5',
+                number: 447,
+              },
+              load: 2054,
             },
-            load: 1080
-          },
-          {
-            product: {
-              id: "1",
-              description: 'prod2',
-              name: 'prod2',
-              number: 456
+            {
+              product: {
+                id: '1',
+                description: 'prod6',
+                name: 'prod6',
+                number: 889,
+              },
+              load: 240,
             },
-            load: 720
-          }
-        ]
-      }
-    }
+          ],
+        },
+        ticketsConstraints: {
+          selectionMode: TicketSelectionMode.All,
+          ticketConstraintInputs: [
+            {
+              isOptimize: false,
+              ticketNumber: 7845,
+              demand: 500,
+              productName: 'Clear Diesel',
+              status: DispatchStatus.onTruck,
+            },
+            {
+              isOptimize: true,
+              ticketNumber: 8848,
+              demand: 782,
+              productName: 'Dyed Diesel',
+              status: DispatchStatus.onTruck,
+            },
+          ],
+        },
+      },
+    ];
   }
 
   ngOnInit(): void {
@@ -69,17 +150,26 @@ export class QuickDispatchComponent implements OnInit {
   }
 
   private setFields(): void {
-    this.fields = [{
-      fieldGroupClassName: 'quick_dispatch',
-      fieldGroup: [
-        this.setTruckSection(),
-      ]
-    }];
+    this.fields = [
+      {
+        fieldGroupClassName: 'quick_dispatch-form',
+        fieldGroup: [
+          this.setTruckSection()
+        ],
+      },
+    ];
   }
 
   private setTruckSection(): FormlyFieldConfig {
     return {
-      type: QuickDispatchTruckComponent,
+      type: FormlyTypes.SIMPLE_REPEATING_SECTION,
+      fieldArray: {
+        fieldGroup: [
+          {
+            type: QuickDispatchTruckComponent,
+          }
+        ]
+      }
     };
   }
 
@@ -112,15 +202,14 @@ export class QuickDispatchComponent implements OnInit {
                 });
                 directionResult.subscribe((d) => {
                   this.mapsFacade.addRoute(d);
-                  const trucksForOptimization = this.vrpResults?.vehicleRoutes.map(
-                    (r) => r.vehicleId
-                  );
+                  const trucksForOptimization =
+                    this.vrpResults?.vehicleRoutes.map((r) => r.vehicleId);
                   this.truckFacade.trucks$
                     .pipe(
                       map((trucks) =>
                         trucks
-                          .filter((t) =>
-                            trucksForOptimization?.includes(t.number)
+                          .filter(
+                            (t) => trucksForOptimization?.includes(t.number),
                           )
                           .map((t) => {
                             const features: Feature<Point, GeoJsonProperties> =
@@ -136,14 +225,14 @@ export class QuickDispatchComponent implements OnInit {
                                 },
                               };
                             return features;
-                          })
-                      )
+                          }),
+                      ),
                     )
                     .subscribe((f) => this.mapsFacade.addMarkers(f));
                 });
               });
             });
-        })
+        }),
       )
       .subscribe();
   }

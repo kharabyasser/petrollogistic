@@ -5,16 +5,17 @@ import { MapsFacade } from '../../../../+state/maps/maps-facade';
 import { FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { Observable } from 'rxjs';
 import { TruckConstraintFormComponent } from './constraints/truck-constraints/truck-constraint-form.component';
-import { AbstactEventFormFieldConfigComponent } from '../../../../shared/form-field-config.component';
 import { ProductConstraintFormComponent } from './constraints/product-constraints/product-constraint-form.component';
 import { TrackMode } from '../../../../models/routing/enums/track-mode';
+import { TicketConstraintFormComponent } from './constraints/ticket-contraints/ticket-constraint-form.component';
+import { AbstactFormFieldConfigComponent } from '../../../../shared/form-field-config.component';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-truck',
   templateUrl: './quick-dispatch.truck.html',
   styleUrls: ['./quick-dispatch.truck.scss'],
 })
-export class QuickDispatchTruckComponent extends AbstactEventFormFieldConfigComponent implements OnInit {
+export class QuickDispatchTruckComponent extends AbstactFormFieldConfigComponent implements OnInit {
   trucks$: Observable<Truck[]>;
 
   miniTicketsView = true;
@@ -32,7 +33,8 @@ export class QuickDispatchTruckComponent extends AbstactEventFormFieldConfigComp
   protected override getFieldGroupConfig(): FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>[] {
     return [
       this.setTruckConstraints(),
-      this.setProductsConstraints()
+      this.setProductsConstraints(),
+      this.setTicketsConstraints()
     ]
   }
 
@@ -57,7 +59,7 @@ export class QuickDispatchTruckComponent extends AbstactEventFormFieldConfigComp
   setTicketsConstraints(): FormlyFieldConfig {
     return {
       key: 'ticketsConstraints',
-      type: ProductConstraintFormComponent
+      type: TicketConstraintFormComponent
     };
   }
 

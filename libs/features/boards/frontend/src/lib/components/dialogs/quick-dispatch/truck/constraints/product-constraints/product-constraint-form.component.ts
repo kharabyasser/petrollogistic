@@ -3,14 +3,14 @@
 import { Component } from "@angular/core";
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { FormlyTypes } from "@petrologistic/core/frontend/formly";
-import { AbstactEventFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
+import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
 
 @Component({
     selector: 'petrologistic-product-constraint-form',
     templateUrl: './product-constraint-form.component.html',
     styleUrls: ['./product-constraint-form.component.scss'],
   })
-export class ProductConstraintFormComponent extends AbstactEventFormFieldConfigComponent {
+export class ProductConstraintFormComponent extends AbstactFormFieldConfigComponent {
   capacityModes = [
     { label: 'Truck Load', value: 'truckLoad' },
     { label: 'Full', value: 'full' },

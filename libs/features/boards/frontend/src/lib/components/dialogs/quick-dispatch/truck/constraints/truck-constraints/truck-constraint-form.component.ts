@@ -1,13 +1,13 @@
 import { Component } from "@angular/core";
 import { FormlyFieldConfig } from "@ngx-formly/core";
-import { AbstactEventFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
+import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
 
 @Component({
     selector: 'petrologistic-truck-constraint-form',
     templateUrl: './truck-constraint-form.component.html',
     styleUrls: ['./truck-constraint-form.component.scss'],
   })
-export class TruckConstraintFormComponent extends AbstactEventFormFieldConfigComponent {
+export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponent {
 
   depots = [
     { label: 'Depot #1', value: 'depot1' },
@@ -23,8 +23,8 @@ export class TruckConstraintFormComponent extends AbstactEventFormFieldConfigCom
 
   protected getFieldGroupConfig(): FormlyFieldConfig[] {
     return [
-      this.setTrackMode(),
       this.setStartLocation(),
+      this.setTrackMode(),
       this.setReturnLocation()
     ];
   }
@@ -33,6 +33,7 @@ export class TruckConstraintFormComponent extends AbstactEventFormFieldConfigCom
     return {
       key: 'trackMode',
       type: 'select',
+      className: 'track-mode',
       templateOptions: {
         label: 'Track mode',
         options: this.trackModes,
@@ -44,6 +45,7 @@ export class TruckConstraintFormComponent extends AbstactEventFormFieldConfigCom
     return {
       key: 'startLocation',
       type: 'select',
+      className: 'start-location',
       props: {
         label: 'Start location',
         options: this.depots,
@@ -55,6 +57,7 @@ export class TruckConstraintFormComponent extends AbstactEventFormFieldConfigCom
     return {
       key: 'endLocation',
       type: 'select',
+      className: 'end-location',
       props: {
         label: 'End location',
         options: this.depots,

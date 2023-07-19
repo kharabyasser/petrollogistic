@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { FieldType, FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import { Subject } from 'rxjs';
 
 @Component({ template: '' })
-export abstract class AbstactEventFormFieldConfigComponent extends FieldType implements FormlyExtension {
+export abstract class AbstactFormFieldConfigComponent extends FieldType implements FormlyExtension {
+
+  @HostBinding('class') hostClassNames: string = '';
 
   protected fieldDestroy$ = new Subject<void>();
 

@@ -2,8 +2,8 @@
     <ng-template pTemplate="header">
         <div class="flex flex-column card-container header__content">
             <div class="__title">
-                <p-checkbox></p-checkbox>
-                <b>Truck name #1234 ({{ '3' }})</b>
+                <p-checkbox [(ngModel)]="model.isOptimize" [binary]="true"></p-checkbox>
+                <b>{{ model.truckName }} # {{ model.truckNumber }} ({{ model.ticketsCount }})</b>
             </div>
         </div>
     </ng-template>

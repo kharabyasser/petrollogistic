@@ -64,6 +64,7 @@ import { ProductConstraintFormComponent } from './components/dialogs/quick-dispa
 import { TicketConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/ticket-contraints/ticket-constraint-form.component';
 import { CommonModule } from '@angular/common';
 import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
+import { TicketInputFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/ticket-contraints/ticket-input-form/ticket-input-form.component';
 
 @NgModule({
   imports: [
@@ -117,6 +118,7 @@ import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
     MapsComponent,
     QuickDispatchComponent,
     QuickDispatchTruckComponent,
+    TicketInputFormComponent,
     QuickDispatchTableComponent,
     DeliverySettingsComponent,
     TruckConstraintFormComponent,
