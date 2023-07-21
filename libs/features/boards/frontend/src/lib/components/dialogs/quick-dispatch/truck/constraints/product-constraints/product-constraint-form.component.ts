@@ -29,6 +29,7 @@ export class ProductConstraintFormComponent extends AbstactFormFieldConfigCompon
     return {
       key: 'capacityMode',
       type: 'select',
+      className: 'capacity-mode',
       templateOptions: {
         label: 'Capacity Mode',
         options: this.capacityModes
@@ -44,7 +45,7 @@ export class ProductConstraintFormComponent extends AbstactFormFieldConfigCompon
         fieldGroup: [
           {
             key: 'load',
-            className: 'col-sm-4',
+            className: 'products',
             type: 'input',
             hooks: {
               onInit: (field: FormlyFieldConfig) => {

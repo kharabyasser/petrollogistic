@@ -1,2 +1,13 @@
+.product-constraints {
+  display: grid;
+  width: 100%;
+  grid-template-areas:
+    'capacity capacity capacity'
+    'products products products';
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 1rem;
+}
 
-
+.capacity-mode {
+  grid-area: capacity;
+}
