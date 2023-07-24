@@ -89,7 +89,6 @@ export abstract class AbstractSelectType
       // false is added intentionally, to avoid filtering of items without isActive flag
       map((items) => items.filter((item) => item?.isActive !== false)),
     );
-    this.activeItems$.subscribe(x => console.log(this.allItems))
   }
 
   private isSearchCodeMatch(searchTerm: string, item: SelectListItem): boolean {
