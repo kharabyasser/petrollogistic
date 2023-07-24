@@ -1,6 +1,9 @@
 import { Component } from "@angular/core";
 import { FormlyFieldConfig } from "@ngx-formly/core";
+import { FormlyTypes } from "@petrologistic/core/frontend/formly";
+import { SelectListItem } from "libs/core/frontend/formly/src/lib/interfaces/select-list-item";
 import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
+import { of } from "rxjs";
 
 @Component({
     selector: 'petrologistic-truck-constraint-form',
@@ -15,10 +18,25 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
     { label: 'Depot #3', value: 'depot3' }, 
   ];
 
-  trackModes = [
-    { label: 'Round Trip', value: 'roundTrip' }, 
-    { label: 'Same as Last', value: 'sameAsLast'},
-    { label: 'Return to Depot', value: 'retrunToDepot' }
+  trackModes: SelectListItem[] = [
+    {
+      id: '1',
+      code: 'roundTrip',
+      description: 'Round Trip',
+      isActive: true
+     }, 
+    { 
+      id: '2',
+      code: 'sameAsLast',
+      description: 'Same as Last', 
+      isActive: true
+    },
+    { 
+      id: '3',
+      code: 'retrunToDepot', 
+      description: 'Return to Depot', 
+      isActive: true
+    }
   ];
 
   protected getFieldGroupConfig(): FormlyFieldConfig[] {
@@ -32,12 +50,16 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
   private setTrackMode(): FormlyFieldConfig {
     return {
       key: 'trackMode',
-      type: 'select',
+      type: FormlyTypes.SINGLE_SELECT,
       className: 'track-mode',
-      templateOptions: {
+      props: {
         label: 'Track mode',
-        options: this.trackModes,
-      }
+        items$: of(this.trackModes),
+        optionsLabel: 'CODE_DESCRIPTION',
+        selectedItemLabel: 'CODE',
+        required: true,
+        showClear: true
+      },
     };
   }
 

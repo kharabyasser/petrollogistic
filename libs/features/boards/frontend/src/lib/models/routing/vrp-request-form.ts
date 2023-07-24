@@ -15,7 +15,7 @@ export class VrpRequestForm {
 }
 
 export class TruckConstraint {
-  trackMode: TrackMode = TrackMode.ROUND_TRIP;
+  trackMode: TrackMode | null = null;
   startLocation?: Coordinate;
   endLocation?: Coordinate;
 }

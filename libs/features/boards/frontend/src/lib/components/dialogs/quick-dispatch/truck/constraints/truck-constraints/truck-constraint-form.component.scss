@@ -2,8 +2,8 @@
   display: grid;
   width: 100%;
   grid-template-areas:
-    'start start start'
     'track track track'
+    'start start start'
     'end end end';
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 1rem;

@@ -46,7 +46,7 @@ export class QuickDispatchComponent implements OnInit {
         ticketsCount: 2,
         isOptimize: true,
         truckConstraints: {
-          trackMode: TrackMode.ROUND_TRIP,
+          trackMode: null
         },
         productsConstraints: {
           capacityMode: CapacityMode.TRUCK_LOAD,

@@ -1,4 +1,5 @@
 export enum FormlyTypes {
-    SIMPLE_REPEATING_SECTION = 'simple-repeating-section'
+    SIMPLE_REPEATING_SECTION = 'simple-repeating-section',
+    SINGLE_SELECT = "single-select"
   }
   
