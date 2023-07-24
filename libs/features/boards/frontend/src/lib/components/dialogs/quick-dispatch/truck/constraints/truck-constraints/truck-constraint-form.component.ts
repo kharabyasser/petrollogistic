@@ -21,19 +21,19 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
   trackModes: SelectListItem[] = [
     {
       id: '1',
-      code: 'roundTrip',
+      code: 'RT',
       description: 'Round Trip',
       isActive: true
      }, 
     { 
       id: '2',
-      code: 'sameAsLast',
+      code: 'SAL',
       description: 'Same as Last', 
       isActive: true
     },
     { 
       id: '3',
-      code: 'retrunToDepot', 
+      code: 'RTD', 
       description: 'Return to Depot', 
       isActive: true
     }
@@ -56,7 +56,7 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
         label: 'Track mode',
         items$: of(this.trackModes),
         optionsLabel: 'CODE_DESCRIPTION',
-        selectedItemLabel: 'CODE',
+        selectedItemLabel: 'DESCRIPTION',
         required: true,
         showClear: true
       },

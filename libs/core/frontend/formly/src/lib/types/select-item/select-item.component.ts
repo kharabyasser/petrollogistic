@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { SelectListItem, SelectListItemViewMode } from '../../interfaces/select-list-item';
 import { SelectOptionById } from '../../helpers/select-options-by-id.helper';
 
@@ -7,11 +7,15 @@ import { SelectOptionById } from '../../helpers/select-options-by-id.helper';
   templateUrl: './select-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectItemComponent {
+export class SelectItemComponent implements OnInit {
+
+  ngOnInit(): void {
+    debugger
+  }
 
   @Input() viewMode: SelectListItemViewMode = SelectListItemViewMode.CODE;
-  @Input() item: SelectListItem | null = null;
-  @Input() disabled = true;
+  @Input() item?: SelectListItem;
+  @Input() disabled = false;
 
   @Input() set options(options: SelectListItem[]) {
     if (!this.item?.code && options?.length) {

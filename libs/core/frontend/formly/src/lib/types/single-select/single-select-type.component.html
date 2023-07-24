@@ -1,20 +1,19 @@
   <ng-select
   class="osiris-single-select ng-select-control"
-  [appendTo]="props['appendTo'] === null ? null : props['appendTo'] || 'body'"
   [bindValue]="props['bindValue']"
+  [bindLabel]="props['optionsLabel']"
   [virtualScroll]="props['virtualScroll']"
-  [items]="cars" 
+  [items]="props['showInactiveItems'] ? (items$ | async)! : (activeItems$ | async)!"
   [formControl]="formControl"
   [formlyAttributes]="field"
   [readonly]="props['readonly'] ?? false"
-  [bindLabel]="props['optionLabel']"
   [placeholder]="props.placeholder || ''"
   [clearable]="props['showClear']"
   [searchFn]="customSearchFn"
 >
   <!-- Selected value template -->
   <ng-template ng-label-tmp let-item="item">
-    <select-item [item]="item" [options]="allItems" [viewMode]="props['selectedItemLabel']" />
+    <select-item [item]="item" [options]="allItems ?? []" [viewMode]="props['selectedItemLabel']" />
   </ng-template>
 
   <!-- Option item template -->

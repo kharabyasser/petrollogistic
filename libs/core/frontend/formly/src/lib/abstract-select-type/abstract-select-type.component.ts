@@ -15,7 +15,7 @@ export abstract class AbstractSelectType
   extends FieldType<FieldTypeConfig>
   implements OnInit
 {
-  allItems: SelectListItem[] = [];
+  allItems?: SelectListItem[];
   activeItems$: Observable<SelectListItem[]> = of([]);
 
   private fieldConfigUpdate$ = new Subject<void>();
@@ -61,7 +61,7 @@ export abstract class AbstractSelectType
     );
 
     this.items$ = filteredItems$.pipe(takeUntil(this.fieldConfigUpdate$));
-
+    
     this.setActiveItems();
   }
 
@@ -85,10 +85,11 @@ export abstract class AbstractSelectType
 
   private setActiveItems(): void {
     this.activeItems$ = this.items$.pipe(
-      tap((allItems) => (this.allItems = allItems)),
+      tap((items) => this.allItems = items),
       // false is added intentionally, to avoid filtering of items without isActive flag
       map((items) => items.filter((item) => item?.isActive !== false)),
     );
+    this.activeItems$.subscribe(x => console.log(this.allItems))
   }
 
   private isSearchCodeMatch(searchTerm: string, item: SelectListItem): boolean {

@@ -14,13 +14,6 @@ import { SelectListItem } from '../../interfaces/select-list-item';
   encapsulation: ViewEncapsulation.None,
 })
 export class SingleSelectTypeComponent extends AbstractSelectType {
-  cars = [
-    { id: 1, name: 'Volvo' },
-    { id: 2, name: 'Saab' },
-    { id: 3, name: 'Opel' },
-    { id: 4, name: 'Audi' },
-  ];
-
   override defaultOptions = {
     props: {
       placeholder: 'Select an option',

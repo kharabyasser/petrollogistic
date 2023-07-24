@@ -1,0 +1,16 @@
+<div class="text-break-word text-tags" [class.disabled-text]="disabled">
+    <ng-container *ngIf="viewMode === SelectViewMode.CODE">
+        {{ item?.code }}
+    </ng-container>
+    <ng-container *ngIf="viewMode === SelectViewMode.CODE_DESCRIPTION">
+        <ng-container *ngIf="item?.code">({{ item?.code }})</ng-container>
+        {{ item?.description }}
+    </ng-container>
+    <ng-container *ngIf="viewMode === SelectViewMode.DESCRIPTION">
+        {{ item?.description }}
+    </ng-container>
+    <ng-container *ngIf="viewMode === SelectViewMode.DESCRIPTION_OR_CODE">
+        {{ item?.description || item?.code }}
+    </ng-container>
+
+</div>
