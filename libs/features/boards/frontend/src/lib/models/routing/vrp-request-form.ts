@@ -21,7 +21,7 @@ export class TruckConstraint {
 }
 
 export class ProductConstraint {
-  capacityMode: CapacityMode = CapacityMode.TRUCK_LOAD;
+  capacityMode: CapacityMode | null = null;
   productsData?: ProductConstraintData[];
 }
 

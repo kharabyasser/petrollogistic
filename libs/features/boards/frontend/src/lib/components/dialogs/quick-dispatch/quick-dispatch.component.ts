@@ -49,7 +49,7 @@ export class QuickDispatchComponent implements OnInit {
           trackMode: null
         },
         productsConstraints: {
-          capacityMode: CapacityMode.TRUCK_LOAD,
+          capacityMode: null,
           productsData: [
             {
               product: {

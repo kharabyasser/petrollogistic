@@ -13,9 +13,25 @@ import { of } from "rxjs";
 export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponent {
 
   depots = [
-    { label: 'Depot #1', value: 'depot1' },
-    { label: 'Depot #2', value: 'depot2' }, 
-    { label: 'Depot #3', value: 'depot3' }, 
+    
+    { 
+      id: 1,
+      code: 'depot1', 
+      description: 'Depot #1', 
+      isActive: true
+    },
+    { 
+      id: 2,
+      code: 'depot2', 
+      description: 'Depot #2', 
+      isActive: true
+    }, 
+    { 
+      id: 3,
+      code: 'depot3',
+      description: 'Depot #3', 
+      isActive: true
+    }, 
   ];
 
   trackModes: SelectListItem[] = [
@@ -66,23 +82,31 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
   private setStartLocation(): FormlyFieldConfig {
     return {
       key: 'startLocation',
-      type: 'select',
+      type: FormlyTypes.SINGLE_SELECT,
       className: 'start-location',
       props: {
         label: 'Start location',
-        options: this.depots,
+        options: of(this.depots),
+        optionsLabel: 'CODE_DESCRIPTION',
+        selectedItemLabel: 'DESCRIPTION',
+        required: true,
+        showClear: true
       }
     };
   }
 
   private setReturnLocation(): FormlyFieldConfig {
     return {
-      key: 'endLocation',
-      type: 'select',
+      key: 'startLocation',
+      type: FormlyTypes.SINGLE_SELECT,
       className: 'end-location',
       props: {
         label: 'End location',
-        options: this.depots,
+        options: of(this.depots),
+        optionsLabel: 'CODE_DESCRIPTION',
+        selectedItemLabel: 'DESCRIPTION',
+        required: true,
+        showClear: true
       }
     };
   }

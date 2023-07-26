@@ -4,6 +4,7 @@ import { Component } from "@angular/core";
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { FormlyTypes } from "@petrologistic/core/frontend/formly";
 import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
+import { of } from "rxjs";
 
 @Component({
     selector: 'petrologistic-product-constraint-form',
@@ -12,10 +13,30 @@ import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/s
   })
 export class ProductConstraintFormComponent extends AbstactFormFieldConfigComponent {
   capacityModes = [
-    { label: 'Truck Load', value: 'truckLoad' },
-    { label: 'Full', value: 'full' },
-    { label: 'Empty',  value: 'empty' },
-    { label: 'Custom', value: 'custom' }
+    { 
+      id: 1,
+      description: 'Truck Load', 
+      code: 'truckLoad',
+      isActive: true
+    },
+    { 
+      id: 2,
+      description: 'Full', 
+      code: 'full',
+      isActive: true
+    },
+    { 
+      id: 3,
+      description: 'Empty', 
+      code: 'empty',
+      isActive: true
+    },
+    { 
+      id: 4,
+      description: 'Custom', 
+      code: 'custom',
+      isActive: true
+    }
   ];
 
   protected override getFieldGroupConfig(): FormlyFieldConfig[] {
@@ -28,11 +49,15 @@ export class ProductConstraintFormComponent extends AbstactFormFieldConfigCompon
   setCapacityMode(): FormlyFieldConfig {
     return {
       key: 'capacityMode',
-      type: 'select',
+      type: FormlyTypes.SINGLE_SELECT,
       className: 'capacity-mode',
       templateOptions: {
         label: 'Capacity Mode',
-        options: this.capacityModes
+        items$: of(this.capacityModes),
+        optionsLabel: 'CODE_DESCRIPTION',
+        selectedItemLabel: 'DESCRIPTION',
+        required: true,
+        showClear: true
       }
     }
   }
