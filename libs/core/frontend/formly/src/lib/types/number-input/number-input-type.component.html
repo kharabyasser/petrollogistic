@@ -1,0 +1,34 @@
+
+<span
+    class="input-wrapper p-fluid icon-suffix"
+    [class.p-input-icon-right]="props['iconSuffix'] || props['textIconSuffix']"
+>
+    <i *ngIf="props['iconSuffix']" [className]="'pi ' + props['iconSuffix']" ></i>
+    <p-inputNumber
+            class="p-component p-element w-full inputfield"
+            [inputStyleClass]="props['inputClassNames']"
+            [mode]="props['mode']"
+            [attr.data-testid]="key"
+            [attr.data-label-ele]="props['label']"
+            [formControl]='formControl'
+            [formlyAttributes]='field'
+            [placeholder]="props['placeholder'] || ''"
+            [useGrouping]="props['useGrouping']"
+            [minFractionDigits]="props['minFractionDigits' ]"
+            [maxFractionDigits]="props['maxFractionDigits']"
+            [showButtons]="props['showButtons']"
+            [prefix]="props['prefix']"
+            [suffix]="props['suffix']"
+            [readonly]="!!props['readonly']"
+            [maxlength]="maxInputLength"
+            [min]="props['allowInvalidInput'] ? $any(null) : props['min']"
+            [max]="props['allowInvalidInput'] ? $any(null) : props['max']"
+            incrementButtonClass="number-with-buttons"
+            decrementButtonClass="number-with-buttons"
+            (onBlur)="props.blur && props.blur(field, $event)"
+    ></p-inputNumber>
+    <span *ngIf="props['textIconSuffix'] && (formControl.value || !props.placeholder)" class="input-text-icon-suffix">{{ props['textIconSuffix'] }}</span>
+</span>
+
+
+

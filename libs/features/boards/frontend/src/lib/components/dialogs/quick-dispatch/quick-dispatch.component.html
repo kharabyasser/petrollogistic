@@ -1,10 +1,9 @@
-
-<form [formGroup]="form">
-    <formly-form
-      [fields]="fields"
-      [form]="form"
-      [model]="model"
-      [options]="options"
-    >
-    </formly-form>
-</form>
+<div>
+  <div class="constraints-container">
+    <form [formGroup]="form" class="__trucks">
+      <formly-form [fields]="fields" [form]="form" [model]="model" [options]="options">
+      </formly-form>
+    </form>
+    <petrologistic-quick-dispatch-table class="__tickets"></petrologistic-quick-dispatch-table>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+.icon-suffix {
+  width: 100%;
+  i {
+    font-size: 0.75rem !important;
+    margin-top: 0;
+    transform: translate(0, -50%);
+  }
+
+  .p-input-icon-left .p-input-icon-right {
+    width: 100% !important;
+  }
+}
+
+.inputfield {
+  border-radius: 0 !important;
+}

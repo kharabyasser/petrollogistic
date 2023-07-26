@@ -11,12 +11,15 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormlyWrappersEnum } from './wrappers/formly-wrapper';
 import { DefaultFormFieldWrapperComponent } from './wrappers/default-wrapper/default-form-field-wrapper.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { NumberInputTypeComponent } from './types/number-input/number-input-type.component';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   imports: [
     CommonModule,
     TooltipModule,
     NgSelectModule,
+    InputNumberModule,
     FormsModule,
     FormlyModule,
     ReactiveFormsModule,
@@ -37,6 +40,11 @@ import { TooltipModule } from 'primeng/tooltip';
           name: FormlyTypes.SINGLE_SELECT,
           component: SingleSelectTypeComponent,
           wrappers: [FormlyWrappersEnum.DEFAULT_WRAPPER]
+        },
+        {
+          name: FormlyTypes.NUMBER_INPUT,
+          component: NumberInputTypeComponent,
+          wrappers: [FormlyWrappersEnum.DEFAULT_WRAPPER]
         }
       ],
     }),
@@ -45,6 +53,7 @@ import { TooltipModule } from 'primeng/tooltip';
     SimpleRepeatingSectionComponent,
     SingleSelectTypeComponent,
     SelectItemComponent,
+    NumberInputTypeComponent,
     DefaultFormFieldWrapperComponent
   ]
 })

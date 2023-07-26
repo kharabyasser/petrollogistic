@@ -7,7 +7,7 @@
   <label
     *ngIf="to.label && to['hideLabel'] !== true"
     [for]="id"
-    class="sersi-label"
+    class="label"
   >
     {{ to.label }}
     <span
@@ -30,7 +30,7 @@
       [field]="field"
     ></formly-validation-message>
   </small>
-  <small *ngIf="props['hint'] && !showError" class="sersi-hint text-break-word">
+  <small *ngIf="props['hint'] && !showError" class="hint text-break-word">
     {{ props['hint'] }}
   </small>
 </div>

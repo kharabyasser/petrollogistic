@@ -70,8 +70,8 @@ export class ProductConstraintFormComponent extends AbstactFormFieldConfigCompon
         fieldGroup: [
           {
             key: 'load',
+            type: FormlyTypes.NUMBER_INPUT,
             className: 'products',
-            type: 'input',
             hooks: {
               onInit: (field: FormlyFieldConfig) => {
                 if (field.props) {
