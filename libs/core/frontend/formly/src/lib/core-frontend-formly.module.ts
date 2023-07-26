@@ -8,15 +8,26 @@ import { FormlyTypes } from './types/formly-types';
 import { SingleSelectTypeComponent } from './types/single-select/single-select-type.component';
 import { SelectItemComponent } from './types/select-item/select-item.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FormlyWrappersEnum } from './wrappers/formly-wrapper';
+import { DefaultFormFieldWrapperComponent } from './wrappers/default-wrapper/default-form-field-wrapper.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   imports: [
     CommonModule,
+    TooltipModule,
     NgSelectModule,
     FormsModule,
+    FormlyModule,
     ReactiveFormsModule,
     FormlyPrimeNGModule,
     FormlyModule.forRoot({
+      wrappers: [
+        {
+          name: FormlyWrappersEnum.DEFAULT_WRAPPER,
+          component: DefaultFormFieldWrapperComponent
+        },
+      ],
       types: [
         { 
           name: FormlyTypes.SIMPLE_REPEATING_SECTION, 
@@ -24,7 +35,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
         },
         {
           name: FormlyTypes.SINGLE_SELECT,
-          component: SingleSelectTypeComponent
+          component: SingleSelectTypeComponent,
+          wrappers: [FormlyWrappersEnum.DEFAULT_WRAPPER]
         }
       ],
     }),
@@ -32,7 +44,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
   declarations: [
     SimpleRepeatingSectionComponent,
     SingleSelectTypeComponent,
-    SelectItemComponent
+    SelectItemComponent,
+    DefaultFormFieldWrapperComponent
   ]
 })
 export class CoreFrontendFormlyModule {}
