@@ -12,28 +12,6 @@ import { of } from "rxjs";
   })
 export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponent {
 
-  depots = [
-    
-    { 
-      id: 1,
-      code: 'depot1', 
-      description: 'Depot #1', 
-      isActive: true
-    },
-    { 
-      id: 2,
-      code: 'depot2', 
-      description: 'Depot #2', 
-      isActive: true
-    }, 
-    { 
-      id: 3,
-      code: 'depot3',
-      description: 'Depot #3', 
-      isActive: true
-    }, 
-  ];
-
   trackModes: SelectListItem[] = [
     {
       id: '1',
@@ -55,6 +33,21 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
     }
   ];
 
+  locations: SelectListItem[] = [
+    {
+      id: '1',
+      code: 'TL',
+      description: 'Truck Location',
+      isActive: true
+     }, 
+     {
+      id: '2',
+      code: 'MDP',
+      description: 'Main Depot',
+      isActive: true
+     }, 
+  ];
+
   protected getFieldGroupConfig(): FormlyFieldConfig[] {
     return [
       this.setStartLocation(),
@@ -70,7 +63,7 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
       className: 'track-mode',
       props: {
         label: 'Track mode',
-        items$: of(this.trackModes),
+        items: this.trackModes,
         optionsLabel: 'CODE_DESCRIPTION',
         selectedItemLabel: 'DESCRIPTION',
         required: true,
@@ -86,7 +79,7 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
       className: 'start-location',
       props: {
         label: 'Start location',
-        options: of(this.depots),
+        items: this.locations,
         optionsLabel: 'CODE_DESCRIPTION',
         selectedItemLabel: 'DESCRIPTION',
         required: true,
@@ -102,7 +95,7 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
       className: 'end-location',
       props: {
         label: 'End location',
-        options: of(this.depots),
+        items: this.locations,
         optionsLabel: 'CODE_DESCRIPTION',
         selectedItemLabel: 'DESCRIPTION',
         required: true,

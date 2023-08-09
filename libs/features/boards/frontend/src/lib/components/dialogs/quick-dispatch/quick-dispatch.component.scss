@@ -8,7 +8,8 @@
   }
   & .__trucks {
     width: 20vw;
-    margin-right: 0;
+    margin: 0;
+    overflow-y: scroll;
   }
 }
 

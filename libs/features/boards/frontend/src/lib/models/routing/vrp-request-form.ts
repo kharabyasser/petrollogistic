@@ -5,6 +5,7 @@ import { CapacityMode } from './enums/capacity-mode';
 import { TrackMode } from './enums/track-mode';
 
 export class VrpRequestForm {
+  truckId: number = 0;
   truckName: string = '';
   truckNumber: number = 0;
   ticketsCount: number = 0;
@@ -33,6 +34,7 @@ export class TicketConstraint {
 export class ProductConstraintData {
   product?: Product;
   load: number = 0;
+  capacity: number = 0;
 }
 
 export class TicketConstraintInput {
