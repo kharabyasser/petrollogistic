@@ -1,9 +1,10 @@
 import { Component } from "@angular/core";
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { FormlyTypes } from "@petrologistic/core/frontend/formly";
-import { SelectListItem } from "libs/core/frontend/formly/src/lib/interfaces/select-list-item";
+import { getSelectListFromEnum } from "@petrologistic/core/frontend/helpers";
+import { SelectListItem } from "@petrologistic/core/frontend/formly";
 import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
-import { of } from "rxjs";
+import { KnownLocation } from "libs/features/boards/frontend/src/lib/models/routing/vrp-request-form";
 
 @Component({
     selector: 'petrologistic-truck-constraint-form',
@@ -77,19 +78,15 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
       key: 'startLocation',
       type: FormlyTypes.SINGLE_SELECT,
       className: 'start-location',
+      defaultValue: KnownLocation.VehicleLocation,
       props: {
         label: 'Start location',
-        items: this.locations,
-        optionsLabel: 'CODE_DESCRIPTION',
-        selectedItemLabel: 'DESCRIPTION',
+        items: getSelectListFromEnum(KnownLocation),
+        optionsLabel: 'CODE',
+        selectedItemLabel: 'CODE',
         required: true,
-        showClear: true
-      },
-      // hooks: {
-      //   onInit: (field: FormlyFieldConfig): void => {
-      //     field.formControl?.setValue(this.locations[0]);
-      //   }
-      // }
+        showClear: false
+      }
     };
   }
 

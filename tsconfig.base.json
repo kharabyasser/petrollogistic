@@ -30,6 +30,9 @@
       "@petrologistic/core/frontend/formly": [
         "libs/core/frontend/formly/src/index.ts"
       ],
+      "@petrologistic/core/frontend/helpers": [
+        "libs/core/frontend/helpers/src/index.ts"
+      ],
       "@petrologistic/core/frontend/osiris-pipes": [
         "libs/core/frontend/osiris-pipes/src/index.ts"
       ],
