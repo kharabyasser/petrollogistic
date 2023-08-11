@@ -1,0 +1,24 @@
+.truck-constraints {
+  display: grid;
+  width: 100%;
+  grid-template-areas:
+    'track track track'
+    'start start start'
+    'end end end';
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 1rem;
+  grid-template-rows: repeat(3, 60px);
+  row-gap: 15px;
+}
+
+.track-mode {
+  grid-area: track;
+}
+
+.start-location {
+  grid-area: start;
+}
+
+.end-location {
+  grid-area: end;
+}

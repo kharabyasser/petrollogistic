@@ -34,6 +34,7 @@ import { StoreModule } from '@ngrx/store';
 
 import { DeliveryRequestService } from './services/deliveryrequest-service';
 import { CoreFrontendApolloModule } from '@petrologistic/core/frontend/apollo';
+import { CoreFrontendFormlyModule } from '@petrologistic/core/frontend/formly';
 import { CoreFrontendPPanelChildModule } from '@petrologistic/core/frontend/p-panel-child';
 import { CoreFrontendOsirisPipesModule } from '@petrologistic/core/frontend/osiris-pipes';
 import { EffectsModule } from '@ngrx/effects';
@@ -61,6 +62,9 @@ import { FormlyModule } from '@ngx-formly/core';
 import { TruckConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/truck-constraints/truck-constraint-form.component';
 import { ProductConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/product-constraints/product-constraint-form.component';
 import { TicketConstraintFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/ticket-contraints/ticket-constraint-form.component';
+import { CommonModule } from '@angular/common';
+import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
+import { TicketInputFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/ticket-contraints/ticket-input-form/ticket-input-form.component';
 
 @NgModule({
   imports: [
@@ -94,7 +98,12 @@ import { TicketConstraintFormComponent } from './components/dialogs/quick-dispat
     InputNumberModule,
     CalendarModule,
     TimelineModule,
-    FormlyModule.forRoot(),
+    CommonModule,
+    CoreFrontendFormlyModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FormlyPrimeNGModule,
+    FormlyModule,
     StoreModule.forFeature('DeliveryRequests', deliveryRequestsReducer),
     EffectsModule.forFeature([DeliveryRequestsEffect]),
     StoreModule.forFeature('Trucks', trucksReducer),
@@ -109,12 +118,12 @@ import { TicketConstraintFormComponent } from './components/dialogs/quick-dispat
     MapsComponent,
     QuickDispatchComponent,
     QuickDispatchTruckComponent,
+    TicketInputFormComponent,
     QuickDispatchTableComponent,
     DeliverySettingsComponent,
     TruckConstraintFormComponent,
     ProductConstraintFormComponent,
     TicketConstraintFormComponent,
-    ReactiveFormsModule,
   ],
   exports: [BoardsContainerComponent],
   providers: [

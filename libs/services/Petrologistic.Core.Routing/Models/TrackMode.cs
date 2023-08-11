@@ -1,4 +1,4 @@
-﻿public enum TrackMode
+public enum TrackMode
 {
   Default = 0,
   RoundTrip = 1,

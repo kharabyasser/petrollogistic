@@ -6,7 +6,7 @@ namespace Petrologistic.Core.Persistence.Lib.Models;
 
 public class Container : BaseModel
 {
-  public int ContainerNumber { get; set; } 
+  public int ContainerNumber { get; set; }
   public GeoCoordinates Coordinates { get; set; } = default!;
   public double Capacity { get; set; }
   public double IdealDeliveryQuantity { get; set; }
@@ -22,7 +22,7 @@ public class Container : BaseModel
   /// Ex: barcode.
   /// </summary>
   public string IdentificationTag { get; set; } = default!;
-  public string AlternativeTag{ get; set; } = default!;
+  public string AlternativeTag { get; set; } = default!;
   public Product Product { get; set; } = default!;
   public double RequestedAmount { get; set; }
   public UnitOfMeasurement RequestedAmountUnit { get; set; }

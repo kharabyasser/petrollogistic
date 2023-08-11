@@ -1,0 +1,117 @@
+:host ::ng-deep .p-panel .p-panel-header {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.truck__panel {
+  width: 29rem;
+  overflow-y: auto;
+  max-height: var(--height, 100vh);
+  padding-bottom: 5rem;
+  & .header__content {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.card {
+  border-radius: 10px;
+  padding-left: 0;
+  padding-right: 1rem;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+.card__statusBar {
+  width: 5px;
+  background-color: orange;
+  margin-right: 1rem;
+}
+
+.card__body {
+  width: 100%;
+}
+
+.card__header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: gray;
+  & .__status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & .__icon {
+      background-color: orange;
+      width: 8px;
+      height: 8px;
+      border-radius: 100%;
+      margin-right: 5px;
+    }
+  }
+}
+
+.card__content {
+  width: 100%;
+  padding-bottom: 0.5rem;
+  & .__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: gray;
+  }
+}
+
+:host ::ng-deep .p-panel {
+  margin-bottom: 5px;
+}
+
+:host ::ng-deep .panel-button {
+  width: 25px;
+  height: 25px !important;
+  margin-right: 5px;
+}
+
+.header__content {
+  padding-bottom: 5px;
+  & .__title {
+    margin: 8px;
+  }
+  & .__chip {
+    margin: 2px;
+  }
+}
+
+.constraints-form {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto auto;
+}
+
+.products-form {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.return-to {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.return-to-selector {
+  grid-column-start: 2;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.ato-mode {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}

@@ -1,0 +1,36 @@
+<div
+  class="p-field"
+  [ngClass]="props['wrapperClass']"
+  [class.field-error]="showError"
+  [pTooltip]="showError && props['showErrInTooltip'] ? (validationMessage?.errorMessage$ | async) : $any(null)"
+>
+  <label
+    *ngIf="to.label && to['hideLabel'] !== true"
+    [for]="id"
+    class="label"
+  >
+    {{ to.label }}
+    <span
+      *ngIf="to.required && to['hideRequiredMarker'] !== true"
+      style="color: red"
+      aria-hidden="true"
+      >*</span
+    >
+    <i *ngIf="props['helpText'] as helpText"
+       class="pi pi-question-circle help-circle"
+       [pTooltip]="helpText">
+    </i>
+  </label>
+
+  <ng-container #fieldComponent></ng-container>
+  <small class="p-error" [class.hidden]="!showError || props['showErrInTooltip']">
+    <formly-validation-message
+      #validationMessage
+      class="ui-message-text"
+      [field]="field"
+    ></formly-validation-message>
+  </small>
+  <small *ngIf="props['hint'] && !showError" class="hint text-break-word">
+    {{ props['hint'] }}
+  </small>
+</div>

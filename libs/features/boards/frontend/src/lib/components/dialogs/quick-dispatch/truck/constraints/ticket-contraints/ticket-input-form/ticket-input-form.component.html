@@ -1,0 +1,14 @@
+<div class="flex align-items-stretch card">
+    <div class="card__statusBar"></div>
+    <p-checkbox [(ngModel)]="model.isOptimize" [binary]="true"></p-checkbox>
+    <div class="card__body">
+        <div class="card__header">
+            <p>Ticket {{ model.ticketNumber }}</p>
+            <p>{{ model.demand }}L of {{ model.productName }}.</p>
+            <div class="__status">
+                <div class="__icon"></div>
+                <p>{{ model.status }}</p>
+            </div>
+        </div>
+    </div>
+</div>

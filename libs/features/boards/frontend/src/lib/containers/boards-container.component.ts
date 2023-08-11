@@ -52,6 +52,8 @@ export class BoardsContainerComponent {
     private mapsFacade: MapsFacade,
     private dialogService: DialogService
   ) {
+    this.trucksFacade.loadTrucks();
+
     this.deliveriesFacade.selectedRequests$.subscribe(
       (x) => (this.detailsState = x.length > 0 ? 'in' : 'out')
     );

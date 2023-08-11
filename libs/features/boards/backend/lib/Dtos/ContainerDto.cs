@@ -11,6 +11,6 @@ public class ContainerDto
   public ProductDto Product { get; set; } = default!;
   public double RequestedAmount { get; set; }
   public UnitOfMeasurement RequestedAmountUnit { get; set; }
-  public double Latitude { get;set; }
-  public double longitude { get;set; }
+  public double Latitude { get; set; }
+  public double longitude { get; set; }
 }

@@ -1,9 +1,12 @@
-  export interface VrpRequest {
-    jobs: Job[];
-    reloads?: Reload[];
-    vehicles: Vehicle[];
-    depot?: Coordinate;
-  }
+import { Coordinate } from "../maps/coordinate";
+import { TrackMode } from "./enums/track-mode";
+
+export interface VrpRequestDto {
+  jobs: Job[];
+  reloads?: Reload[];
+  vehicles: Vehicle[];
+  depot?: Coordinate;
+}
 
 export interface Job {
   id: number;
@@ -28,15 +31,4 @@ export interface Vehicle {
   maxDrivingDistance?: number;
   maxDrivingTime?: number;
   averageDrivingSpeed?: number;
-}
-
-export interface Coordinate {
-  latitude: number;
-  longitude: number;
-}
-
-export enum TrackMode {
-  LastVisit = "LastVisit",
-  RoundTrip = "RoundTrip",
-  Custom = "Custom",
 }

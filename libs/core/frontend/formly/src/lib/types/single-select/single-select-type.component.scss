@@ -1,0 +1,19 @@
+.ng-select .ng-select-container {
+  border-radius: 2px;
+}
+
+.ng-select.ng-select-disabled > .ng-select-container {
+  background-color: #FAFAFA;
+  opacity: 0.6;
+}
+
+osiris-single-select {
+  p-dropdown > div.p-dropdown.p-component {
+    width: 100%;
+  }
+  .text-tags {
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+}

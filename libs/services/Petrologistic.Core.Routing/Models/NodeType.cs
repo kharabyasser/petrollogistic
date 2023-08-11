@@ -1,4 +1,4 @@
-﻿public enum NodeType
+public enum NodeType
 {
   Default = 0,
   Depot = 1,

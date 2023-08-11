@@ -1,0 +1,23 @@
+  <ng-select
+  class="osiris-single-select ng-select-control"
+  [bindValue]="props['bindValue']"
+  [bindLabel]="props['optionsLabel']"
+  [virtualScroll]="props['virtualScroll']"
+  [items]="props['showInactiveItems'] ? (items$ | async)! : (activeItems$ | async)!"
+  [formControl]="formControl"
+  [formlyAttributes]="field"
+  [readonly]="props['readonly'] ?? false"
+  [placeholder]="props.placeholder || ''"
+  [clearable]="props['showClear']"
+  [searchFn]="customSearchFn"
+>
+  <!-- Selected value template -->
+  <ng-template ng-label-tmp let-item="item">
+    <select-item [item]="item" [options]="allItems ?? []" [viewMode]="props['selectedItemLabel']" />
+  </ng-template>
+
+  <!-- Option item template -->
+  <ng-template ng-option-tmp let-item="item">
+    <select-item [disabled]="!!props.disabled" [item]="item" [viewMode]="props['optionsLabel']" />
+  </ng-template>
+</ng-select>

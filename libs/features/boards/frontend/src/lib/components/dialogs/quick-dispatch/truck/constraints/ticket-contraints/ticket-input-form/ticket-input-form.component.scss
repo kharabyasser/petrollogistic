@@ -1,0 +1,38 @@
+.card {
+  border-radius: 10px;
+  padding-left: 0;
+  padding-right: 1rem;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+.card__statusBar {
+  width: 5px;
+  background-color: orange;
+  margin-right: 1rem;
+}
+
+.card__body {
+  width: 100%;
+}
+
+.card__header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: gray;
+  & .__status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & .__icon {
+      background-color: orange;
+      width: 8px;
+      height: 8px;
+      border-radius: 100%;
+      margin-right: 5px;
+    }
+  }
+}
