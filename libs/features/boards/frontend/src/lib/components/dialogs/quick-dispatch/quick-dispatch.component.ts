@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VrpService } from '../../../services/vrp-service';
-import { Job, Vehicle } from '../../../models/routing/vrp-request';
+import { Job } from '../../../models/routing/vrp-request';
 import { MapsFacade } from '../../../+state/maps/maps-facade';
-import { tap, switchMap, map } from 'rxjs';
 import { RoutingService } from '../../../services/routing-service';
 import { TrucksFacade } from '../../../+state/trucks/trucks-facade';
 import { Feature, GeoJsonProperties, Point } from 'geojson';
@@ -10,10 +9,13 @@ import { VrpAssignment } from '../../../models/routing/vrp-assignment';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { QuickDispatchTruckComponent } from './truck/quick-dispatch.truck';
-import { VrpRequestForm } from '../../../models/routing/vrp-request-form';
+import { KnownLocation, VrpRequestForm } from '../../../models/routing/vrp-request-form';
 import { FormlyTypes } from '@petrologistic/core/frontend/formly';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TrackMode } from '../../../models/routing/enums/track-mode';
+import { map, tap } from 'rxjs';
+import { Truck } from '../../../domain/truck';
+import { Coordinate } from '../../../models/maps/coordinate';
 
 @UntilDestroy()
 @Component({
@@ -27,8 +29,12 @@ export class QuickDispatchComponent implements OnInit {
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [];
 
+  optimizationJobs: Job[] = [];
+
   optimizationStep: 'configuration' | 'result' | 'validation' = 'configuration';
   vrpResults: VrpAssignment | null = null;
+
+  trucks: Truck[] = [];
 
   constructor(
     private vrpService: VrpService,
@@ -38,10 +44,11 @@ export class QuickDispatchComponent implements OnInit {
   ) {
     this.truckFacade.trucks$
       .pipe(
+        tap(trucks => this.trucks = trucks),
         map((trucks) =>
           trucks.map((t) => {
             return {
-              truckId: t.id,
+              truckId: t.number,
               truckName: t.name,
               truckNumber: t.number,
               ticketsCount: 0,
@@ -63,6 +70,9 @@ export class QuickDispatchComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
+
+      this.mapsFacade.optimizationJobs$.subscribe(jobs => 
+        this.optimizationJobs = jobs)
   }
 
   ngOnInit(): void {
@@ -96,14 +106,24 @@ export class QuickDispatchComponent implements OnInit {
 
     this.vrpService
       .optimize({
-        jobs: deliveries,
+        jobs: this.optimizationJobs,
         vehicles: this.model.map(x => {
+          const currentTruck = this.trucks.find(t => t.number === x.truckId);
+
+          const startLocation = x.truckConstraints?.startLocation === KnownLocation.VehicleLocation ?
+            new Coordinate(currentTruck?.longitude ?? 0, currentTruck?.latitude ?? 0) : 
+            x.truckConstraints?.startLocationCoordinate;
+
+          const endLocation = x.truckConstraints?.endLocation === KnownLocation.VehicleLocation ?
+            new Coordinate(currentTruck?.longitude ?? 0, currentTruck?.latitude ?? 0) : 
+            x.truckConstraints?.endLocationCoordinate;
+
           return {
             id: x.truckId,
             capacity: x.productsConstraints?.productsData?.map(p => p.capacity),
             initialLoad: x.productsConstraints?.productsData?.map(p => p.load),
-            start: x.truckConstraints?.startLocation,
-            end: x.truckConstraints?.endLocation,
+            start: startLocation,
+            end: endLocation,
             trackMode: x.truckConstraints!.trackMode ?? TrackMode.ROUND_TRIP,
           }
         }),

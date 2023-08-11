@@ -74,7 +74,6 @@ export class ProductConstraintFormComponent extends AbstactFormFieldConfigCompon
             className: 'products',
             hooks: {
               onInit: (field: FormlyFieldConfig) => {
-                debugger
                 if (field.props) {
                   field.props['label'] = field.model.product.name;
                   field.props['suffix'] = `/${field.model.capacity}`;

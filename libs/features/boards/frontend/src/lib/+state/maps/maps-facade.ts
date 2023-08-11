@@ -6,7 +6,6 @@ import {
   markersOnMapSelector,
   centerOnPositionSelector,
   isochroneDataSelector,
-  optimizationVehiculeSelector,
   optimizationJobsSelector,
   routesSelector,
 } from './maps-selectors';
@@ -21,7 +20,6 @@ export class MapsFacade {
   centerOnPosition$: Observable<Coordinate | null>;
   isochroneData$: Observable<GeoJSON.GeoJSON | null>;
   routes$: Observable<GeoJSON.GeoJSON[]>;
-  optimizationTrucks$: Observable<Vehicle[]>;
   optimizationJobs$: Observable<Job[]>;
 
   constructor(private store: Store) {
@@ -32,8 +30,6 @@ export class MapsFacade {
     this.isochroneData$ = this.store.pipe(select(isochroneDataSelector));
 
     this.routes$ = this.store.pipe(select(routesSelector));
-
-    this.optimizationTrucks$ = this.store.pipe(select(optimizationVehiculeSelector));
 
     this.optimizationJobs$ = this.store.pipe(select(optimizationJobsSelector));
   }
@@ -54,20 +50,8 @@ export class MapsFacade {
     this.store.dispatch(MapActions.addRoute({ data: routesData }));
   }
 
-  addOptimizationVehicule(vehicule: Vehicle) {
-    this.store.dispatch(
-      MapActions.addOptimizationVehicule({ data: vehicule })
-    );
-  }
-
   addOptimizationJob(job: Job) {
     this.store.dispatch(MapActions.addOptimizationJob({ data: job }));
-  }
-
-  removeOptimizationVehicule(vehiculeId: number) {
-    this.store.dispatch(
-      MapActions.removeOptimizationVehicule({ data: vehiculeId })
-    );
   }
 
   removeOptimizationJob(jobId: number) {

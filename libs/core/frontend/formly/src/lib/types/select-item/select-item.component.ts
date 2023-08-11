@@ -10,7 +10,6 @@ import { SelectOptionById } from '../../helpers/select-options-by-id.helper';
 export class SelectItemComponent implements OnInit {
 
   ngOnInit(): void {
-    debugger
   }
 
   @Input() viewMode: SelectListItemViewMode = SelectListItemViewMode.CODE;

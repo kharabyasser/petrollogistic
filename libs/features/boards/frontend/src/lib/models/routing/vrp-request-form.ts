@@ -17,8 +17,10 @@ export class VrpRequestForm {
 
 export class TruckConstraint {
   trackMode: TrackMode | null = null;
-  startLocation?: Coordinate;
-  endLocation?: Coordinate;
+  startLocation?: KnownLocation = KnownLocation.VehicleLocation;
+  startLocationCoordinate? : Coordinate;
+  endLocation?: KnownLocation = KnownLocation.VehicleLocation;
+  endLocationCoordinate?: Coordinate;
 }
 
 export class ProductConstraint {
@@ -49,4 +51,11 @@ export enum TicketSelectionMode {
   All = 1,
   None = 2,
   Custom = 3,
+}
+
+// TO.DO: move to reference data.
+export enum KnownLocation {
+  VehicleLocation = 1,
+  Depot = 2,
+  Custom = 3
 }

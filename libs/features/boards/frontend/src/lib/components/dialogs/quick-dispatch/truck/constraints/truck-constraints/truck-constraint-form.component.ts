@@ -84,7 +84,12 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
         selectedItemLabel: 'DESCRIPTION',
         required: true,
         showClear: true
-      }
+      },
+      // hooks: {
+      //   onInit: (field: FormlyFieldConfig): void => {
+      //     field.formControl?.setValue(this.locations[0]);
+      //   }
+      // }
     };
   }
 

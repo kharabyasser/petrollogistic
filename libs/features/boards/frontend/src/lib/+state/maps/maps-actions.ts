@@ -33,16 +33,6 @@ export const addRoute = createAction(
   props<{ data: GeoJSON.GeoJSON }>()
 );
 
-export const addOptimizationVehicule = createAction(
-  '[Map] Add Optimization Vehicule',
-  props<{ data: Vehicle }>()
-);
-
-export const removeOptimizationVehicule = createAction(
-  '[Map] Remove Optimization Vehicule',
-  props<{ data: number }>()
-);
-
 export const addOptimizationJob = createAction(
   '[Map] Add Optimization Jobs',
   props<{ data: Job }>()
