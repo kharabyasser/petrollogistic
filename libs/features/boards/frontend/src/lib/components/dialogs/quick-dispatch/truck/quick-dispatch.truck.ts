@@ -6,7 +6,6 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Observable } from 'rxjs';
 import { TruckConstraintFormComponent } from './constraints/truck-constraints/truck-constraint-form.component';
 import { ProductConstraintFormComponent } from './constraints/product-constraints/product-constraint-form.component';
-import { TrackMode } from '../../../../models/routing/enums/track-mode';
 import { TicketConstraintFormComponent } from './constraints/ticket-contraints/ticket-constraint-form.component';
 import { AbstactFormFieldConfigComponent } from '../../../../shared/form-field-config.component';
 

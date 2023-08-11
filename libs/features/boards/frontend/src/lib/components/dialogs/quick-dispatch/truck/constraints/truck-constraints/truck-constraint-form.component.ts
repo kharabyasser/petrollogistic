@@ -1,10 +1,11 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Component } from "@angular/core";
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { FormlyTypes } from "@petrologistic/core/frontend/formly";
 import { getSelectListFromEnum } from "@petrologistic/core/frontend/helpers";
-import { SelectListItem } from "@petrologistic/core/frontend/formly";
 import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
 import { KnownLocation } from "libs/features/boards/frontend/src/lib/models/routing/vrp-request-form";
+import { TrackMode } from "libs/features/boards/frontend/src/lib/models/routing/enums/track-mode";
 
 @Component({
     selector: 'petrologistic-truck-constraint-form',
@@ -12,42 +13,6 @@ import { KnownLocation } from "libs/features/boards/frontend/src/lib/models/rout
     styleUrls: ['./truck-constraint-form.component.scss'],
   })
 export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponent {
-
-  trackModes: SelectListItem[] = [
-    {
-      id: '1',
-      code: 'RT',
-      description: 'Round Trip',
-      isActive: true
-     }, 
-    { 
-      id: '2',
-      code: 'SAL',
-      description: 'Same as Last', 
-      isActive: true
-    },
-    { 
-      id: '3',
-      code: 'RTD', 
-      description: 'Return to Depot', 
-      isActive: true
-    }
-  ];
-
-  locations: SelectListItem[] = [
-    {
-      id: '1',
-      code: 'TL',
-      description: 'Truck Location',
-      isActive: true
-     }, 
-     {
-      id: '2',
-      code: 'MDP',
-      description: 'Main Depot',
-      isActive: true
-     }, 
-  ];
 
   protected getFieldGroupConfig(): FormlyFieldConfig[] {
     return [
@@ -62,13 +27,14 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
       key: 'trackMode',
       type: FormlyTypes.SINGLE_SELECT,
       className: 'track-mode',
+      defaultValue: TrackMode.ROUND_TRIP,
       props: {
         label: 'Track mode',
-        items: this.trackModes,
-        optionsLabel: 'CODE_DESCRIPTION',
-        selectedItemLabel: 'DESCRIPTION',
+        items: getSelectListFromEnum(TrackMode),
+        optionsLabel: 'CODE',
+        selectedItemLabel: 'CODE',
         required: true,
-        showClear: true
+        showClear: false
       },
     };
   }
@@ -97,11 +63,11 @@ export class TruckConstraintFormComponent extends AbstactFormFieldConfigComponen
       className: 'end-location',
       props: {
         label: 'End location',
-        items: this.locations,
-        optionsLabel: 'CODE_DESCRIPTION',
-        selectedItemLabel: 'DESCRIPTION',
+        items: getSelectListFromEnum(KnownLocation),
+        optionsLabel: 'CODE',
+        selectedItemLabel: 'CODE',
         required: true,
-        showClear: true
+        showClear: false
       }
     };
   }

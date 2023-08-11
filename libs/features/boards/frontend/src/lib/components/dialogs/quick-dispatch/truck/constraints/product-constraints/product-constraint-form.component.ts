@@ -1,8 +1,9 @@
-
-
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Component } from "@angular/core";
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { FormlyTypes } from "@petrologistic/core/frontend/formly";
+import { getSelectListFromEnum } from "@petrologistic/core/frontend/helpers";
+import { CapacityMode } from "libs/features/boards/frontend/src/lib/models/routing/enums/capacity-mode";
 import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
 import { of } from "rxjs";
 
@@ -12,33 +13,6 @@ import { of } from "rxjs";
     styleUrls: ['./product-constraint-form.component.scss'],
   })
 export class ProductConstraintFormComponent extends AbstactFormFieldConfigComponent {
-  capacityModes = [
-    { 
-      id: 1,
-      description: 'Truck Load', 
-      code: 'truckLoad',
-      isActive: true
-    },
-    { 
-      id: 2,
-      description: 'Full', 
-      code: 'full',
-      isActive: true
-    },
-    { 
-      id: 3,
-      description: 'Empty', 
-      code: 'empty',
-      isActive: true
-    },
-    { 
-      id: 4,
-      description: 'Custom', 
-      code: 'custom',
-      isActive: true
-    }
-  ];
-
   protected override getFieldGroupConfig(): FormlyFieldConfig[] {
     return [
       this.setCapacityMode(),
@@ -51,13 +25,14 @@ export class ProductConstraintFormComponent extends AbstactFormFieldConfigCompon
       key: 'capacityMode',
       type: FormlyTypes.SINGLE_SELECT,
       className: 'capacity-mode',
+      defaultValue: CapacityMode.TRUCK_LOAD,
       templateOptions: {
         label: 'Capacity Mode',
-        items$: of(this.capacityModes),
-        optionsLabel: 'CODE_DESCRIPTION',
-        selectedItemLabel: 'DESCRIPTION',
+        items: getSelectListFromEnum(CapacityMode),
+        optionsLabel: 'CODE',
+        selectedItemLabel: 'CODE',
         required: true,
-        showClear: true
+        showClear: false
       }
     }
   }
