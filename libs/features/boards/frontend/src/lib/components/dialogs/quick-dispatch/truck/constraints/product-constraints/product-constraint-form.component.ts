@@ -5,7 +5,6 @@ import { FormlyTypes } from "@petrologistic/core/frontend/formly";
 import { getSelectListFromEnum } from "@petrologistic/core/frontend/helpers";
 import { CapacityMode } from "libs/features/boards/frontend/src/lib/models/routing/enums/capacity-mode";
 import { AbstactFormFieldConfigComponent } from "libs/features/boards/frontend/src/lib/shared/form-field-config.component";
-import { of } from "rxjs";
 
 @Component({
     selector: 'petrologistic-product-constraint-form',
