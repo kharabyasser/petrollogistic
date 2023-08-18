@@ -6,12 +6,10 @@ import {
   markersOnMapSelector,
   centerOnPositionSelector,
   isochroneDataSelector,
-  optimizationJobsSelector,
   routesSelector,
 } from './maps-selectors';
 
 import * as MapActions from './maps-actions';
-import { Job, Vehicle } from '../../models/routing/vrp-request';
 import { Feature, GeoJsonProperties, Point } from 'geojson';
 
 @Injectable()
@@ -20,7 +18,6 @@ export class MapsFacade {
   centerOnPosition$: Observable<Coordinate | null>;
   isochroneData$: Observable<GeoJSON.GeoJSON | null>;
   routes$: Observable<GeoJSON.GeoJSON[]>;
-  optimizationJobs$: Observable<Job[]>;
 
   constructor(private store: Store) {
     this.markersOnMap$ = this.store.pipe(select(markersOnMapSelector));
@@ -30,8 +27,6 @@ export class MapsFacade {
     this.isochroneData$ = this.store.pipe(select(isochroneDataSelector));
 
     this.routes$ = this.store.pipe(select(routesSelector));
-
-    this.optimizationJobs$ = this.store.pipe(select(optimizationJobsSelector));
   }
 
   addMarkers(markers: Feature<Point, GeoJsonProperties>[]) {
@@ -48,14 +43,6 @@ export class MapsFacade {
 
   addRoute(routesData: GeoJSON.GeoJSON) {
     this.store.dispatch(MapActions.addRoute({ data: routesData }));
-  }
-
-  addOptimizationJob(job: Job) {
-    this.store.dispatch(MapActions.addOptimizationJob({ data: job }));
-  }
-
-  removeOptimizationJob(jobId: number) {
-    this.store.dispatch(MapActions.removeOptimizationJob({ data: jobId }));
   }
 
   centerOn(location: Coordinate) {

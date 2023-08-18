@@ -13,6 +13,8 @@ import { MapMarker } from '../../../../models/maps/map-marker';
 import { Coordinate } from '../../../../models/maps/coordinate';
 import { TrucksFacade } from '../../../../+state/trucks/trucks-facade';
 import { Feature, GeoJsonProperties, Point } from 'geojson';
+import { OptimizationFacade } from '../../../../+state/optimization/optimization-facade';
+import { Product } from '../../../../domain/product';
 
 @Component({
   selector: 'petrologistic-quick-dispatch-table',
@@ -35,13 +37,20 @@ export class QuickDispatchTableComponent implements OnInit {
   tagFilterModeOptions: SelectItem[] = [];
   accountFilterModeOptions: SelectItem[] = [];
 
+  optimizationProds: Product[] = [];
+
   constructor(
     private filterService: FilterService,
     private deliveryRequestsFacade: DeliveryRequestsFacade,
     private dialogService: DialogService,
     private mapsFacade: MapsFacade,
-    private trucksFacade: TrucksFacade
+    private optimizationFacade: OptimizationFacade,
+    private trucksFacade: TrucksFacade,
   ) {
+    this.optimizationFacade.optimizationProducts$.subscribe(
+      (products) => (this.optimizationProds = products),
+    );
+
     this.deliveryRequests$ = this.deliveryRequestsFacade.deliveryRequests$.pipe(
       map((reqs) =>
         reqs
@@ -49,11 +58,11 @@ export class QuickDispatchTableComponent implements OnInit {
             ...item,
             lowestContainer: item.destinationContainers.reduce(
               (prev: Container, curr: Container) =>
-                prev?.currentPercentage < curr.currentPercentage ? prev : curr
+                prev?.currentPercentage < curr.currentPercentage ? prev : curr,
             ),
           }))
-          .filter((req) => req.dispatchStatus.toString() === 'PENDING')
-      )
+          .filter((req) => req.dispatchStatus.toString() === 'PENDING'),
+      ),
     );
 
     this.deliveryRequests$.subscribe((reqs) => {
@@ -70,10 +79,10 @@ export class QuickDispatchTableComponent implements OnInit {
               new MapMarker(
                 new Coordinate(d.longitude, d.latitude),
                 '../assets/truck.png',
-                '#000000'
-              )
-          )
-        )
+                '#000000',
+              ),
+          ),
+        ),
       )
       .subscribe((markers) => {
         this.trucksMarkers = markers;
@@ -129,7 +138,7 @@ export class QuickDispatchTableComponent implements OnInit {
         }
 
         return value.name.toLowerCase().includes(filter.toLowerCase());
-      }
+      },
     );
 
     this.filterService.register(
@@ -152,7 +161,7 @@ export class QuickDispatchTableComponent implements OnInit {
           value.address.postalCode;
 
         return address.toLowerCase().includes(filter.toLowerCase());
-      }
+      },
     );
 
     this.filterService.register(
@@ -169,7 +178,7 @@ export class QuickDispatchTableComponent implements OnInit {
         const phone = value.phoneNumber;
 
         return phone.toLowerCase().includes(filter.toLowerCase());
-      }
+      },
     );
 
     this.accountFilterModeOptions = [
@@ -206,17 +215,19 @@ export class QuickDispatchTableComponent implements OnInit {
         .pipe(
           map((requests) =>
             requests.map((request) =>
-              this.mapsFacade.removeOptimizationJob(request.purchaseOrder)
-            )
-          )
+              this.optimizationFacade.removeOptimizationJob(
+                request.purchaseOrder,
+              ),
+            ),
+          ),
         )
         .subscribe();
     } else {
       this.deliveryRequests$
         .pipe(
           map((requests) =>
-            requests.map((request) => this.addToOptimizationJobs(request))
-          )
+            requests.map((request) => this.addToOptimizationJobs(request)),
+          ),
         )
         .subscribe();
     }
@@ -225,7 +236,7 @@ export class QuickDispatchTableComponent implements OnInit {
   }
 
   onRowUnselect(event: any) {
-    this.mapsFacade.removeOptimizationJob(event.data.id);
+    this.optimizationFacade.removeOptimizationJob(event.data.id);
     this.updateSelectedOnMap();
   }
 
@@ -238,14 +249,37 @@ export class QuickDispatchTableComponent implements OnInit {
   }
 
   addToOptimizationJobs(request: DeliveryRequest) {
-    this.mapsFacade.addOptimizationJob({
+    const demands = [this.optimizationProds.length];
+
+    for (let i = 0; i < this.optimizationProds.length; i++) {
+      demands[i] = 0;
+    }
+
+    request.destinationContainers?.forEach((c) => {
+      debugger;
+      const index = this.optimizationProds.findIndex(
+        (p) => p.number === c.product?.number,
+      );
+
+      // -1 means product is in demand but not provided but vehicles.
+      // in this scenario we are ignoring that product.
+      if (index >= 0) {
+        demands[index] = demands[index]
+          ? demands[index] + c.requestedAmount
+          : c.requestedAmount;
+      }
+    });
+
+    const job = {
       id: request.purchaseOrder,
       location: {
         longitude: request.shipToAccount.longitude,
         latitude: request.shipToAccount.latitude,
       },
-      demands: []
-    });
+      demands: demands,
+    };
+
+    this.optimizationFacade.addOptimizationJob(job);
   }
 
   updateSelectedOnMap() {
@@ -255,7 +289,7 @@ export class QuickDispatchTableComponent implements OnInit {
           type: 'Feature',
           properties: {
             tag: 'delivery',
-            symbol: d.purchaseOrder.toString()
+            symbol: d.purchaseOrder.toString(),
           },
           geometry: {
             type: 'Point',
@@ -264,7 +298,7 @@ export class QuickDispatchTableComponent implements OnInit {
         };
 
         return features;
-      })
+      }),
     );
   }
 }

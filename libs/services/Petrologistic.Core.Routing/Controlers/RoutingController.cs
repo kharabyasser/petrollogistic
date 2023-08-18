@@ -22,7 +22,7 @@ namespace Petrologistic.Service.Routing.Controlers
 
     [HttpPost("Solve")]
     public async Task<ActionResult> SolveVrp([FromBody] RoutingData data, CancellationToken token)
-    {
+     {
       var result = await _vrpResolverService.Solve(data, token);
 
       return Ok(result);

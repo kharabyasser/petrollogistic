@@ -58,7 +58,6 @@ public class DeliveryRequestRepository : IDeliveryRequestRepository
     };
 
     var fakeAccounts = new Faker<Account>()
-
       .RuleSet("BillingAccount", set =>
       {
         set.Rules((f, u) =>
