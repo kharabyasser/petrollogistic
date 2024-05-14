@@ -34,7 +34,7 @@ export class TicketConstraint {
 }
 
 export class ProductConstraintData {
-  product?: Product;
+  product: Product | null = null;
   load: number = 0;
   capacity: number = 0;
 }

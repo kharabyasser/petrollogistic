@@ -9,13 +9,19 @@ import { VrpAssignment } from '../../../models/routing/vrp-assignment';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { QuickDispatchTruckComponent } from './truck/quick-dispatch.truck';
-import { KnownLocation, VrpRequestForm } from '../../../models/routing/vrp-request-form';
+import {
+  KnownLocation,
+  VrpRequestForm,
+} from '../../../models/routing/vrp-request-form';
 import { FormlyTypes } from '@petrologistic/core/frontend/formly';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TrackMode } from '../../../models/routing/enums/track-mode';
 import { map, tap } from 'rxjs';
 import { Truck } from '../../../domain/truck';
 import { Coordinate } from '../../../models/maps/coordinate';
+import { Product } from '../../../domain/product';
+import { OptimizationFacade } from '../../../+state/optimization/optimization-facade';
+import { DeliveryRequestsFacade } from '../../../+state/delivery-requests/delivery-requests-facade';
 
 @UntilDestroy()
 @Component({
@@ -30,6 +36,7 @@ export class QuickDispatchComponent implements OnInit {
   fields: FormlyFieldConfig[] = [];
 
   optimizationJobs: Job[] = [];
+  optimizationProds: Product[] = [];
 
   optimizationStep: 'configuration' | 'result' | 'validation' = 'configuration';
   vrpResults: VrpAssignment | null = null;
@@ -40,11 +47,13 @@ export class QuickDispatchComponent implements OnInit {
     private vrpService: VrpService,
     private routingService: RoutingService,
     private mapsFacade: MapsFacade,
+    private optimizationFacade: OptimizationFacade,
     private truckFacade: TrucksFacade,
+    private deliveryFacade: DeliveryRequestsFacade,
   ) {
     this.truckFacade.trucks$
       .pipe(
-        tap(trucks => this.trucks = trucks),
+        tap((trucks) => (this.trucks = trucks)),
         map((trucks) =>
           trucks.map((t) => {
             return {
@@ -59,7 +68,7 @@ export class QuickDispatchComponent implements OnInit {
                   return {
                     product: c.product,
                     load: c.load,
-                    capacity: c.capacity
+                    capacity: c.capacity,
                   };
                 }),
               },
@@ -71,8 +80,13 @@ export class QuickDispatchComponent implements OnInit {
       )
       .subscribe();
 
-      this.mapsFacade.optimizationJobs$.subscribe(jobs => 
-        this.optimizationJobs = jobs)
+    this.optimizationFacade.optimizationProducts$.subscribe(
+      (products) => (this.optimizationProds = products),
+    );
+
+    this.optimizationFacade.optimizationJobs$.subscribe(
+      (jobs) => (this.optimizationJobs = jobs),
+    );
   }
 
   ngOnInit(): void {
@@ -107,25 +121,54 @@ export class QuickDispatchComponent implements OnInit {
     this.vrpService
       .optimize({
         jobs: this.optimizationJobs,
-        vehicles: this.model.map(x => {
-          const currentTruck = this.trucks.find(t => t.number === x.truckId);
+        vehicles: this.model.map((x) => {
+          const currentTruck = this.trucks.find((t) => t.number === x.truckId);
 
-          const startLocation = x.truckConstraints?.startLocation === KnownLocation.VehicleLocation ?
-            new Coordinate(currentTruck?.longitude ?? 0, currentTruck?.latitude ?? 0) : 
-            x.truckConstraints?.startLocationCoordinate;
+          const startLocation =
+            x.truckConstraints?.startLocation === KnownLocation.VehicleLocation
+              ? new Coordinate(
+                  currentTruck?.longitude ?? 0,
+                  currentTruck?.latitude ?? 0,
+                )
+              : x.truckConstraints?.startLocationCoordinate;
 
-          const endLocation = x.truckConstraints?.endLocation === KnownLocation.VehicleLocation ?
-            new Coordinate(currentTruck?.longitude ?? 0, currentTruck?.latitude ?? 0) : 
-            x.truckConstraints?.endLocationCoordinate;
+          const endLocation =
+            x.truckConstraints?.endLocation === KnownLocation.VehicleLocation
+              ? new Coordinate(
+                  currentTruck?.longitude ?? 0,
+                  currentTruck?.latitude ?? 0,
+                )
+              : x.truckConstraints?.endLocationCoordinate;
+
+          const capacity = [this.optimizationProds.length];
+          const initialLoad = [this.optimizationProds.length];
+
+          for (let i = 0; i < this.optimizationProds.length; i++) {
+            capacity[i] = 0;
+            initialLoad[i] = 0;
+          }
+
+          x.productsConstraints?.productsData?.forEach((c) => {
+            const index = this.optimizationProds.findIndex(
+              (p) => p.number === c.product?.number,
+            );
+
+            capacity[index] = capacity[index]
+              ? capacity[index] + c.capacity
+              : c.capacity;
+            initialLoad[index] = initialLoad[index]
+              ? initialLoad[index] + c.load
+              : c.load;
+          });
 
           return {
             id: x.truckId,
-            capacity: x.productsConstraints?.productsData?.map(p => p.capacity),
-            initialLoad: x.productsConstraints?.productsData?.map(p => p.load),
+            capacity: capacity,
+            initialLoad: initialLoad,
             start: startLocation,
             end: endLocation,
             trackMode: x.truckConstraints!.trackMode ?? TrackMode.ROUND_TRIP,
-          }
+          };
         }),
       })
       .subscribe((result) => {

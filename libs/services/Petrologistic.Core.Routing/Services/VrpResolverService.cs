@@ -467,10 +467,12 @@ namespace Petrologistic.Service.Routing.Services
         throw new ArgumentException("Vehicle ending point and tracking mode missmatch.");
       }
 
-      if (routing.Jobs.Where(job => job.Demands == null)?.Count() ==
-              routing.Vehicles.Where(vehicle => vehicle.Capacity == null)?.Count())
+      var containersCount = routing.Jobs.First().Demands?.Count();
+
+      if (routing.Jobs.Any(job => job.Demands?.Count() != containersCount) ||
+              routing.Vehicles.Any(vehicle => vehicle.Capacity?.Count() != containersCount))
       {
-        throw new ArgumentException("Number of demands and jobs should be the same.");
+        throw new ArgumentException("demands count and vehicules capacities count should be the same.");
       }
     }
 

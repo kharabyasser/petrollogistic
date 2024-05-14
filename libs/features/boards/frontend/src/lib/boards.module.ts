@@ -52,6 +52,7 @@ import { TrucksEffect } from './+state/trucks/trucks-effects';
 import { trucksReducer } from './+state/trucks/trucks-reducer';
 import { MapsFacade } from './+state/maps/maps-facade';
 import { mapsReducer } from './+state/maps/maps-reducer';
+import { optimizationReducer } from './+state/optimization/optimization-reducer';
 import { MapService } from './services/maps-service';
 import { QuickDispatchComponent } from './components/dialogs/quick-dispatch/quick-dispatch.component';
 import { QuickDispatchTruckComponent } from './components/dialogs/quick-dispatch/truck/quick-dispatch.truck';
@@ -65,6 +66,7 @@ import { TicketConstraintFormComponent } from './components/dialogs/quick-dispat
 import { CommonModule } from '@angular/common';
 import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 import { TicketInputFormComponent } from './components/dialogs/quick-dispatch/truck/constraints/ticket-contraints/ticket-input-form/ticket-input-form.component';
+import { OptimizationFacade } from './+state/optimization/optimization-facade';
 
 @NgModule({
   imports: [
@@ -109,6 +111,7 @@ import { TicketInputFormComponent } from './components/dialogs/quick-dispatch/tr
     StoreModule.forFeature('Trucks', trucksReducer),
     EffectsModule.forFeature([TrucksEffect]),
     StoreModule.forFeature('Maps', mapsReducer),
+    StoreModule.forFeature('Optimization', optimizationReducer),
   ],
   declarations: [
     TableComponent,
@@ -133,6 +136,7 @@ import { TicketInputFormComponent } from './components/dialogs/quick-dispatch/tr
     DeliveryRequestsFacade,
     TrucksFacade,
     MapsFacade,
+    OptimizationFacade,
     MapService,
     RoutingService,
     DialogService

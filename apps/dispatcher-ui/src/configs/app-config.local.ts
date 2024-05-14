@@ -10,6 +10,6 @@ export const APP_CONFIG_LOCAL: AppConfig = {
   authServerUrl: "",
   authRedirectOrigin: "",
   apiUrl: 'http://localhost:5188/graphql/',
-  openRoutingServiceApiUrl: "http://localhost:8080/ors/v2/",
+  openRoutingServiceApiUrl: "http://localhost:8080/ors/v2",
   vrpServiceApiUrl: "http://localhost:3000/"
 };

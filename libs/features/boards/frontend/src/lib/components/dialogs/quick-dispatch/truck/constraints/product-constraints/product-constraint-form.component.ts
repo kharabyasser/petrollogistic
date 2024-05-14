@@ -19,13 +19,13 @@ export class ProductConstraintFormComponent extends AbstactFormFieldConfigCompon
     ]
   }
 
-  setCapacityMode(): FormlyFieldConfig {
+  private setCapacityMode(): FormlyFieldConfig {
     return {
       key: 'capacityMode',
       type: FormlyTypes.SINGLE_SELECT,
       className: 'capacity-mode',
       defaultValue: CapacityMode.TRUCK_LOAD,
-      templateOptions: {
+      props: {
         label: 'Capacity Mode',
         items: getSelectListFromEnum(CapacityMode),
         optionsLabel: 'CODE',
@@ -36,7 +36,7 @@ export class ProductConstraintFormComponent extends AbstactFormFieldConfigCompon
     }
   }
 
-  setProductsLoads(): FormlyFieldConfig {
+  private setProductsLoads(): FormlyFieldConfig {
     return {
       key: 'productsData',
       type: FormlyTypes.SIMPLE_REPEATING_SECTION,

@@ -2,7 +2,6 @@ import { createReducer, on } from '@ngrx/store';
 import { Coordinate } from '../../models/maps/coordinate';
 
 import * as MapsActions from './maps-actions';
-import { Job } from '../../models/routing/vrp-request';
 import { Feature, GeoJsonProperties, Point } from 'geojson';
 
 export interface MapState {
@@ -10,15 +9,13 @@ export interface MapState {
   isochroneData: GeoJSON.GeoJSON | null;
   routes: GeoJSON.GeoJSON[];
   centerOnPosition: Coordinate | null;
-  optimizationJobs: Job[];
 }
 
 export const initialState: MapState = {
   markersOnMap: [],
   centerOnPosition: null,
   isochroneData: null,
-  routes: [],
-  optimizationJobs: []
+  routes: []
 };
 
 export const mapsReducer = createReducer(
@@ -48,14 +45,6 @@ export const mapsReducer = createReducer(
   on(MapsActions.addRoute, (state, action) => ({
     ...state,
     routes: [...state.routes, action.data],
-  })),
-  on(MapsActions.addOptimizationJob, (state, action) => ({
-    ...state,
-    optimizationJobs: [...state.optimizationJobs, action.data],
-  })),
-  on(MapsActions.removeOptimizationJob, (state, action) => ({
-    ...state,
-    optimizationJobs: state.optimizationJobs.filter((job) => job.id !== action.data),
   })),
   on(MapsActions.clear, (state) => ({
     ...state,

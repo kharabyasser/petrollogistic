@@ -9,10 +9,12 @@ import {
 import { DeliveryRequestsFacade } from '../+state/delivery-requests/delivery-requests-facade';
 import { TrucksFacade } from '../+state/trucks/trucks-facade';
 import { MapsFacade } from '../+state/maps/maps-facade';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { DialogService } from 'primeng/dynamicdialog';
 import { QuickDispatchComponent } from '../components/dialogs/quick-dispatch/quick-dispatch.component';
 import { Feature, GeoJsonProperties, Point } from 'geojson';
+import { Product } from '../domain/product';
+import { OptimizationFacade } from '../+state/optimization/optimization-facade';
 
 @Component({
   selector: 'petrologistic-boards-container',
@@ -50,9 +52,26 @@ export class BoardsContainerComponent {
     private deliveriesFacade: DeliveryRequestsFacade,
     private trucksFacade: TrucksFacade,
     private mapsFacade: MapsFacade,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private optimizationFacade: OptimizationFacade
   ) {
     this.trucksFacade.loadTrucks();
+
+    this.trucksFacade.trucks$
+    .pipe(
+      tap((trucks) => {
+        const products: Product[] = [];
+        trucks.forEach((truck) => {
+          truck.compartments.forEach((c) => {
+            if (!products.find((p) => p.number === c.product.number))
+              products.push(c.product);
+          });
+        });
+
+        this.optimizationFacade.setOptimizationProducts(products.sort((p1, p2) => p1.number - p2.number));
+      }),
+    )
+    .subscribe();
 
     this.deliveriesFacade.selectedRequests$.subscribe(
       (x) => (this.detailsState = x.length > 0 ? 'in' : 'out')

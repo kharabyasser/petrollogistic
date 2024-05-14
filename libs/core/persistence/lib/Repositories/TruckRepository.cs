@@ -46,11 +46,16 @@ namespace Petrologistic.Core.Persistence.Lib.Repositories
         .RuleFor(c => c.Number, (f, u) => f.Random.Number(1, 100))
         .RuleFor(c => c.Capacity, (f, u) => 2000)
         .RuleFor(c => c.Load, (f, u) => f.Random.Number(100, 2000))
-        .RuleFor(c => c.Product, (f, u) => new Product
+        .RuleFor(c => c.Product, (f, u) =>
         {
-          Number = f.PickRandom(PickingLists.Products.Keys.ToArray()),
-          Name = f.PickRandom(PickingLists.Products.Values.ToArray()),
-          Description = ""
+          var index = f.Random.Number(1, 4);
+
+          return new Product
+          {
+            Number = PickingLists.Products.Keys.ToArray()[index],
+            Name = PickingLists.Products.Values.ToArray()[index],
+            Description = ""
+          };
         });
 
       var fakeTruck = new Faker<Truck>()
