@@ -33,7 +33,7 @@ export class MapService {
 
     this.map = new Map({
       container: mapContainer,
-      style: `https://api.maptiler.com/maps/streets-v2/style.json?key=9GLc7lJKzQasVymrF28T`,
+      style: `http://localhost:5243/styles/basic-preview/style.json?key=LX.xloL1EpOG-LQt4-twxV0l0KIPjpNPM2xN7Zux7SJTNs`,
       zoom: this.initialState.zoom,
       center: [this.initialState.lng, this.initialState.lat],
       attributionControl: false,

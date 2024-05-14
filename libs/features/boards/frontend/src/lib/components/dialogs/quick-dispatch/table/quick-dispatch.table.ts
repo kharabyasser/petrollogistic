@@ -256,12 +256,11 @@ export class QuickDispatchTableComponent implements OnInit {
     }
 
     request.destinationContainers?.forEach((c) => {
-      debugger;
       const index = this.optimizationProds.findIndex(
         (p) => p.number === c.product?.number,
       );
 
-      // -1 means product is in demand but not provided but vehicles.
+      // -1 means product is in demand but not provided by vehicles.
       // in this scenario we are ignoring that product.
       if (index >= 0) {
         demands[index] = demands[index]
